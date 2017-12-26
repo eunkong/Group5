@@ -34,13 +34,15 @@ public class Client {
 			out.writeUTF(s.nextLine()); out.flush(); //id를 server에 넘김
 			System.out.print("PWD : ");
 			out.writeUTF(s.nextLine()); out.flush(); //pwd를 server에 넘김
-			System.out.print("전화번호  : ");
-			out.writeUTF(s.nextLine()); out.flush(); //phoneNumber를 server에 넘김
-			System.out.print("주소 : ");
-			out.writeUTF(s.nextLine()); out.flush(); //address를 server에 넘김
+			if(menu==1) {
+				System.out.print("전화번호  : ");
+				out.writeUTF(s.nextLine()); out.flush(); //phoneNumber를 server에 넘김
+				System.out.print("주소 : ");
+				out.writeUTF(s.nextLine()); out.flush(); //address를 server에 넘김
+			}
 
 			boolean result = in.readBoolean();
-			Member my = (Member)in.readObject();
+//			Member my = (Member)in.readObject();
 			
 			if(menu==2 && result==true) {
 				System.out.println("메뉴출력");
