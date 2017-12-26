@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
+import master.MenuSFM;
+
 public class Client {
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		int port = 20000;
@@ -47,10 +49,12 @@ public class Client {
 					continue;
 				}
 			}
-			Member my = new Member();
-			my = (Member)in.readObject();
+			Member my = (Member)in.readObject();
 			System.out.println("객체 받기 성공");
 			my.printInfo();
+			System.out.println("메뉴판 출력");
+			MenuSFM.menuLoad();
+			MenuSFM.menuPrintConsole();
 		}
 		s.close();
 		in.close();
