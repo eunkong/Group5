@@ -3,6 +3,7 @@ package master;
 import java.util.*;
 
 import client.Member;
+import server.MemberManager;
 
 public class Order {
 	static Scanner sc = new Scanner(System.in);
@@ -25,9 +26,9 @@ public class Order {
 			System.out.println("4.주문보기");
 			System.out.println("5.정보보기");
 			System.out.println("0.종료");
-			int choice=0;
+			int choice = 0;
 			try {
-				choice=sc.nextInt();
+				choice = sc.nextInt();
 			} catch (Exception e) {
 				System.err.println("Insert Error");
 				return;
@@ -160,17 +161,26 @@ public class Order {
 
 	public static void infoEdit(Member member) {
 
-		System.out.println("1.집주소");
-		System.out.println("2.전화번호");
+		System.out.println("1.아이디");
+		System.out.println("2.비밀번호");
+		System.out.println("3.집주소");
+		System.out.println("4.전화번호");
 		System.out.print("바꿀 정보:");
 		try {
 
 			switch (sc.nextInt()) {
 			case 1:
+
+				break;
+			case 2:
+				editIdPw(member, false);
+				member.setPhoneNumber(sc.next());
+				break;
+			case 3:
 				System.out.print("바뀐 주소:");
 				member.setAddress(sc.next());
 				break;
-			case 2:
+			case 4:
 				System.out.print("바뀐 번호:");
 				member.setPhoneNumber(sc.next());
 				break;
@@ -197,5 +207,22 @@ public class Order {
 		System.out.println("address:" + member.getAddress());
 		System.out.println("grade:" + member.getGrade());
 	}
+
+	public static void editIdPw(Member member,boolean flag) {
+		
+		System.out.println("아이디와 패스워드를 다시한번 입력해주세요");
+		System.out.print("아이디:");
+		String id = sc.next();
+		System.out.print("패스워드:");
+		String pw = sc.next();
+		if (member.getId() != id || member.getPwd() == pw) {
+			System.out.println("비밀번호 혹은 아이디가 잘못되었습니다");
+			return;
+		}
+		System.out.println("새로운 아이디/패스워드를 입력하세요");
+		String str=sc.next();
+		if(flag) member.setId(str);
+		else member.setPwd(str);
+	}// infoedit을 위한 메소드
 
 }
