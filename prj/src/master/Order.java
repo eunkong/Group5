@@ -145,6 +145,8 @@ public class Order {
 		}
 
 		else if (choice == 3) {
+		
+			
 			System.out.println("몇개로 수정하시겠 습니까?");
 			int num = 0;
 			try {
@@ -156,7 +158,15 @@ public class Order {
 			}
 			orderIdx.put(menu, num);
 			priceSum += menu.getPrice() * num;
+			System.out.println("수정완료");
+	}
+		System.out.println("계속 수정 하시겠습니까?\n 1. 예       2. 아니오");
+		try {
+			if(sc.nextInt()==2) return;
+		} catch (Exception e) {
+			System.err.println("Insert Error");
 		}
+		editOrder(member);
 	}
 
 	public static void infoEdit(Member member) {
