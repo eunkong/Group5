@@ -133,8 +133,8 @@ public class ForguiShow extends JFrame {
 	}
 
 	private static void menuEdit(boolean flag) {// 메뉴 추가/삭제용  sysout은 오직 콘솔확인용
-		String group = "";//메뉴 분류
-		String name = "";//메뉴 이름
+		String group;//메뉴 분류
+		String name;//메뉴 이름
 		
 		System.out.print("메뉴분류:");
 		
@@ -197,7 +197,7 @@ public class ForguiShow extends JFrame {
 	}
 
 	private static void groupEdit(boolean flag) {// 그룹 추가/삭제용
-		String group = "";
+		String group;
 		System.out.print("분류명:");
 		group = JOptionPane.showInputDialog("메뉴 분류");
 
