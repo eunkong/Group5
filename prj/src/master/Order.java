@@ -170,7 +170,7 @@ public class Order {
 
 			switch (sc.nextInt()) {
 			case 1:
-
+				editIdPw(member, true);
 				break;
 			case 2:
 				editIdPw(member, false);
