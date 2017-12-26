@@ -215,7 +215,7 @@ public class Order {
 		String id = sc.next();
 		System.out.print("패스워드:");
 		String pw = sc.next();
-		if (member.getId() != id || member.getPwd() == pw) {
+		if (member.getId() != id || member.getPwd() != pw) {
 			System.out.println("비밀번호 혹은 아이디가 잘못되었습니다");
 			return;
 		}
