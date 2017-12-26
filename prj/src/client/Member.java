@@ -1,18 +1,20 @@
 package client;
 
-public class Member {
-	private String itd;
+import java.io.Serializable;
+
+public class Member implements Serializable {
+	private String id;
 	private String pwd;
-	public Member(String itd, String pwd) {
+	public Member(String id, String pwd) {
 		super();
-		this.itd = itd;
+		this.id = id;
 		this.pwd = pwd;
 	}
-	public String getItd() {
-		return itd;
+	public String getId() {
+		return id;
 	}
-	public void setItd(String itd) {
-		this.itd = itd;
+	public void setId(String id) {
+		this.id = id;
 	}
 	public String getPwd() {
 		return pwd;
