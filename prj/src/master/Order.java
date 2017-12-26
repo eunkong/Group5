@@ -18,13 +18,21 @@ public class Order {
 		orderIdx.clear();
 
 		while (true) {
+			System.out.println();
 			System.out.println("1.주문하기");
 			System.out.println("2.주문수정");
 			System.out.println("3.정보편집");
 			System.out.println("4.주문보기");
 			System.out.println("5.정보보기");
 			System.out.println("0.종료");
-			switch (sc.nextInt()) {
+			int choice=0;
+			try {
+				choice=sc.nextInt();
+			} catch (Exception e) {
+				System.err.println("Insert Error");
+				return;
+			}
+			switch (choice) {
 			case 1:
 				order(member);
 				break;
@@ -41,12 +49,14 @@ public class Order {
 				printInfo(member);
 				break;
 			case 0:
-				
+
 				return;
 
 			default:
+				System.out.println("종료");
 				break;
 			}
+
 		}
 
 	}
@@ -55,7 +65,7 @@ public class Order {
 		System.out.println("=====메뉴분류=====");
 
 		Set<String> groups = MenuSFM.getGroupString();
-		Menu menu;
+
 		int num = 0;
 
 		for (String string : groups) {
@@ -64,10 +74,8 @@ public class Order {
 		System.out.print("분류선택:");
 
 		String group = sc.next();
-		
-		try {
-			MenuSFM.getMenuGroup(group);
-		} catch (Exception e) {
+
+		if (MenuSFM.getMenuGroup(group) == null) {
 			System.err.println("잘못된 접근 입니다");
 			return;
 		}
@@ -78,9 +86,8 @@ public class Order {
 
 		System.out.print("메뉴선택:");
 		String name = sc.next();
-		try {
-			menu = MenuSFM.getMenu(group, name);
-		} catch (Exception e) {
+		Menu menu = MenuSFM.getMenu(group, name);
+		if (menu == null) {
 			System.err.println("잘못된 접근 입니다");
 			return;
 		}
@@ -104,10 +111,14 @@ public class Order {
 	}
 
 	public static void editOrder(Member member) {
+		if (orderIdx.size() == 0) {
+			System.out.println("주문내역이 없습니다");
+			return;
+		}
 		System.out.println("1. 모든 주문 삭제   2.주문하나만 삭제 3.주문수량 변경");
-		int choice=0;
+		int choice = 0;
 		try {
-			choice=sc.nextInt();
+			choice = sc.nextInt();
 			if (choice == 1) {
 				orderIdx.clear();
 				System.out.println("삭제완료");
@@ -127,21 +138,23 @@ public class Order {
 			return;
 		}
 		priceSum -= orderIdx.get(menu) * menu.getPrice();
-		if(choice==2) {
-		orderIdx.remove(menu);
-		System.out.println("삭제 완료");}
-		
-		else if(choice==3) {
-			System.out.println("몇개로 수정하시겠 습니까?");
-		int num=0;
-		try {
-			num=sc.nextInt();
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.err.println("error");
+		if (choice == 2) {
+			orderIdx.remove(menu);
+			System.out.println("삭제 완료");
 		}
-		orderIdx.put(menu, num);
-		priceSum+=menu.getPrice()*num;
+
+		else if (choice == 3) {
+			System.out.println("몇개로 수정하시겠 습니까?");
+			int num = 0;
+			try {
+				num = sc.nextInt();
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.err.println("error");
+				return;
+			}
+			orderIdx.put(menu, num);
+			priceSum += menu.getPrice() * num;
 		}
 	}
 
@@ -165,6 +178,7 @@ public class Order {
 			}
 		} catch (Exception e) {
 			System.err.println("error");
+			return;
 		}
 	}
 
