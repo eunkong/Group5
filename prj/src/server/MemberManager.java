@@ -19,7 +19,7 @@ import client.Member;
 
 //membermap.db를 관리하는 클래스
 public class MemberManager {
-	public static final File db = new File("files", "membermap.db");
+	public static final File db = new File("files", "memberlist.db");
 	
 	//파일을 관리할 각종 기능 메소드
 	
@@ -27,14 +27,16 @@ public class MemberManager {
 	// - 준비물 : 아이디, 비밀번호
 	// - 처리내용 : 파일에 해당 아이디, 비밀번호가 있는지 검사
 	// - 결과물 : 존재하는지 / 존재하지 않는지에 대한 결과값
-	public static boolean login(String id, String password){
+	public static Member login(String id, String password){
 		Map<String, Member> map = loadDatabase();
 		Iterator<String> iterator = map.keySet().iterator();
 		while(iterator.hasNext()) {
-			if(id.equals(iterator.next()))
-				return true;
+			if(id.equals(iterator.next())) {
+				//파일에서 해당 member리스트 가져오기
+				return loadDatabase().get(id);
+			}
 		}
-		return false;
+		return null;
 	}
 
 	private static Map<String, Member> loadDatabase() {

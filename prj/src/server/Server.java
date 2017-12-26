@@ -39,34 +39,33 @@ public class Server {
 			System.out.println("선택 = "+ select);
 			//회원가입
 			if(select == REGISTER) {
-//				Member m = (Member) in.readObject();
 				String id = in.readUTF();
 				String pw = in.readUTF();
 				String phone = in.readUTF();
 				String address = in.readUTF();
-				System.out.println(id);
+				System.out.println(id);	//Test
 				System.out.println(pw);
 				System.out.println(phone);
 				System.out.println(address);
 				boolean result = MemberManager.register(id, pw, phone, address);
+				System.out.println(result);
 				out.writeBoolean(result); out.flush();
 			//로그인
 			}else if(select == LOGIN) {
 				String id = in.readUTF();
 				String pw = in.readUTF();
-				boolean result = MemberManager.login(id, pw);
-				System.out.println(result);	//로그인 성공여부 체크
-				out.writeBoolean(result); out.flush();
-				//로그인 성공하면
-				if(result) {
-					System.out.println("로그인 성공");
-				}
+				Member member = MemberManager.login(id, pw);
+				out.writeObject(member); out.flush(); 	//로그인 성공시 고객정보 객체 전송
+				System.out.println("객체전송완료");
 			}
 			
+			
+			
+			
+			
+			
+			
 		}
-		
-		
-		
 		
 	}
 }
