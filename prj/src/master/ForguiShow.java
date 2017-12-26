@@ -83,10 +83,8 @@ public class ForguiShow extends JFrame {
 
 	private void action(String key) {// event를 위한 메소드 (이전버전에선 메인 클래스에 있었음)
 
-		String name;
-		String group;
 		System.out.println("======" + key + "======\n");
-		int price = 0;
+
 		switch (key) {
 		case "메뉴보기":
 			MenuSFM.menuPrintConsole();// 콘솔창에서 메뉴목록 확인가능
