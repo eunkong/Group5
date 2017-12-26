@@ -16,7 +16,7 @@ public class Order {
 	}
 	
 	public static void orderMain(Member member) {
-
+		orderIdx.clear();
 		printInfo(member);
 		MenuSFM.menuLoad();
 
@@ -67,7 +67,7 @@ public class Order {
 
 	}
 
-	public static void order(Member member) {
+	private static void order(Member member) {
 		System.out.println("=====메뉴분류=====");
 
 		Set<String> groups = MenuSFM.getGroupString();
@@ -116,7 +116,7 @@ public class Order {
 		System.out.println("주문 완료");
 	}
 
-	public static void editOrder(Member member) {
+	private static void editOrder(Member member) {
 		if (orderIdx.size() == 0) {
 			System.out.println("주문내역이 없습니다");
 			return;
@@ -174,7 +174,7 @@ public class Order {
 		editOrder(member);
 	}
 
-	public static void infoEdit(Member member) {
+	private static void infoEdit(Member member) {
 
 		System.out.println("1.아이디");
 		System.out.println("2.비밀번호");
@@ -207,7 +207,7 @@ public class Order {
 		}
 	}
 
-	public static void printOrder() {
+	private static void printOrder() {
 
 		for (Iterator<Menu> iterator = orderIdx.keySet().iterator(); iterator.hasNext();) {
 			Menu menu = iterator.next();
@@ -216,14 +216,14 @@ public class Order {
 		System.out.println("총" + priceSum + "원");
 	}
 
-	public static void printInfo(Member member) {
+	private static void printInfo(Member member) {
 		System.out.println("id:" + member.getId());
 		System.out.println("pwd:" + member.getPwd());
 		System.out.println("address:" + member.getAddress());
 		System.out.println("grade:" + member.getGrade());
 	}
 
-	public static void editIdPw(Member member,boolean flag) {
+	private static void editIdPw(Member member,boolean flag) {
 		
 		System.out.println("아이디와 패스워드를 다시한번 입력해주세요");
 		System.out.print("아이디:");
