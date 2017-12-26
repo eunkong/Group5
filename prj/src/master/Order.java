@@ -9,7 +9,12 @@ public class Order {
 	static Scanner sc = new Scanner(System.in);
 	private static int priceSum;
 	private static Map<Menu, Integer> orderIdx = new HashMap<>();
-
+	private static Order instance=new Order();
+	
+	private Order() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	public static void orderMain(Member member) {
 
 		printInfo(member);
@@ -234,5 +239,7 @@ public class Order {
 		if(flag) member.setId(str);
 		else member.setPwd(str);
 	}// infoedit을 위한 메소드
-
+	public static Order getInstance() {
+		return instance;
+	}
 }
