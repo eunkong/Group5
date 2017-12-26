@@ -47,6 +47,7 @@ public class MemberManager {
 		){
 			@SuppressWarnings("unchecked")
 			Map<String, Member> map = (Map<String, Member>) in.readObject();
+			System.out.println(map.get("master"));
 			return map;
 		}
 		catch(Exception e) {

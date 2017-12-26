@@ -55,12 +55,10 @@ public class Server {
 				String id = in.readUTF();
 				String pw = in.readUTF();
 				Member member = MemberManager.login(id, pw);
+				System.out.println(member.getAddress());
 				out.writeObject(member); out.flush(); 	//로그인 성공시 고객정보 객체 전송
 				System.out.println("객체전송완료");
 			}
-			
-			
-			
 			
 			
 			
