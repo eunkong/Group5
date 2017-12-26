@@ -7,17 +7,17 @@ import server.MemberManager;
 
 public class Order {
 	static Scanner sc = new Scanner(System.in);
-	private static int priceSum;
-	private static Map<Menu, Integer> orderIdx = new HashMap<>();
-	private static Order instance=new Order();
-	
+	private int priceSum;
+	private Map<Menu, Integer> orderIdx = new HashMap<>();
+	private Order instance=new Order();
+	Member member;
 	private Order() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static void orderMain(Member member) {
+	public void orderMain() {
 		orderIdx.clear();
-		printInfo(member);
+		printInfo();
 		MenuSFM.menuLoad();
 
 		priceSum = 0;
@@ -40,19 +40,19 @@ public class Order {
 			}
 			switch (choice) {
 			case 1:
-				order(member);
+				order();
 				break;
 			case 2:
-				editOrder(member);
+				editOrder();
 				break;
 			case 3:
-				infoEdit(member);
+				infoEdit();
 				break;
 			case 4:
 				printOrder();
 				break;
 			case 5:
-				printInfo(member);
+				printInfo();
 				break;
 			case 0:
 
@@ -67,7 +67,7 @@ public class Order {
 
 	}
 
-	private static void order(Member member) {
+	private void order() {
 		System.out.println("=====메뉴분류=====");
 
 		Set<String> groups = MenuSFM.getGroupString();
@@ -116,7 +116,7 @@ public class Order {
 		System.out.println("주문 완료");
 	}
 
-	private static void editOrder(Member member) {
+	private void editOrder() {
 		if (orderIdx.size() == 0) {
 			System.out.println("주문내역이 없습니다");
 			return;
@@ -171,10 +171,10 @@ public class Order {
 		} catch (Exception e) {
 			System.err.println("Insert Error");
 		}
-		editOrder(member);
+		editOrder();
 	}
 
-	private static void infoEdit(Member member) {
+	private void infoEdit() {
 
 		System.out.println("1.아이디");
 		System.out.println("2.비밀번호");
@@ -185,10 +185,10 @@ public class Order {
 
 			switch (sc.nextInt()) {
 			case 1:
-				editIdPw(member, true);
+				editIdPw(true);
 				break;
 			case 2:
-				editIdPw(member, false);
+				editIdPw(false);
 				member.setPhoneNumber(sc.next());
 				break;
 			case 3:
@@ -207,7 +207,7 @@ public class Order {
 		}
 	}
 
-	private static void printOrder() {
+	private void printOrder() {
 
 		for (Iterator<Menu> iterator = orderIdx.keySet().iterator(); iterator.hasNext();) {
 			Menu menu = iterator.next();
@@ -216,14 +216,14 @@ public class Order {
 		System.out.println("총" + priceSum + "원");
 	}
 
-	private static void printInfo(Member member) {
+	private void printInfo() {
 		System.out.println("id:" + member.getId());
 		System.out.println("pwd:" + member.getPwd());
 		System.out.println("address:" + member.getAddress());
 		System.out.println("grade:" + member.getGrade());
 	}
 
-	private static void editIdPw(Member member,boolean flag) {
+	private void editIdPw(boolean flag) {
 		
 		System.out.println("아이디와 패스워드를 다시한번 입력해주세요");
 		System.out.print("아이디:");
@@ -240,16 +240,25 @@ public class Order {
 		else member.setPwd(str);
 	}// infoedit을 위한 메소드
 	
-	public static int getPriceSum() {
+	public int getPriceSum() {
 		return priceSum;
 	}
 
-	public static Map<Menu, Integer> getOrderIdx() {
+	public Map<Menu, Integer> getOrderIdx() {
 		return orderIdx;
 	}
 
 
-	public static Order getInstance() {
+	public Order getInstance() {
 		return instance;
 	}
+
+	public static Scanner getSc() {
+		return sc;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+	
 }
