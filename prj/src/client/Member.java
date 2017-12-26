@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class Member implements Serializable {
 	private String id, pwd, phoneNumber, address, grade;
-	private String[] gradeArray = {"일반", "VIP", "VVIP"};
 	private int orderCount, point;
+	private String[] gradeArray = {"일반", "VIP", "VVIP"};
 	public Member(String id, String pwd, String phoneNumber, String address) {
 		super();
 		this.id = id;
@@ -58,6 +58,13 @@ public class Member implements Serializable {
 	public void setPoint(int point) {
 		this.point = point;
 	}
-	
+	public void printInfo() {
+		System.out.println("ID : " + this.id);
+		System.out.println("전화번호 : " + this.phoneNumber);
+		System.out.println("주소 : " + this.address);
+		System.out.println("등급 : " + this.grade);
+		System.out.println("총 주문 횟수 : " + this.orderCount);
+		System.out.println("포인트 : " + this.point);
+	}
 	
 }
