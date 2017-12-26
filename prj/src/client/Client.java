@@ -29,7 +29,6 @@ public class Client {
 			s.nextLine();
 			out.writeInt(menu);
 			out.flush();
-			// System.out.println("int 전송");
 			
 			System.out.print("ID : ");
 			out.writeUTF(s.nextLine()); out.flush(); //id를 server에 넘김
