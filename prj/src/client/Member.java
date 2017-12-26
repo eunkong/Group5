@@ -6,6 +6,9 @@ public class Member implements Serializable {
 	private String id, pwd, phoneNumber, address, grade;
 	private int orderCount, point;
 	private String[] gradeArray = {"¿œπ›", "VIP", "VVIP"};
+	public Member() {
+		
+	}
 	public Member(String id, String pwd, String phoneNumber, String address) {
 		super();
 		this.id = id;

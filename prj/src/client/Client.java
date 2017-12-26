@@ -23,7 +23,7 @@ public class Client {
 		while(true) {
 			System.out.print("1.회원가입 or 2.로그인 or 3.종료 : ");
 			int menu = s.nextInt();
-			if(menu==3) break;
+			if(menu==3) break; //종료
 			s.nextLine();
 			out.writeInt(menu);
 			out.flush();
@@ -47,9 +47,11 @@ public class Client {
 					continue;
 				}
 			}
-			Member my = (Member)in.readObject();
+			Member my = new Member();
+			my = (Member)in.readObject();
 			System.out.println("객체 받기 성공");
-			my.printInfo();
+			System.out.println(my==null?"널":"아니다");
+			// my.printInfo();
 		}
 		s.close();
 		in.close();
