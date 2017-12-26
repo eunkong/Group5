@@ -239,6 +239,16 @@ public class Order {
 		if(flag) member.setId(str);
 		else member.setPwd(str);
 	}// infoedit을 위한 메소드
+	
+	public static int getPriceSum() {
+		return priceSum;
+	}
+
+	public static Map<Menu, Integer> getOrderIdx() {
+		return orderIdx;
+	}
+
+
 	public static Order getInstance() {
 		return instance;
 	}
