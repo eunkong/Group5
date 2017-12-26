@@ -114,7 +114,7 @@ public class ForguiShow extends JFrame {
 		case "메뉴리셋":
 			int choice = JOptionPane.showConfirmDialog(null, "정말 리셋 하시겠습니까?", "", JOptionPane.OK_CANCEL_OPTION,
 					JOptionPane.WARNING_MESSAGE, null);
-			if (choice == JOptionPane.CANCEL_OPTION)
+			if (choice != JOptionPane.OK_OPTION)
 				break;
 
 			MenuSFM.menuReset();
