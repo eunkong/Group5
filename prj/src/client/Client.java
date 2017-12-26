@@ -50,8 +50,7 @@ public class Client {
 			Member my = new Member();
 			my = (Member)in.readObject();
 			System.out.println("객체 받기 성공");
-			System.out.println(my==null?"널":"아니다");
-			// my.printInfo();
+			my.printInfo();
 		}
 		s.close();
 		in.close();
