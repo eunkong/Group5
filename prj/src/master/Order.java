@@ -9,10 +9,10 @@ public class Order {
 	static Scanner sc = new Scanner(System.in);
 	private int priceSum;
 	private Map<Menu, Integer> orderIdx = new HashMap<>();
-	private Order instance=new Order();
+	
 	Member member;
-	private Order() {
-		// TODO Auto-generated constructor stub
+	public Order(Member member) {
+		this.member=member;
 	}
 	
 	public void orderMain() {
@@ -248,10 +248,6 @@ public class Order {
 		return orderIdx;
 	}
 
-
-	public Order getInstance() {
-		return instance;
-	}
 
 	public static Scanner getSc() {
 		return sc;
