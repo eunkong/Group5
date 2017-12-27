@@ -16,12 +16,12 @@ public class Order {
 	}
 	
 	public void orderMain() {
-		orderIdx.clear();
-		printInfo();
+		
+		
 		MenuSFM.menuLoad();
 
 		priceSum = 0;
-		orderIdx.clear();
+		
 
 		while (true) {
 			System.out.println();
@@ -52,7 +52,7 @@ public class Order {
 				printOrder();
 				break;
 			case 5:
-				printInfo();
+				member.printInfo();
 				break;
 			case 0:
 
@@ -214,13 +214,6 @@ public class Order {
 			System.out.println(menu.getName() + "-" + menu.getPrice() + "-" + orderIdx.get(menu) + "°³");
 		}
 		System.out.println("ÃÑ" + priceSum + "¿ø");
-	}
-
-	private void printInfo() {
-		System.out.println("id:" + member.getId());
-		System.out.println("pwd:" + member.getPwd());
-		System.out.println("address:" + member.getAddress());
-		System.out.println("grade:" + member.getGrade());
 	}
 
 	private void editIdPw(boolean flag) {
