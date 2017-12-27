@@ -12,37 +12,19 @@ public class Order implements Serializable {
 	public Calendar cal = Calendar.getInstance();;
 	private int priceSum;
 	private Map<Menu, Integer> orderIdx = new HashMap<>();
-	private static  ArrayList<String>ordernumbers=new ArrayList<>();
-	private static Map<String, Member> daymem = new HashMap<>();
-	private String ordernum="";
+	
+	private String ordernum=(cal.get(Calendar.YEAR)-2000)+""+(1+cal.get(Calendar.MONTH))+""+cal.get(Calendar.DAY_OF_MONTH);
 	int idxnum;
 
 	Member member;
 
 	public Order(Member member) {
 		this.member = member;
+	
 		
-		Calendar cal = Calendar.getInstance();
-		
-		dayorderSetting();
-		ordernum=cal.get(Calendar.YEAR)+""+(1+cal.get(Calendar.MONTH))+""+cal.get(Calendar.DAY_OF_MONTH)+""+
-		(idxnum<100?"0":"")+(idxnum<10?"0":"")+
-				idxnum+"";
-		
-		daymem.put(ordernum, member);
-		ordernumbers.add(ordernum);
 	}
 
-	public void dayorderSetting() {//날이 지나면 order번호 초기화
-		String s="";
-		if(ordernumbers.size()==0) {idxnum=1;return;}
-		s=ordernumbers.get(ordernumbers.size()-1);
-		if(
-				Long.parseLong(s.substring(0,8))<cal.get(Calendar.YEAR)*10000+(1+cal.get(Calendar.MONTH))*100+cal.get(Calendar.DAY_OF_MONTH)
-				)daymem.clear();
-		
-		idxnum=daymem.size()+1;
-	}
+	
 
 	public void orderMain() {
 
@@ -278,4 +260,13 @@ public class Order implements Serializable {
 		return member;
 	}
 
+
+	public void addOrdernum(int num) {
+		ordernum+=num+"";
+	}
+	
+	public void addOrdernum(String str) {
+		ordernum+=str;
+	}
+	
 }
