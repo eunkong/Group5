@@ -21,15 +21,14 @@ public class Client {
 		ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 		System.out.println("전송준비");
 		Scanner s = new Scanner(System.in);
-		boolean result = false;
+		boolean registerResult = false;
 		
 		while(true) {
 			System.out.print("1.회원가입 or 2.로그인 or 3.종료 : ");
 			int menu = s.nextInt();
 			if(menu==3) break; //종료
 			s.nextLine();
-			out.writeInt(menu);
-			out.flush();
+			out.writeInt(menu); out.flush();
 			
 			System.out.print("ID : ");
 			out.writeUTF(s.nextLine()); out.flush(); //id를 server에 넘김
@@ -40,8 +39,8 @@ public class Client {
 				out.writeUTF(s.nextLine()); out.flush(); //phoneNumber를 server에 넘김
 				System.out.print("주소 : ");
 				out.writeUTF(s.nextLine()); out.flush(); //address를 server에 넘김
-				result = in.readBoolean();
-				if(result==true) {
+				registerResult = in.readBoolean();
+				if(registerResult==true) {
 					System.out.println("회원가입 성공");
 					continue;
 				}else {
@@ -49,18 +48,19 @@ public class Client {
 					continue;
 				}
 			}
-			// if(registerResult==false) continue; //로그인/회원가입 실패시 다시 첫화면
 			
 			MenuSFM.menuLoad(); //메뉴판 읽기
 			MenuSFM.menuPrintConsole(); //메뉴판 출력
 			//로그인 성공
 			Member my = (Member)in.readObject();
+			
 			if(my==null) {
 				System.out.println("로그인 실패");
 				System.exit(0);
 			} else {
 				System.out.println("로그인 성공");
 			}
+			
 			//주문하기
 			Order myOrder = new Order(my);
 			myOrder.orderMain();
