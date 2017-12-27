@@ -11,6 +11,9 @@ import master.MenuSFM;
 import master.Order;
 
 public class Client {
+	public static final int REGISTER = 1;
+	public static final int LOGIN = 2;
+	public static final int END = 3;
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		int port = 20000;
 		InetAddress inet = InetAddress.getByName("192.168.0.243");
@@ -26,7 +29,7 @@ public class Client {
 		while(true) {
 			System.out.print("1.회원가입 or 2.로그인 or 3.종료 : ");
 			int menu = s.nextInt();
-			if(menu==3) break; //종료
+			if(menu==END) break; //종료
 			s.nextLine();
 			out.writeInt(menu); out.flush();
 			
@@ -34,7 +37,7 @@ public class Client {
 			out.writeUTF(s.nextLine()); out.flush(); //id를 server에 넘김
 			System.out.print("PWD : ");
 			out.writeUTF(s.nextLine()); out.flush(); //pwd를 server에 넘김
-			if(menu==1) { //회원가입일 경우
+			if(menu==REGISTER) { //회원가입일 경우
 				System.out.print("전화번호  : ");
 				out.writeUTF(s.nextLine()); out.flush(); //phoneNumber를 server에 넘김
 				System.out.print("주소 : ");
@@ -48,17 +51,15 @@ public class Client {
 					continue;
 				}
 			}
-			
-			MenuSFM.menuLoad(); //메뉴판 읽기
-			MenuSFM.menuPrintConsole(); //메뉴판 출력
-			//로그인 성공
 			Member my = (Member)in.readObject();
 			
-			if(my==null) {
+			if(my==null) { //로그인 성공시에 서버에서 Member 객체 넘겨줌
 				System.out.println("로그인 실패");
-				System.exit(0);
+				continue;
 			} else {
 				System.out.println("로그인 성공");
+				MenuSFM.menuLoad(); //메뉴판 읽기
+				MenuSFM.menuPrintConsole(); //메뉴판 출력
 			}
 			
 			//주문하기
