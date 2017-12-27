@@ -7,34 +7,47 @@ import client.Member;
 import server.MemberManager;
 
 @SuppressWarnings("serial")
-public class Order implements Serializable{
+public class Order implements Serializable {
 	static Scanner sc = new Scanner(System.in);
+	public Calendar cal = Calendar.getInstance();;
 	private int priceSum;
 	private Map<Menu, Integer> orderIdx = new HashMap<>();
-	public static Map<String , Member> orderMem=new HashMap<>();//주문 번호및 주문 고객을 저장하기 위한 메소드
-	
-	
+	private static Map<String, Member> daymem = new HashMap<>();
+	private String ordernum="";
+	int idxnum;
+
 	Member member;
+
 	public Order(Member member) {
-		this.member=member;
-		int num=orderMem.size();
-		Calendar cal=Calendar.getInstance();
-		orderMem.put(cal.get(Calendar.YEAR)+cal.get(Calendar.MONTH)+cal.get(Calendar.DAY_OF_MONTH)+//날짜
-				(num<100?"0":"")+(num<10?"0":"")+num+""//주문 번호
-				, member);
+		this.member = member;
+		
+		Calendar cal = Calendar.getInstance();
+		
+		dayorderSetting();
+		ordernum=cal.get(Calendar.YEAR)+""+(1+cal.get(Calendar.MONTH))+""+cal.get(Calendar.DAY_OF_MONTH)+""+
+		(idxnum<100?"0":"")+(idxnum<10?"0":"")+
+				idxnum+"";
+		
+		daymem.put(ordernum, member);		
 	}
-	
-	public static void dayorderClear() {//날이 지나면 order번호 초기화
-		orderMem.clear();
+
+	public void dayorderSetting() {//날이 지나면 order번호 초기화
+		String s="";
+		for (Iterator<String> iterator = daymem.keySet().iterator(); iterator.hasNext();) {
+			String temp=iterator.next();
+			if(!iterator.hasNext())s=temp;
+		}
+		if(
+				Long.parseLong(s.substring(0,8))<cal.get(Calendar.YEAR)*10000+(1+cal.get(Calendar.MONTH))*100+cal.get(Calendar.DAY_OF_MONTH)
+				)daymem.clear();
+		idxnum=daymem.size()+1;
 	}
-	
+
 	public void orderMain() {
-		
-		
+
 		MenuSFM.menuLoad();
 
 		priceSum = 0;
-		
 
 		while (true) {
 			System.out.println();
@@ -163,8 +176,7 @@ public class Order implements Serializable{
 		}
 
 		else if (choice == 3) {
-		
-			
+
 			System.out.println("몇개로 수정하시겠 습니까?");
 			int num = 0;
 			try {
@@ -177,10 +189,11 @@ public class Order implements Serializable{
 			orderIdx.put(menu, num);
 			priceSum += menu.getPrice() * num;
 			System.out.println("수정완료");
-	}
+		}
 		System.out.println("계속 수정 하시겠습니까?\n 1. 예       2. 아니오");
 		try {
-			if(sc.nextInt()==2) return;
+			if (sc.nextInt() == 2)
+				return;
 		} catch (Exception e) {
 			System.err.println("Insert Error");
 		}
@@ -230,22 +243,24 @@ public class Order implements Serializable{
 	}
 
 	private void editIdPw(boolean flag) {
-		
+
 		System.out.println("아이디와 패스워드를 다시한번 입력해주세요");
 		System.out.print("아이디:");
 		String id = sc.next();
 		System.out.print("패스워드:");
 		String pw = sc.next();
-		if (!member.getId().equals(id)|| !member.getPwd() .equals(pw)) {
+		if (!member.getId().equals(id) || !member.getPwd().equals(pw)) {
 			System.out.println("비밀번호 혹은 아이디가 잘못되었습니다");
 			return;
 		}
 		System.out.println("새로운 아이디/패스워드를 입력하세요");
-		String str=sc.next();
-		if(flag) member.setId(str);
-		else member.setPwd(str);
+		String str = sc.next();
+		if (flag)
+			member.setId(str);
+		else
+			member.setPwd(str);
 	}// infoedit을 위한 메소드
-	
+
 	public int getPriceSum() {
 		return priceSum;
 	}
@@ -254,7 +269,6 @@ public class Order implements Serializable{
 		return orderIdx;
 	}
 
-
 	public static Scanner getSc() {
 		return sc;
 	}
@@ -262,5 +276,5 @@ public class Order implements Serializable{
 	public Member getMember() {
 		return member;
 	}
-	
+
 }
