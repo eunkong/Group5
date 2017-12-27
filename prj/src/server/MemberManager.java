@@ -12,21 +12,18 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import client.Member;
-
 
 //membermap.db를 관리하는 클래스
 public class MemberManager {
 	public static final File db = new File("files", "memberlist.db");
-	
-	//파일을 관리할 각종 기능 메소드
-	
-	//로그인 기능
-	// - 준비물 : 아이디, 비밀번호
-	// - 처리내용 : 파일에 해당 아이디, 비밀번호가 있는지 검사
-	// - 결과물 : 존재하는지 / 존재하지 않는지에 대한 결과값
+	/**
+	 * 로그인 메소드
+	 * @param id
+	 * @param password
+	 * @return 해당 Member객체정보
+	 */
 	public static Member login(String id, String password){
 		Map<String, Member> map = loadDatabase();
 		Iterator<String> iterator = map.keySet().iterator();
@@ -39,6 +36,12 @@ public class MemberManager {
 		return null;
 	}
 
+	/**
+	 * 
+	 * 
+	 * 
+	 * @return
+	 */
 	private static Map<String, Member> loadDatabase() {
 		try(
 			ObjectInputStream in = new ObjectInputStream(

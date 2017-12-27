@@ -1,26 +1,23 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import client.Member;
-
+import master.Menu;
+import master.Order;
 
 public class Connection extends Thread{
 	public static final int REGISTER = 1;
 	public static final int LOGIN = 2;
 	
-	
-	//외부데이터 : Connection 전체를 관리하는 기능을 static 형태로 보관
 	private static List<Connection> list = new ArrayList<>();
 	public static void add(Connection c) {
 		list.add(c);
@@ -29,7 +26,6 @@ public class Connection extends Thread{
 		list.remove(c);
 	}
 	
-	//내부데이터
 	private Socket socket;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
@@ -42,7 +38,7 @@ public class Connection extends Thread{
 			out.close();
 			socket.close();
 		}catch(Exception e) {	}
-		remove(this);//나를 지워라
+		remove(this);
 	}
 	
 	public Connection(Socket socket) throws IOException{
@@ -80,6 +76,18 @@ public class Connection extends Thread{
 					System.out.println(member.getAddress());
 					out.writeObject(member); out.flush(); 	//로그인 성공시 고객정보 객체 전송
 					System.out.println("객체전송완료");
+					
+					//주문정보 받음.
+					Order order = (Order) in.readObject();
+					System.out.println(order.getPriceSum()+" 받았다!!!");
+					Map<Menu, Integer> orderMap = order.getOrderIdx();
+					System.out.println(orderMap.isEmpty()+"나도받았다!!");
+
+					
+					
+					ReceiptStorage.saveDatabase(OrderNumber.getOrderNumber(), order);
+					
+					
 				}
 			}
 		}catch(Exception e) {
