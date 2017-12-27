@@ -70,5 +70,6 @@ public class ClientTool {
 			System.err.println("¿À·ù!");
 			e.printStackTrace();
 		}
+		
 	}
 }
