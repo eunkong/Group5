@@ -12,6 +12,7 @@ public class Order implements Serializable {
 	public Calendar cal = Calendar.getInstance();;
 	private int priceSum;
 	private Map<Menu, Integer> orderIdx = new HashMap<>();
+	private static  ArrayList<String>ordernumbers=new ArrayList<>();
 	private static Map<String, Member> daymem = new HashMap<>();
 	private String ordernum="";
 	int idxnum;
@@ -28,18 +29,18 @@ public class Order implements Serializable {
 		(idxnum<100?"0":"")+(idxnum<10?"0":"")+
 				idxnum+"";
 		
-		daymem.put(ordernum, member);		
+		daymem.put(ordernum, member);
+		ordernumbers.add(ordernum);
 	}
 
 	public void dayorderSetting() {//날이 지나면 order번호 초기화
 		String s="";
-		for (Iterator<String> iterator = daymem.keySet().iterator(); iterator.hasNext();) {
-			String temp=iterator.next();
-			if(!iterator.hasNext())s=temp;
-		}
+		if(ordernumbers.size()==0) {idxnum=1;return;}
+		s=ordernumbers.get(ordernumbers.size()-1);
 		if(
 				Long.parseLong(s.substring(0,8))<cal.get(Calendar.YEAR)*10000+(1+cal.get(Calendar.MONTH))*100+cal.get(Calendar.DAY_OF_MONTH)
 				)daymem.clear();
+		
 		idxnum=daymem.size()+1;
 	}
 
