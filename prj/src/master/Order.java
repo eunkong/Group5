@@ -1,18 +1,31 @@
 package master;
 
+import java.io.Serializable;
 import java.util.*;
 
 import client.Member;
 import server.MemberManager;
 
-public class Order {
+@SuppressWarnings("serial")
+public class Order implements Serializable{
 	static Scanner sc = new Scanner(System.in);
 	private int priceSum;
 	private Map<Menu, Integer> orderIdx = new HashMap<>();
+	public static Map<String , Member> orderMem=new HashMap<>();//주문 번호및 주문 고객을 저장하기 위한 메소드
+	
 	
 	Member member;
 	public Order(Member member) {
 		this.member=member;
+		int num=orderMem.size();
+		Calendar cal=Calendar.getInstance();
+		orderMem.put(cal.get(Calendar.YEAR)+cal.get(Calendar.MONTH)+cal.get(Calendar.DAY_OF_MONTH)+//날짜
+				(num<100?"0":"")+(num<10?"0":"")+num+""//주문 번호
+				, member);
+	}
+	
+	public static void dayorderClear() {//날이 지나면 order번호 초기화
+		orderMem.clear();
 	}
 	
 	public void orderMain() {
