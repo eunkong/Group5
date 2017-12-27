@@ -8,93 +8,67 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
+import master.MenuSFM;
 import master.Order;
 
 public class ClientTool {
-	private static int port = 20000;
-	static boolean result = false;
-	public static Scanner s;
-	public static InetAddress inet;
-	public static Socket socket;
-	public static ObjectInput in;
-	public static ObjectOutputStream out;
-	
-	public ClientTool() throws IOException {
-		inet = InetAddress.getByName("192.168.0.243");
-		s = new Scanner(System.in);
-		socket = new Socket(inet, port);
-		in = new ObjectInputStream(socket.getInputStream());
-		out = new ObjectOutputStream(socket.getOutputStream());
-	}
-	
-	
-	public static int Home() throws IOException{
-		s = new Scanner(System.in);
-		out = new ObjectOutputStream(socket.getOutputStream());
-		
-		System.out.print("1.회원가입 or 2.로그인 or 3.종료 : ");
-		int choice = s.nextInt();
-		if(choice==3) exit();
-		out.writeInt(choice); out.flush();
-		return choice;
-	}
-	public static boolean ClientRegisterLogin(int clientChoice) throws IOException{
-		//준비물 준비
-		s = new Scanner(System.in);
-		inet = InetAddress.getByName("192.168.0.243");
-		socket = new Socket(inet, port);
-		out = new ObjectOutputStream(socket.getOutputStream());
-		in = new ObjectInputStream(socket.getInputStream());
-		
-		System.out.print("ID : ");
-		out.writeUTF(s.nextLine()); out.flush();
-		System.out.print("PWD : ");
-		out.writeUTF(s.nextLine()); out.flush();
-		
-		if(clientChoice==1) { //회원가입일 경우
-			System.out.print("전화번호  : ");
-			out.writeUTF(s.nextLine()); out.flush(); //phoneNumber를 server에 넘김
-			System.out.print("주소 : ");
-			out.writeUTF(s.nextLine()); out.flush(); //address를 server에 넘김
-			result = in.readBoolean();
-			if(result==true) {
-				System.out.println("회원가입 성공");
-				return result;
-			}else {
-				System.out.println("회원가입 실패");
-				return result;
+	public static final int REGISTER = 1;
+	public static final int LOGIN = 2;
+	public static final int END = 3;
+	public static boolean registerResult=false;
+
+	public static void clientHome() {
+		//in 만들때 ObjectInputStream(BufferedInputStream(socket.getInputStream()));
+		//하면 더이상 진행되지 않음. (왜..?)
+		try(Socket socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
+				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+				Scanner s = new Scanner(System.in);){
+			while(true) {
+				System.out.print("1.회원가입 or 2.로그인 or 3.종료 : ");
+				int menu = s.nextInt();
+				if(menu==END) break; //종료
+				s.nextLine();
+				out.writeInt(menu); out.flush();
+				
+				System.out.print("ID : ");
+				out.writeUTF(s.nextLine()); out.flush(); //id를 server에 넘김
+				System.out.print("PWD : ");
+				out.writeUTF(s.nextLine()); out.flush(); //pwd를 server에 넘김
+				if(menu==REGISTER) { //회원가입일 경우
+					System.out.print("전화번호  : ");
+					out.writeUTF(s.nextLine()); out.flush(); //phoneNumber를 server에 넘김
+					System.out.print("주소 : ");
+					out.writeUTF(s.nextLine()); out.flush(); //address를 server에 넘김
+					registerResult = in.readBoolean(); //회원가입 성공여부를 server에 받음
+					if(registerResult==true) {
+						System.out.println("회원가입 성공");
+						continue;
+					}else {
+						System.out.println("회원가입 실패");
+						continue;
+					}
+				}
+				Member my = (Member)in.readObject();
+				if(my==null) { //로그인 성공시에 서버에서 Member 객체 넘겨줌
+					System.out.println("로그인 실패");
+					continue;
+				} else {
+					System.out.println("로그인 성공");
+					MenuSFM.menuLoad(); //메뉴판 읽기
+					MenuSFM.menuPrintConsole(); //메뉴판 출력
+				}
+				
+				//주문하기
+				Order myOrder = new Order(my);
+				myOrder.orderMain();
+				out.writeObject(myOrder); out.flush(); //주문 객체 전송
+				System.out.println("주문 완료");
 			}
+			
+		} catch(Exception e) {
+			System.err.println("오류!");
+			e.printStackTrace();
 		}
-		if(result==true) {
-			System.out.println("로그인 성공");
-			return result;
-		}else {
-			System.out.println("로그인 실패");
-			return result;
-		}
-	}
-	public static void ClientMain() {
-		System.out.println("1.내 정보 보기 or 2.내 주문 보기");
-	}
-	public static int ClientInput() {
-		s = new Scanner(System.in);
-		return s.nextInt();
-	}
-	public static Order myOrder() throws ClassNotFoundException, IOException {
-		in = new ObjectInputStream(socket.getInputStream());
-		out = new ObjectOutputStream(socket.getOutputStream());
-		Member my = (Member)in.readObject();
-		Order myOrder = new Order(my);
-		myOrder.orderMain();
-		out.writeObject(myOrder); out.flush();
-		System.out.println("주문 완료");
-		return myOrder;
-	}
-	public static void exit() throws IOException {
-		s.close();
-		in.close();
-		out.close();
-		System.out.println("종료");
-		System.exit(0);
 	}
 }
