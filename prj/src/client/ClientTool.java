@@ -28,27 +28,55 @@ public class ClientTool {
 		out = new ObjectOutputStream(socket.getOutputStream());
 		in = new ObjectInputStream(socket.getInputStream());
 		s = new Scanner(System.in);
+		//in 만들때 ObjectInputStream(BufferedInputStream(socket.getInputStream()));
+		//하면 더이상 진행되지 않음. (왜..?)
 	}
 	
 	public void clientHome() throws IOException, ClassNotFoundException {
-		//in 만들때 ObjectInputStream(BufferedInputStream(socket.getInputStream()));
-		//하면 더이상 진행되지 않음. (왜..?)
 		while(true) {
 			System.out.print("1.회원가입 or 2.로그인 or 3.종료 : ");
-			int menu = s.nextInt();
+			int choice = s.nextInt();
 			s.nextLine();
-			out.writeInt(menu); out.flush();
+			out.writeInt(choice); out.flush();
 			
-			switch(menu) {
+			switch(choice) {
 			case REGISTER: register();
 				continue;
 			case LOGIN: 
-				if(login()) break;
-				else continue;
+				if(login()) {
+					loginHome();
+					break;
+				}else {
+					continue;
+				}
 			case END: end(); break; //종료
-			default: System.out.println("번호 오류"); break;
+			default: System.out.println("번호 오류"); continue;
 			}
+			break;
+			
 		}
+	}
+
+	private void loginHome() throws IOException {
+		System.out.println("1.내정보 or 2.주문하기 or 3.주문내역");
+		int choice = s.nextInt();
+		s.nextLine();
+		switch(choice) {
+		case 1: my.printInfo(); break;
+		case 2: order(); break;
+		case 3: break;
+		default: System.out.println("번호 오류");
+		}
+	}
+
+	private void order() throws IOException {
+		MenuSFM.menuLoad(); //메뉴판 읽기
+		MenuSFM.menuPrintConsole(); //메뉴판 출력
+		//주문하기
+		Order myOrder = new Order(my);
+		myOrder.orderMain();
+		out.writeObject(myOrder); out.flush(); //주문 객체 전송
+		System.out.println("주문 완료");
 	}
 
 	private boolean login() throws IOException, ClassNotFoundException {
@@ -57,17 +85,18 @@ public class ClientTool {
 		System.out.print("PWD : ");
 		out.writeUTF(s.nextLine()); out.flush(); //pwd를 server에 넘김
 		
-		Member my = (Member)in.readObject();
+		my = (Member)in.readObject();
 		
 		if(my!=null) {
 			System.out.println("로그인 성공");
-			MenuSFM.menuLoad(); //메뉴판 읽기
-			MenuSFM.menuPrintConsole(); //메뉴판 출력
-			//주문하기
-			Order myOrder = new Order(my);
-			myOrder.orderMain();
-			out.writeObject(myOrder); out.flush(); //주문 객체 전송
-			System.out.println("주문 완료");
+			loginHome();
+//			MenuSFM.menuLoad(); //메뉴판 읽기
+//			MenuSFM.menuPrintConsole(); //메뉴판 출력
+//			//주문하기
+//			Order myOrder = new Order(my);
+//			myOrder.orderMain();
+//			out.writeObject(myOrder); out.flush(); //주문 객체 전송
+//			System.out.println("주문 완료");
 			return true;
 		}else {
 			System.out.println("로그인 실패");
