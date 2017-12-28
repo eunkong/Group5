@@ -1,7 +1,13 @@
 package master;
 
-import client.Member;
-
+//import client.Member;
+/** 
+ * 메뉴관리 메인
+ * @author Team5
+ * @see MenuBoard
+ * @see ForguiShow  
+ * @see MenuSFM  
+ */
 public class MenuManager {
 	
 	public static void main(String[] args) throws Exception {

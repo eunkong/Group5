@@ -2,21 +2,40 @@ package master;
 
 import java.awt.*;
 import java.util.*;
-
 import javax.swing.*;
-
+/** 
+ * 메뉴목록을 GUI로 출력
+ * JLabel로 그냥 보여주는 용도
+ * @author Team5
+ * 
+ * @version 1.0
+ * @see ForguiShow  
+ * @see MenuSFM  
+ */
 @SuppressWarnings("serial")
 public class MenuBoard extends JFrame{
-
+	/** 
+	 * @see #design
+	 * 
+	 */
 	private JPanel bg = new JPanel(new BorderLayout());
-	
 	private JToolBar tb1=new JToolBar();
 	private JToolBar tb2=new JToolBar();
 	
+	/** 
+	 * 출력되는 글자의 크기를 컨트롤하기 위한 JButton
+	 * @see #design
+	 * @see #event
+	 */
 	private JButton bt1=new JButton("+");//글씨크기 키우기
 	private JButton bt2=new JButton("-");//글씨크기 줄이기
 	
-	private ArrayList<JLabel> jb=new ArrayList<>();//각 라벨을 제어하기 위해서 Arraylist
+	/**
+	 * 그룹별 메뉴가 출력
+	 * 각 라벨을 제어하기 위해서 Arraylist
+	 * @see #design
+	 */
+	private ArrayList<JLabel> jb=new ArrayList<>();
 	
 	private int fontsize=13;//폰트 사이즈. bt1,bt2 버튼으로 글씨를 키우거나 줄일때 사용
 	
@@ -33,7 +52,16 @@ public class MenuBoard extends JFrame{
 		setResizable(true);
 		setVisible(true);
 	}
-
+	/** 
+	 * 출력화면 구성
+	 * @param JPanel bg					back ground에 설치할 JPanel
+	 * @param JToolBar tb1				메뉴 목록을 프린트할 JToolBar	
+	 * @param JToolBar tb2				bt1,bt2를 둘 JToolBar	
+	 * @param JButton bt1,bt2			글씨크기를 조종할 JButton
+	 * @param ArrayList<JLabel> jb		분류별로 bg에 메뉴를 프린트할 JLabel
+	 * @param int fontsize				현재 글자크기를 저장하는 정수
+	 * 
+	 */
 	private void design() {
 //		MenuSFM.menuLoad();
 		setContentPane(bg);//bg를 배경에 설치하라
@@ -60,7 +88,9 @@ public class MenuBoard extends JFrame{
 			tb2.add(bt2);
 			tb2.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 	}
-
+	/**
+	 * @see #fontSizeConntrol
+	 */
 	private void event() {
 //		JFrame에서 기본적으로 제공하는 종료 옵션
 //		setDefaultCloseOperation(EXIT_ON_CLOSE);//x 키 누르면 종료
@@ -76,10 +106,13 @@ public class MenuBoard extends JFrame{
 		});
 		//ActionListener로 이벤트 추가
 	}
-
 	private void menu() {
 		
-	}
+	}//지금은 쓰지않음
+	/**
+	 * 
+	 * @param flag 확대/축소를 분류
+	 */
 	private void fontSizeConntrol(boolean flag) {//true를 넣고 실행하면 글씨크기가 2증가 false를 넣고 실행하면 글씨크기가 2 감소
 		fontsize=fontsize+(flag?2:-2);
 		for (int i = 0; i < jb.size(); i++) {

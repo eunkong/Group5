@@ -6,9 +6,15 @@ import java.util.*;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+/**
+ * @author Team5
+ * @see ForguiShow, MenuBoard
+ * @version 2.2
+ */
+
 @SuppressWarnings("serial")
 public class MenuSFM implements Serializable {// 메뉴관리
-
+	
 	private static final String NOODLE = "면류";
 	private static final String RICE = "밥류";
 	private static final String DRINK = "음료";// 메뉴 분류를 위한 상수 ex) 짜장면, 짬뽕-면류 볶음밥, 잡탕밥-밥류
@@ -17,8 +23,6 @@ public class MenuSFM implements Serializable {// 메뉴관리
 			,"없는 메뉴 입니다","이미 있는 메뉴 입니다."};//경고메세지
 	
 	private static final File MENUFILE = new File("files", "menus.db");
-	
-	
 	
 	private static Map<String, Set<Menu>> menus = new HashMap<>();// 분류별로 메뉴 저장
 
@@ -43,7 +47,14 @@ public class MenuSFM implements Serializable {// 메뉴관리
 
 	}
 
-	public static void addMenu(String group, Menu menu) {// 메뉴추가 , 이름이 같은 메뉴가 있으면 추가 불가능
+	
+	/**
+	 * 메뉴추가 , 이름이 같은 메뉴가 있거나 없은 분류면 추가 불가능
+	 * @param group
+	 * @param menu
+	 * {@code}
+	 */
+	public static void addMenu(String group, Menu menu) {
 
 		if (!getGroupString().contains(group)) { // 존재하는 분류인지 검사
 			System.out.println(WARNING[4]);
@@ -61,7 +72,12 @@ public class MenuSFM implements Serializable {// 메뉴관리
 		JOptionPane.showMessageDialog(null, "추가완료");// 완료 메세지
 	}
 
-	public static void addMenu(String group) {// 음식 분류 추가 ex) 주류혹은 요리류 추가
+	/**
+	 * 분류 추가,이미 있는 분류면 추가 불가능  ex)주류혹은 요리류 추가
+	 * @param String , Menu
+	 */
+	
+	public static void addMenu(String group) {
 
 		if (getGroupString().contains(group)) {
 			System.out.println(MenuSFM.WARNING[1]);
@@ -72,7 +88,13 @@ public class MenuSFM implements Serializable {// 메뉴관리
 		System.out.println("추가완료");
 		JOptionPane.showMessageDialog(null, "추가완료");// 완료 메세지
 	}
-
+	
+	/**
+	 * 메뉴 삭제,이미 있는 분류면 추가 불가능  ex)면류에 짜장면 삭제
+	 * @param group
+	 * @param name
+	 */
+	
 	public static void removeMenu(String group, String name) { // 메뉴삭제 ex) 면류에 짜장면 삭제
 
 		if (!getGroupString().contains(group)) {

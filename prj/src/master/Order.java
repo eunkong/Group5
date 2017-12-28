@@ -11,6 +11,7 @@ public class Order implements Serializable {
 	static Scanner sc = new Scanner(System.in);
 	public Calendar cal = Calendar.getInstance();;
 	private int priceSum;
+	private String ordertime;
 	private Map<Menu, Integer> orderIdx = new HashMap<>();
 	
 	int idxnum;
@@ -259,5 +260,13 @@ public class Order implements Serializable {
 		return member;
 	}
 
+	public String getOrdertime() {
+		return ordertime;
+	}
+
+	public void setOrdertime(String ordertime) {
+		this.ordertime = ordertime;
+	}
+	
 
 }

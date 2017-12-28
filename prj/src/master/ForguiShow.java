@@ -2,19 +2,46 @@ package master;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import javax.swing.*;
 
+import javax.swing.*;
+/** 
+ * 메뉴관리 GUI
+ * 
+ * @version 1.1
+ * @see MenuSFM
+ * @see MenuBoard
+ * @see MenuManager
+ */
 @SuppressWarnings("serial")
 public class ForguiShow extends JFrame {
-
+	/**
+	 * @see #ForguiShow()
+	 * 
+	 * @param bg		기본적인 'BackGround'
+	 * @param tb		bg에 설치할 JToolBar
+	 *  
+	 */
 	private JPanel bg = new JPanel(new BorderLayout());
 	private JToolBar tb = new JToolBar();
-	private JLabel lb = new JLabel();
 
+	/**
+	 * 
+	 * 사용할 버튼들의 이름&버튼 Array
+	 * @see #event
+	 */
 	private static final String[] USING = { "메뉴보기", "메뉴추가", "메뉴삭제", "분류추가", "분류삭제", "메뉴리셋", "종료" };// 버튼 이름을 Array로 정리
 
 	private JButton[] bts = new JButton[USING.length];// button을 모아놓은 Array USING과 당연히 length가 같음
 
+	
+	/**
+	 * constructor
+	 * 크기 조절 불가
+	 * 
+	 * @see #mains()
+	 * @see	#event()
+	 * @see #menu()
+	 */
 	public ForguiShow() {// 강사님의 기본 틀대로 만든 JFrame 상속 클래스
 
 		mains();
@@ -30,21 +57,32 @@ public class ForguiShow extends JFrame {
 		setVisible(true);
 	}
 
+	/** 
+	 * design에 해당
+	 */
 	private void mains() {
 
-		lb.setHorizontalAlignment(SwingConstants.CENTER);
 		setContentPane(bg);// bg를 배경에 설치하라
 
 		bg.add(tb, BorderLayout.CENTER);// JToolBar를 중앙에 설치
 
 		tb.setLayout(new GridLayout(USING.length, 1));
+		
 		for (int i = 0; i < USING.length; i++) {
 			bts[i] = new JButton(USING[i]);
 			tb.add(bts[i]);// for문으로버튼 추가
 		}
 		// this가 아니라 bg에 작업을 수행할 수 있다
-
 	}
+	/** 
+	 * @see #USING
+	 * @see #bts
+	 *  * <pre>{@code
+	 *  ActionListener act = e -> {action(action(e.getActionCommand());)
+	 *  if (종료)@code
+	 *  }@code
+     *      }</pre>
+	 */
 
 	private void event() {
 		// JFrame에서 기본적으로 제공하는 종료 옵션
@@ -55,7 +93,7 @@ public class ForguiShow extends JFrame {
 
 		ActionListener act = e -> {
 			action(e.getActionCommand());
-			if (e.getActionCommand().equals("종료")) {
+			if (e.getActionCommand().equals(USING[USING.length-1])) {
 
 				switch (JOptionPane.showConfirmDialog(null, "저장하시겠습니까?")) // JOption으로 예 아니오 취소 여부를 물음
 				{
@@ -76,11 +114,21 @@ public class ForguiShow extends JFrame {
 		}
 
 	}
-
+	/*
+	 *지금은 안씀
+	 */
 	private void menu() {
 
 	}
-
+	/**
+	 *@see #event()
+	 *@param key
+	 *<pre>{@code
+	 *	switch(key){
+	 *		case ???:  ???Edit(boolean) break;...
+	 *	}
+	 *}</pre>
+	 */
 	private void action(String key) {// event를 위한 메소드 (이전버전에선 메인 클래스에 있었음)
 
 		System.out.println("======" + key + "======\n");
@@ -131,7 +179,15 @@ public class ForguiShow extends JFrame {
 			break;
 		}
 	}
-
+	/**
+	 * @param flag
+	 * 
+	 * {
+	 * @param group
+	 * @param name
+	 * flag? add:remove-menu
+	 * }
+	 */
 	private static void menuEdit(boolean flag) {// 메뉴 추가/삭제용  sysout은 오직 콘솔확인용
 		String group;//메뉴 분류
 		String name;//메뉴 이름
@@ -195,8 +251,11 @@ public class ForguiShow extends JFrame {
 		}
 
 	}
-
-	private static void groupEdit(boolean flag) {// 그룹 추가/삭제용
+	/**
+	 * @param flag-boolean
+	 * flag? add:remove-group
+	 */
+	private static void groupEdit(boolean flag) {// 분류 추가/삭제용
 		String group;
 		System.out.print("분류명:");
 		group = JOptionPane.showInputDialog("메뉴 분류");
