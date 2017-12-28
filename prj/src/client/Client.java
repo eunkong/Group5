@@ -74,11 +74,9 @@ public class Client {
 			}
 			
 		}
-		s.close();
+		s.close();	
 		in.close();
 		out.close();
 		System.out.println("종료");
-		
-		//정보받기
 	}
 }
