@@ -1,5 +1,3 @@
-//Map<id, Member>으로 변환
-
 package server;
 
 import java.io.BufferedInputStream;
@@ -12,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import client.Member;
 
@@ -28,19 +27,19 @@ public class MemberManager {
 		Map<String, Member> map = loadDatabase();
 		Iterator<String> iterator = map.keySet().iterator();
 		while(iterator.hasNext()) {
-			if(id.equals(iterator.next())) {
+			if(id.equals(iterator.next())&&password.equals(map.get(id).getPwd())) {
 				//파일에서 해당 member리스트 가져오기
+				System.out.println("로그인 성공 : 객체전송완료");
 				return loadDatabase().get(id);
 			}
 		}
+		System.out.println("로그인 체크 : null전송");
 		return null;
 	}
 
 	/**
-	 * 
-	 * 
-	 * 
-	 * @return
+	 * memberlist.db에서 멤버정보 불러오는 메소드
+	 * @return Map<id, Member>
 	 */
 	private static Map<String, Member> loadDatabase() {
 		try(
@@ -58,7 +57,14 @@ public class MemberManager {
 			return new HashMap<>();
 		}
 	}
-
+	/**
+	 * 회원가입 메소드
+	 * @param id
+	 * @param password
+	 * @param phone
+	 * @param address
+	 * @return 회원가입 성공여부
+	 */
 	public static boolean register(String id, String password, String phone, String address) {
 		Map<String, Member> map = loadDatabase();
 		
@@ -73,6 +79,10 @@ public class MemberManager {
 		return true;
 	}
 
+	/**
+	 * memberlist.db에 파일 쓰는 메소드
+	 * @param map<id,Member>
+	 */
 	private static void saveDatabase(Map<String, Member> map) {
 		try(
 				ObjectOutputStream out = new ObjectOutputStream(
@@ -86,8 +96,6 @@ public class MemberManager {
 		}
 	}
 }
-
-
 
 
 

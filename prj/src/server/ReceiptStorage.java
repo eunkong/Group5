@@ -10,14 +10,58 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
-import client.Member;
 import master.Menu;
 import master.Order;
 
 //영수증 파일 관리 클래스
 public class ReceiptStorage {
 		public static final File db = new File("files", "receiptlist.db");
+
+
+	/**
+	 * 전체 영수증 파일 불러오는 메소드		
+	 * @return Map<String, Order> 영수증 전체
+	 */
+		public static Map<Long, Order> loadDatabase() {
+			try(
+				ObjectInputStream in = new ObjectInputStream(
+															new BufferedInputStream(
+																new FileInputStream(db)));
+			){
+				@SuppressWarnings("unchecked")
+				Map<Long, Order> map = (Map<Long, Order>) in.readObject();
+				return map;
+			}
+			catch(Exception e) {
+				System.out.println("최초주문");
+				return new HashMap<>();
+			}
+		}
+		
+	/**
+	 * 주문번호, 주문정보를 파일에 입력하는 메소드
+	 * 추가적으로 입력정보 콘솔 출력
+	 * @param orderNum
+	 * @param order
+	 */
+		public static void saveDatabase(Long orderNum, Order order) {
+			try(
+					ObjectOutputStream out = new ObjectOutputStream(
+																new BufferedOutputStream(
+																	new FileOutputStream(db)));
+			){
+				Map<Long, Order> map = new HashMap<>();
+				map.put(orderNum, order);
+				printReceipt(orderNum, order);
+				out.writeObject(map);
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		
 	/**
 	 * 주문번호와 주문정보를 받아 콘솔에 영수증 출력하는 메소드
@@ -25,7 +69,7 @@ public class ReceiptStorage {
 	 * @param order 주문정보
 	 * private 선언 : 내부 사용
 	 */
-	private static void printReceipt(String orderNum, Order order) {
+	private static void printReceipt(Long orderNum, Order order) {
 			System.out.println("\t=== 짜 장 전 설   영 수 증 ===");
 			System.out.println("\t주문번호 : "+ orderNum);
 			System.out.println("\t고객 아이디 : "+ order.getMember().getId());
@@ -43,72 +87,72 @@ public class ReceiptStorage {
 			System.out.println("\t총 가격 :\t\t"+order.getPriceSum()+"원");
 	}
 
-	
-	/**
-	 * 개인의 주문기록 불러오는 메소드
-	 * @param map
-	 * @return
-	 */
-//	public static Map<String, Order> getPerReceipt(Member member){
-//		 Map<String, Order> allreceipt = loadDatabase();
-//		for (Iterator<String> iterator = allreceipt.keySet().iterator(); iterator.hasNext();) {
-//			while(iterator.hasNext()) {
-//				String orderNum = iterator.next();
-//				Order order = allreceipt.get(orderNum);
-//				Map<String, Order> map = new HashMap<>();
-//				if(member.getId().equals(order.getMember().getId()))	//매개변수로 넘겨온 member와 영수증에 있는 id가 일치하면 가져와라	
-//					map.put(orderNum, arg1);		//이것의 주문번호, 주문정보 넘긴다.
-//			}
-//		}		 
-//	}
-
-	/**
-	 * 전체 영수증 파일 불러오는 메소드		
-	 * @return Map<String, Order> 영수증 전체
-	 */
-		public static Map<String, Order> loadDatabase() {
-			try(
-				ObjectInputStream in = new ObjectInputStream(
-															new BufferedInputStream(
-																new FileInputStream(db)));
-			){
-				@SuppressWarnings("unchecked")
-				Map<String, Order> map = (Map<String, Order>) in.readObject();
-				System.out.println("불러온거 비어있는지? : "+map.isEmpty());	//test
-				return map;
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				return new HashMap<>();
-			}
-		}
-
 		
-	/**
-	 * 주문번호, 주문정보를 파일에 입력하는 메소드
-	 * 추가적으로 입력정보 콘솔 출력
-	 * @param orderNum
-	 * @param order
-	 */
-		public static void saveDatabase(String orderNum, Order order) {
-			try(
-					ObjectOutputStream out = new ObjectOutputStream(
-																new BufferedOutputStream(
-																	new FileOutputStream(db)));
-			){
-				Map<String, Order> map = new HashMap<>();
-				map.put(orderNum, order);
-				printReceipt(orderNum, order);
-				out.writeObject(map);
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-			}
+		/**
+		 * 개인의 주문기록 불러오는 메소드
+		 * @param id
+		 * @return Map<주문번호, Order>
+		 * 매개변수로 받은 id와 일치하는 영수증 추출
+		 */
+		public static Map<Long, Order> getPerReceipt(String id){
+			 Map<Long, Order> allreceipt = loadDatabase();
+			 Set<Long> set = allreceipt.keySet();
+			 Iterator<Long> iterator = set.iterator();
+			 Map<Long, Order> map = new HashMap<>();
+			 while(iterator.hasNext()) {
+				 Long orderNum = iterator.next();
+				 Order order = allreceipt.get(orderNum);
+				 if(id.equals(order.getMember().getId()))	
+						map.put(orderNum, order);		
+			 }
+			 return map;
 		}
-
 		
-		//맵을 받아 그 내용 영수를 출력하는 메소드도 필요하다.
-		//날짜별 영수증 가져오는 메소드, 주문번호의 앞번호가 해당날짜로 시작하는 정보들 불러오기
-		//기간별 영수증 가져오는 메소드, 오버라이딩으로 매개변수 두개일 때로 정의
+
+		/**
+		 * 입력받은 날짜 영수증 가져오는 메소드
+		 * @param date(String)
+		 * @return Map<주문번호, Order>
+		 */
+		public static Map<Long, Order> getPeriodReceipt(String date){
+			 Map<Long, Order> allreceipt = loadDatabase();
+			 Set<Long> set = allreceipt.keySet();
+			 Iterator<Long> iterator = set.iterator();
+			 Map<Long, Order> map = new HashMap<>();
+			 while(iterator.hasNext()) {
+				 Long orderNum = iterator.next();
+				 Order order = allreceipt.get(orderNum);
+				 String orderDate = orderNum.toString().substring(0, 6);
+				 if(date.equals(orderDate))	
+						map.put(orderNum, order);		
+			 }
+			 return map;
+		}
+		
+		/**
+		 * 입력받은 기간 영수증 가져오는 메소드
+		 * @param start, end
+		 * @return Map<주문번호, Order>
+		 */
+		public static Map<Long, Order> getPeriodReceipt(String start, String end){
+			 Map<Long, Order> allreceipt = loadDatabase();
+			 Set<Long> set = allreceipt.keySet();
+			 Iterator<Long> iterator = set.iterator();
+			 Map<Long, Order> map = new HashMap<>();
+			 while(iterator.hasNext()) {
+				 Long orderNum = iterator.next();
+				 Order order = allreceipt.get(orderNum);
+				 String orderDate = orderNum.toString().substring(0, 6);
+				 Long orderDateLong = Long.parseLong(orderDate);
+				 Long startLong = Long.parseLong(start);
+				 Long endLong = Long.parseLong(end);
+				 if(orderDateLong<=endLong&&orderDateLong>=startLong)	
+						map.put(orderNum, order);		
+			 }
+			 return map;
+		}
+		
+		
+		
 
 }
