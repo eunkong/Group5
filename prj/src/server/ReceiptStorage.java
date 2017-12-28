@@ -2,6 +2,7 @@ package server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,12 +31,15 @@ public class ReceiptStorage {
 															new BufferedInputStream(
 																new FileInputStream(db)));
 			){
-				@SuppressWarnings("unchecked")
 				Map<Long, Order> map = (Map<Long, Order>) in.readObject();
 				return map;
 			}
-			catch(Exception e) {
-				System.out.println("최초주문");
+			catch(EOFException e) {
+				e.printStackTrace();
+				System.out.println("LoadDatabase 예외처리");
+				return new HashMap<>();
+			}catch(Exception e) {
+				e.printStackTrace();
 				return new HashMap<>();
 			}
 		}
@@ -47,24 +51,30 @@ public class ReceiptStorage {
 	 * @param order
 	 */
 		public static void saveDatabase(Long orderNum, Order order) {
-			System.out.println("saveDatabase접근"); //test
+//				System.out.println("saveDatabase접근"); //test
+			Map<Long, Order> map = loadDatabase();	//파일에 저장된 map불러오기
 			try(
-					
 					ObjectOutputStream out = new ObjectOutputStream(
 																new BufferedOutputStream(
 																	new FileOutputStream(db)));
 
 			){
 					System.out.println("saveDatabase 이후 접근"); //test
-					Map<Long, Order> map = loadDatabase();	//파일에 저장된 map불러오기
+					
+					Iterator<Long> test = map.keySet().iterator();
+					while(test.hasNext()) {
+						Long num = test.next();
+						System.out.println("Load map내부 확인 : "+num);
+					}	//test 불러오는게 안된다.
+					
 					System.out.println("saveDatabase 이후1"); //test
 					map.put(orderNum, order);
 					printReceipt(orderNum, order);
 					System.out.println("saveDatabase 이후 2"); //test
-					out.writeObject(map);
+					out.writeObject(map);	//영수 다시써야함.
 			}
 			catch(Exception e) {
-				System.out.println("saveDatabase예외처리");
+				System.out.println("saveDatabase예외처리");	//test
 				e.printStackTrace();
 			}
 		}
@@ -77,13 +87,14 @@ public class ReceiptStorage {
 	 * private 선언 : 내부 사용
 	 */
 	public static void printReceipt(Long orderNum, Order order) {
+			System.out.println();
 			System.out.println("\t======= 짜 장 전 설   영 수 증 =======");
 			System.out.println("\t주문번호 : "+ orderNum);
 			System.out.println("\t주문시간 : "+ order.getOrdertime());
 			System.out.println("\t고객 아이디 : "+ order.getMember().getId());
 			System.out.println("\t고객 주소 : "+ order.getMember().getAddress());
 			System.out.println("\t고객 연락처 : "+order.getMember().getPhoneNumber());
-			System.out.println("\t=============================");
+			System.out.println("\t==============================");
 			System.out.println("\t[주문메뉴]");
 			//주문메뉴 출력
 			Map<Menu, Integer> orderMap = order.getOrderIdx();
@@ -91,9 +102,10 @@ public class ReceiptStorage {
 				Menu menu= iterator.next();
 				System.out.println("\t"+menu.getName()+"\t"+orderMap.get(menu)+"개\t\t"+menu.getPrice()*orderMap.get(menu)+"원");
 			}
-			System.out.println("\t=============================");
+			System.out.println("\t==============================");
 			System.out.println("\t총 가격 :\t\t\t"+order.getPriceSum()+"원");
-			System.out.println("\t=============================");
+			System.out.println("\t==============================");
+			System.out.println();
 	}
 
 		
