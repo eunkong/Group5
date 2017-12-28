@@ -1,5 +1,6 @@
 package client;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -51,22 +52,27 @@ public class Client {
 					continue;
 				}
 			}
-			Member my = (Member)in.readObject();
 			
-			if(my==null) { //로그인 성공시에 서버에서 Member 객체 넘겨줌
-				System.out.println("로그인 실패");
+			try {
+				Member my = (Member)in.readObject();
+				if(my!=null) {
+					System.out.println("로그인 성공");
+					MenuSFM.menuLoad(); //메뉴판 읽기
+					MenuSFM.menuPrintConsole(); //메뉴판 출력
+					//주문하기
+					Order myOrder = new Order(my);
+					myOrder.orderMain();
+					out.writeObject(myOrder); out.flush(); //주문 객체 전송
+					System.out.println("주문 완료");
+				}else {
+					System.out.println("로그인 실패");
+					continue;
+				}
+			} catch (Exception e) {
+				System.err.println("오류");
 				continue;
-			} else {
-				System.out.println("로그인 성공");
-				MenuSFM.menuLoad(); //메뉴판 읽기
-				MenuSFM.menuPrintConsole(); //메뉴판 출력
 			}
 			
-			//주문하기
-			Order myOrder = new Order(my);
-			myOrder.orderMain();
-			out.writeObject(myOrder); out.flush(); //주문 객체 전송
-			System.out.println("주문 완료");
 		}
 		s.close();
 		in.close();
