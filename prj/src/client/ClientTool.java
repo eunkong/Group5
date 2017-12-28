@@ -58,14 +58,16 @@ public class ClientTool {
 	}
 
 	private void loginHome() throws IOException {
-		System.out.println("1.내정보 or 2.주문하기 or 3.주문내역");
-		int choice = s.nextInt();
-		s.nextLine();
-		switch(choice) {
-		case 1: my.printInfo(); break;
-		case 2: order(); break;
-		case 3: break;
-		default: System.out.println("번호 오류");
+		while(true) {
+			System.out.println("1.내정보 or 2.주문하기 or 3.주문내역");
+			int choice = s.nextInt();
+			s.nextLine();
+			switch(choice) {
+			case 1: my.printInfo(); break;
+			case 2: order(); continue;
+			case 3: break;
+			default: System.out.println("번호 오류");
+			}
 		}
 	}
 
