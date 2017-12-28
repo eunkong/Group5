@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import client.Member;
@@ -13,6 +14,8 @@ import master.Order;
 //다중IP연결 쓰레드 생성 클래스
 
 public class Connection extends Thread{
+	private static Calendar cal;
+	private static String time;
 	public static final int REGISTER = 1;
 	public static final int LOGIN = 2;
 	
@@ -105,6 +108,10 @@ public class Connection extends Thread{
 					
 					//주문정보 받음.
 					Order order = (Order) in.readObject();
+					cal = Calendar.getInstance();
+					time = (cal.get(Calendar.YEAR)-2000)+"년 "+(1+cal.get(Calendar.MONTH))+"월 "+cal.get(Calendar.DAY_OF_MONTH)+"일  "+cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND);
+					System.out.println(time);	//test
+					order.setOrdertime(time);
 					ReceiptStorage.saveDatabase(OrderNumber.getOrderNumber(), order);
 				}
 			}

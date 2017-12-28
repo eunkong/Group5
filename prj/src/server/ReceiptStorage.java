@@ -47,17 +47,24 @@ public class ReceiptStorage {
 	 * @param order
 	 */
 		public static void saveDatabase(Long orderNum, Order order) {
+			System.out.println("saveDatabase접근"); //test
 			try(
+					
 					ObjectOutputStream out = new ObjectOutputStream(
 																new BufferedOutputStream(
 																	new FileOutputStream(db)));
+
 			){
-				Map<Long, Order> map = new HashMap<>();
-				map.put(orderNum, order);
-				printReceipt(orderNum, order);
-				out.writeObject(map);
+					System.out.println("saveDatabase 이후 접근"); //test
+					Map<Long, Order> map = loadDatabase();	//파일에 저장된 map불러오기
+					System.out.println("saveDatabase 이후1"); //test
+					map.put(orderNum, order);
+					printReceipt(orderNum, order);
+					System.out.println("saveDatabase 이후 2"); //test
+					out.writeObject(map);
 			}
 			catch(Exception e) {
+				System.out.println("saveDatabase예외처리");
 				e.printStackTrace();
 			}
 		}
@@ -69,22 +76,24 @@ public class ReceiptStorage {
 	 * @param order 주문정보
 	 * private 선언 : 내부 사용
 	 */
-	private static void printReceipt(Long orderNum, Order order) {
-			System.out.println("\t=== 짜 장 전 설   영 수 증 ===");
+	public static void printReceipt(Long orderNum, Order order) {
+			System.out.println("\t======= 짜 장 전 설   영 수 증 =======");
 			System.out.println("\t주문번호 : "+ orderNum);
+			System.out.println("\t주문시간 : "+ order.getOrdertime());
 			System.out.println("\t고객 아이디 : "+ order.getMember().getId());
 			System.out.println("\t고객 주소 : "+ order.getMember().getAddress());
 			System.out.println("\t고객 연락처 : "+order.getMember().getPhoneNumber());
-			System.out.println("\t=====================");
+			System.out.println("\t=============================");
 			System.out.println("\t[주문메뉴]");
 			//주문메뉴 출력
 			Map<Menu, Integer> orderMap = order.getOrderIdx();
 			for (Iterator<Menu> iterator = orderMap.keySet().iterator(); iterator.hasNext();) {
 				Menu menu= iterator.next();
-				System.out.println("\t"+menu.getName()+"\t"+orderMap.get(menu)+"개\t"+menu.getPrice()*orderMap.get(menu)+"원");
+				System.out.println("\t"+menu.getName()+"\t"+orderMap.get(menu)+"개\t\t"+menu.getPrice()*orderMap.get(menu)+"원");
 			}
-			System.out.println("\t=====================");
-			System.out.println("\t총 가격 :\t\t"+order.getPriceSum()+"원");
+			System.out.println("\t=============================");
+			System.out.println("\t총 가격 :\t\t\t"+order.getPriceSum()+"원");
+			System.out.println("\t=============================");
 	}
 
 		
