@@ -13,7 +13,6 @@ public class Order implements Serializable {
 	private int priceSum;
 	private Map<Menu, Integer> orderIdx = new HashMap<>();
 	
-	private String ordernum=(cal.get(Calendar.YEAR)-2000)+""+(1+cal.get(Calendar.MONTH))+""+cal.get(Calendar.DAY_OF_MONTH);
 	int idxnum;
 
 	Member member;
@@ -261,12 +260,4 @@ public class Order implements Serializable {
 	}
 
 
-	public void addOrdernum(int num) {
-		ordernum+=num+"";
-	}
-	
-	public void addOrdernum(String str) {
-		ordernum+=str;
-	}
-	
 }
