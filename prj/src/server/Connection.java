@@ -108,18 +108,22 @@ public class Connection extends Thread{
 				
 				//주문서받고 주문정보 저장
 				while(true) {
-					try {
-						boolean orderCheck = in.readBoolean();	//고객에게 주문신청 여부 전달 받음, 재주문
-					}catch(NullPointerException e) {
-						break;									//null입력되면  재주문 미실시
-					}
-					//주문정보 받음.
-					Order order = (Order) in.readObject();
-					cal = Calendar.getInstance();
-					time = (cal.get(Calendar.YEAR)-2000)+"년 "+(1+cal.get(Calendar.MONTH))+"월 "+cal.get(Calendar.DAY_OF_MONTH)+"일  "+cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND);
-					order.setOrdertime(time);
-					ReceiptManager.saveDatabase(OrderNumber.getOrderNumber(), order);
-					
+						int memberSelect = in.readInt();	//고객에게 2.주문하기, 3.주문내역, 4. 로그아웃 전달 (1.은 대기)
+						System.out.println("member선택 : "+memberSelect);
+						if(memberSelect==2) {	//2.주문하기 선택시
+							//주문정보 받음.
+							Order order = (Order) in.readObject();
+							cal = Calendar.getInstance();
+							time = (cal.get(Calendar.YEAR)-2000)+"년 "+(1+cal.get(Calendar.MONTH))+"월 "+cal.get(Calendar.DAY_OF_MONTH)+"일  "+cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND);
+							order.setOrdertime(time);
+							ReceiptManager.saveDatabase(OrderNumber.getOrderNumber(), order);
+						}	
+							
+						if(memberSelect==3)
+							break;
+							
+						if(memberSelect==4)
+							break;
 				}
 			}
 		}catch(Exception e) {
