@@ -90,13 +90,12 @@ public class Connection extends Thread{
 					boolean result = MemberManager.register(id, pw, phone, address);
 					out.writeBoolean(result); out.flush();
 					continue;		//회원가입하면 
+				}	
 			
 				//로그인
-				}else if(select == LOGIN) {
-					Member member=null;
-					String id = in.readUTF();
-					String pw = in.readUTF();
-					member = MemberManager.login(id, pw);
+					String id_login = in.readUTF();
+					String pw_login = in.readUTF();
+					Member member = MemberManager.login(id_login, pw_login);
 					if(member==null) {
 						out.writeObject(null); out.flush();
 						continue;} 	//로그인 성공시 고객정보 객체 전송
@@ -104,29 +103,32 @@ public class Connection extends Thread{
 						out.writeObject(member); out.flush(); 	//로그인 성공시 고객정보 객체 전송
 					}
 					
-				}
 				
 				//주문서받고 주문정보 저장
-				while(true) {
-						int memberSelect = in.readInt();	//고객에게 2.주문하기, 3.주문내역, 4. 로그아웃 전달 (1.은 대기)
-						System.out.println("member선택 : "+memberSelect);
-						if(memberSelect==2) {	//2.주문하기 선택시
-							//주문정보 받음.
-							Order order = (Order) in.readObject();
-							cal = Calendar.getInstance();
-							time = (cal.get(Calendar.YEAR)-2000)+"년 "+(1+cal.get(Calendar.MONTH))+"월 "+cal.get(Calendar.DAY_OF_MONTH)+"일  "+cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND);
-							order.setOrdertime(time);
-							ReceiptManager.saveDatabase(OrderNumber.getOrderNumber(), order);
-						}	
-							
-						if(memberSelect==3)
-							break;
-							
-						if(memberSelect==4)
-							break;
-				}
+					while(true) {
+							int memberSelect = in.readInt();	//고객에게 2.주문하기, 3.주문내역, 4. 로그아웃 전달 (1.은 대기)
+							System.out.println("member선택 : "+memberSelect);
+							if(memberSelect==2) {	//2.주문하기 선택시
+								//주문정보 받음.
+								Order order = (Order) in.readObject();
+								cal = Calendar.getInstance();
+								time = (cal.get(Calendar.YEAR)-2000)+"년 "+(1+cal.get(Calendar.MONTH))+"월 "+cal.get(Calendar.DAY_OF_MONTH)+"일  "+cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND);
+								order.setOrdertime(time);
+								ReceiptManager.saveDatabase(OrderNumber.getOrderNumber(), order);
+							}	
+							if(memberSelect==3) {
+								out.writeObject(ReceiptManager.getPerReceipt(id_login));//회원의 주문내역
+								out.flush();
+								System.out.println("test : 주문내역 넘겼다.");	//test
+							}
+							if(memberSelect==4)
+								break;
+					}
+					
+					
 			}
 		}catch(Exception e) {
+			//고객이 종료 선택시 socket접속 끊기기에 예외발생
 			kill();
 		}
 	}
