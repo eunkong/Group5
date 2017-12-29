@@ -26,6 +26,9 @@ public class Deliveryman {
 				s.nextLine();
 				
 				Map<Long, Order> orderlist = (Map<Long, Order>)in.readObject();
+				if(orderlist==null) {
+					System.out.println("배달할 목록이 없습니다"); break;
+				}
 				System.out.println("고객정보");
 				Iterator<Long> iterator = orderlist.keySet().iterator();
 				while(iterator.hasNext()) {
