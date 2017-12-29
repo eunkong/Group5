@@ -13,6 +13,7 @@ public class Order implements Serializable {
 	private int priceSum;
 	private String ordertime;
 	private Map<Menu, Integer> orderIdx = new HashMap<>();
+	private int orderState=1;
 	
 	int idxnum;
 
@@ -267,6 +268,14 @@ public class Order implements Serializable {
 	public void setOrdertime(String ordertime) {
 		this.ordertime = ordertime;
 	}
-	
 
+	public int getOrderState() {
+		return orderState;
+	}
+
+	public void setOrderState(int orderState) {
+		this.orderState = orderState;
+	}
+	
+	
 }
