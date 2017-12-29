@@ -20,11 +20,10 @@ import master.Order;
 public class ReceiptManager {
 		public static final File db = new File("files", "receiptlist.db");
 
-
-	/**
-	 * 전체 영수증 파일 불러오는 메소드		
-	 * @return Map<String, Order> 영수증 전체
-	 */
+		/**
+		 * 전체 영수증 파일 불러오는 메소드		
+		 * @return Map<String, Order> 영수증 전체
+		 */
 		public static Map<Long, Order> loadDatabase() {
 			try(
 				ObjectInputStream in = new ObjectInputStream(
@@ -43,12 +42,12 @@ public class ReceiptManager {
 			}
 		}
 		
-	/**
-	 * 주문번호, 주문정보를 파일에 입력하는 메소드
-	 * 추가적으로 입력정보 콘솔 출력
-	 * @param orderNum
-	 * @param order
-	 */
+		/**
+		 * 주문번호, 주문정보를 파일에 입력하는 메소드
+		 * 추가적으로 입력정보 콘솔 출력
+		 * @param orderNum
+		 * @param order
+		 */
 		public static void saveDatabase(Long orderNum, Order order) {
 			Map<Long, Order> map = loadDatabase();	//파일에 저장된 map불러오기
 			try(
@@ -71,6 +70,8 @@ public class ReceiptManager {
 				e.printStackTrace();
 			}
 		}
+		
+		
 		/**
 		 * 주문번호와 주문정보를 받아 콘솔에 영수증 출력하는 메소드
 		 * @param Map<주문번호, Order>

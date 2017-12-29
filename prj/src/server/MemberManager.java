@@ -29,11 +29,9 @@ public class MemberManager {
 		while(iterator.hasNext()) {
 			if(id.equals(iterator.next())&&password.equals(map.get(id).getPwd())) {
 				//파일에서 해당 member리스트 가져오기
-				System.out.println("로그인 성공 : 객체전송완료");
 				return loadDatabase().get(id);
 			}
 		}
-		System.out.println("로그인 체크 : null전송");
 		return null;
 	}
 
@@ -49,7 +47,6 @@ public class MemberManager {
 		){
 			@SuppressWarnings("unchecked")
 			Map<String, Member> map = (Map<String, Member>) in.readObject();
-			System.out.println(map.get("master"));
 			return map;
 		}
 		catch(Exception e) {

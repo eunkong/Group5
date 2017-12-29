@@ -37,14 +37,16 @@ public class Connection extends Thread{
 		list.remove(c);
 	}
 	
+	
 	private Socket socket;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
-	
 	private boolean flag = true;
+	
 	
 	/**
 	 * 통로 폐쇄 메소드
+	 * try-catch로 예외발생시 폐쇄
 	 */
 	public void kill() {
 		try {
@@ -79,6 +81,7 @@ public class Connection extends Thread{
 				int select = in.readInt();
 				System.out.println("선택 = "+ select);
 				
+				//회원가입
 				if(select == REGISTER) {
 					String id = in.readUTF();
 					String pw = in.readUTF();
@@ -86,6 +89,7 @@ public class Connection extends Thread{
 					String address = in.readUTF();
 					boolean result = MemberManager.register(id, pw, phone, address);
 					out.writeBoolean(result); out.flush();
+					continue;		//회원가입하면 
 			
 				//로그인
 				}else if(select == LOGIN) {
@@ -100,12 +104,22 @@ public class Connection extends Thread{
 						out.writeObject(member); out.flush(); 	//로그인 성공시 고객정보 객체 전송
 					}
 					
+				}
+				
+				//주문서받고 주문정보 저장
+				while(true) {
+					try {
+						boolean orderCheck = in.readBoolean();	//고객에게 주문신청 여부 전달 받음, 재주문
+					}catch(NullPointerException e) {
+						break;									//null입력되면  재주문 미실시
+					}
 					//주문정보 받음.
 					Order order = (Order) in.readObject();
 					cal = Calendar.getInstance();
 					time = (cal.get(Calendar.YEAR)-2000)+"년 "+(1+cal.get(Calendar.MONTH))+"월 "+cal.get(Calendar.DAY_OF_MONTH)+"일  "+cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND);
 					order.setOrdertime(time);
 					ReceiptManager.saveDatabase(OrderNumber.getOrderNumber(), order);
+					
 				}
 			}
 		}catch(Exception e) {
