@@ -16,7 +16,7 @@ public class MenuManager {
 				"com.jtattoo.plaf.aluminium.AluminiumLookAndFeel","com.jtattoo.plaf.bernstein.BernsteinLookAndFeel",//2
 				"com.jtattoo.plaf.graphite.GraphiteLookAndFeel","com.jtattoo.plaf.hifi.HiFiLookAndFeel","com.jtattoo.plaf.mint.MintLookAndFeel",//3
 				"com.jtattoo.plaf.luna.LunaLookAndFeel","com.jtattoo.plaf.mcwin.McWinLookAndFeel"//2
-		};//look&feel 테마 이름 
+		};//look&feel 테마 이름 ㄹ
 		MenuSFM.menuLoad();//files에서 menu목록 가져와서 MenuSFM에 재저장(내용을 읽어옴)
 		new ForguiShow();//GUI로 메뉴 관리시작
 
