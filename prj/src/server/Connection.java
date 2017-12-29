@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +83,35 @@ public class Connection extends Thread{
 	}
 	
 	/**
+	 * 배달맨에게 주문 할당하는 메소드
+	 * @throws IOException
+	 * 요리완료된 주문을 하나씩 할당한다.
+	 */
+	public void delivery() throws IOException {
+		System.out.println("배달인  배달 가능합니다.");
+		Map<Long, Order> map = ReceiptManager.loadDatabase();
+		Iterator<Long> iterator = map.keySet().iterator();
+		
+		while(iterator.hasNext()) {
+			Long num = iterator.next();
+			Order order = map.get(num);
+			if(order.getOrderState()==COOKINGCOMPLETE) {	//요리 완료된거를 배달갈꺼다
+				//가게가 배달을 넘긴다.
+				System.out.println("배달 고객 정보 넘김");	//test
+				Map<Long, Order> map1 = new HashMap();
+				map1.put(num, order);
+				out.writeObject(map1);	//재구성한 맵을 넘긴다.
+				out.flush();
+				order.setOrderState(DELIVERING);	//배달중으로 바꾼다.
+				System.out.println(order.getOrderState()+"배달 중이다.");	//test
+				ReceiptManager.saveDatabase(num, order);
+				return;	//하나하면 빠져나간다.
+			}
+		}
+		out.writeObject(null);	//요리완료인 주문이 없으면 null을 전송한다.
+	}
+	
+	/**
 	 * 상속받은 Thread클래스의 run()메소드 재정의
 	 * 
 	 */
@@ -93,23 +123,7 @@ public class Connection extends Thread{
 				//
 				//배달맨 배달가능
 				if(select == DELIVERY) {
-					System.out.println("배달인  배달 가능합니다.");
-					Map<Long, Order> map = ReceiptManager.loadDatabase();
-					Iterator<Long> iterator = map.keySet().iterator();
-					while(iterator.hasNext()) {
-						Long num = iterator.next();
-						Order order = map.get(num);
-						if(order.getOrderState()==COOKINGCOMPLETE) {	//요리 완료된거를 배달갈꺼다
-							//가게가 배달을 넘긴다.
-							System.out.println("배달 고객 정보 넘김");	//test
-							out.writeObject(map);
-							out.flush();
-							order.setOrderState(DELIVERING);	//배달중으로 바꾼다.
-							System.out.println(order.getOrderState()+"배달 중이다.");	//test
-							ReceiptManager.saveDatabase(num, order);
-							break;	//하나하면 빠져나간다.
-						}
-					}
+					delivery();
 					continue;	//헤까림
 				}
 				
