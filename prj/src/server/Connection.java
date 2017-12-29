@@ -84,10 +84,6 @@ public class Connection extends Thread{
 					String pw = in.readUTF();
 					String phone = in.readUTF();
 					String address = in.readUTF();
-					System.out.println(id);	//Test
-					System.out.println(pw);
-					System.out.println(phone);
-					System.out.println(address);
 					boolean result = MemberManager.register(id, pw, phone, address);
 					out.writeBoolean(result); out.flush();
 			
@@ -95,9 +91,7 @@ public class Connection extends Thread{
 				}else if(select == LOGIN) {
 					Member member=null;
 					String id = in.readUTF();
-					System.out.println(id);
 					String pw = in.readUTF();
-					System.out.println(pw);
 					member = MemberManager.login(id, pw);
 					if(member==null) {
 						out.writeObject(null); out.flush();
@@ -110,9 +104,8 @@ public class Connection extends Thread{
 					Order order = (Order) in.readObject();
 					cal = Calendar.getInstance();
 					time = (cal.get(Calendar.YEAR)-2000)+"³â "+(1+cal.get(Calendar.MONTH))+"¿ù "+cal.get(Calendar.DAY_OF_MONTH)+"ÀÏ  "+cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND);
-					System.out.println(time);	//test
 					order.setOrdertime(time);
-					ReceiptStorage.saveDatabase(OrderNumber.getOrderNumber(), order);
+					ReceiptManager.saveDatabase(OrderNumber.getOrderNumber(), order);
 				}
 			}
 		}catch(Exception e) {
