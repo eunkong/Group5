@@ -42,6 +42,7 @@ public class ReceiptManager {
 			}
 		}
 		
+		
 		/**
 		 * 주문번호, 주문정보를 파일에 입력하는 메소드
 		 * 추가적으로 입력정보 콘솔 출력
@@ -63,7 +64,29 @@ public class ReceiptManager {
 					}	
 					
 					map.put(orderNum, order);
-					printReceipt(orderNum, order);
+					out.writeObject(map);	//영수 다시써야함.
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		/**
+		 * 주문번호, 주문정보를 파일에 입력한 뒤 콘솔에 출력하는 메소드
+		 * 추가적으로 입력정보 콘솔 출력
+		 * @param orderNum
+		 * @param order
+		 */
+		public static void saveDatabasePrint(Long orderNum, Order order) {
+			Map<Long, Order> map = loadDatabase();	//파일에 저장된 map불러오기
+			try(
+					ObjectOutputStream out = new ObjectOutputStream(
+																new BufferedOutputStream(
+																	new FileOutputStream(db)));
+
+			){
+					map.put(orderNum, order);
+					printReceipt(orderNum,order);
 					out.writeObject(map);	//영수 다시써야함.
 			}
 			catch(Exception e) {

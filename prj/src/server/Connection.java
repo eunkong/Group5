@@ -6,7 +6,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import client.Member;
 import master.Order;
@@ -18,6 +20,14 @@ public class Connection extends Thread{
 	private static String time;
 	public static final int REGISTER = 1;
 	public static final int LOGIN = 2;
+
+	public static final int DELIVERY=0;	//배달맨 접속
+	public static final int ORDERCOMPLETE = 1;
+	public static final int COOKING = 2;
+	public static final int COOKINGCOMPLETE = 3;
+	public static final int DELIVERING=4;
+	public static final int COMPLETE=5;
+	
 	
 	private static List<Connection> list = new ArrayList<>();
 	
@@ -81,6 +91,28 @@ public class Connection extends Thread{
 				int select = in.readInt();
 				System.out.println("선택 = "+ select);
 				
+				//배달맨 배달가능
+				if(select == DELIVERY) {
+					System.out.println("배달인  배달 가능합니다.");
+					Map<Long, Order> map = ReceiptManager.loadDatabase();
+					Iterator<Long> iterator = map.keySet().iterator();
+					while(iterator.hasNext()) {
+						Long num = iterator.next();
+						Order order = map.get(num);
+						if(order.getOrderState()==COOKINGCOMPLETE) {	//요리 완료된거를 배달갈꺼다
+							//가게가 배달을 넘긴다.
+							System.out.println("배달 고객 정보 넘김");	//test
+							out.writeObject(map);
+							out.flush();
+							order.setOrderState(DELIVERING);	//배달중으로 바꾼다.
+							System.out.println(order.getOrderState()+"배달 중이다.");	//test
+							ReceiptManager.saveDatabase(num, order);
+							break;	//하나하면 빠져나간다.
+						}
+					}
+					continue;	//헤까림
+				}
+				
 				//회원가입
 				if(select == REGISTER) {
 					String id = in.readUTF();
@@ -114,7 +146,20 @@ public class Connection extends Thread{
 								cal = Calendar.getInstance();
 								time = (cal.get(Calendar.YEAR)-2000)+"년 "+(1+cal.get(Calendar.MONTH))+"월 "+cal.get(Calendar.DAY_OF_MONTH)+"일  "+cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND);
 								order.setOrdertime(time);
-								ReceiptManager.saveDatabase(OrderNumber.getOrderNumber(), order);
+								Long orderNumber = OrderNumber.getOrderNumber();
+								ReceiptManager.saveDatabasePrint(orderNumber, order);
+								
+								//주문서 받고 가게에서 버튼 누르면 주문상태를 요리중으로 변경
+								Thread.sleep(3000);	//임시 5초 뒤 요리들어감
+								order.setOrderState(COOKING);
+								System.out.println(order.getOrderState()+" 요리중");	//test
+								ReceiptManager.saveDatabase(orderNumber, order);
+								
+								Thread.sleep(5000);	//임시 5초 뒤 요리완료
+								order.setOrderState(COOKINGCOMPLETE);
+								System.out.println(order.getOrderState()+" 요리다했다~");	//test
+								ReceiptManager.saveDatabase(orderNumber, order);
+								
 							}	
 							if(memberSelect==3) {
 								out.writeObject(ReceiptManager.getPerReceipt(id_login));//회원의 주문내역
