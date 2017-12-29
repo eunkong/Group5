@@ -7,10 +7,12 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Map;
 import java.util.Scanner;
 
 import master.MenuSFM;
 import master.Order;
+import server.ReceiptManager;
 
 public class ClientTool {
 	public static final int REGISTER = 1;
@@ -57,7 +59,7 @@ public class ClientTool {
 		}
 	}
 
-	private void loginHome() throws IOException {
+	private void loginHome() throws IOException, ClassNotFoundException {
 		while(true) {
 			System.out.println("1.내정보 or 2.주문하기 or 3.주문내역 4.로그아웃");
 			int choice = s.nextInt();
@@ -69,12 +71,22 @@ public class ClientTool {
 				order(); continue;
 			case 3: 
 				out.writeInt(choice); out.flush();
-				return;
+				myorderlist();
+				continue;
 			case 4: 
 				out.writeInt(choice); out.flush();
 				return;
 			default: System.out.println("번호 오류");
 			}
+		}
+	}
+
+	private void myorderlist() throws ClassNotFoundException, IOException {
+		Map<Long, Order> orderlist = (Map<Long, Order>)in.readObject();
+		if(orderlist.size()==0) {
+			System.out.println("주문 내역이 없습니다");
+		}else {
+			ReceiptManager.printReceipt(orderlist);
 		}
 	}
 
