@@ -45,7 +45,7 @@ public class ClientTool {
 			case LOGIN: 
 				if(login()) {
 					loginHome();
-					break;
+					continue;
 				}else {
 					continue;
 				}
@@ -59,13 +59,20 @@ public class ClientTool {
 
 	private void loginHome() throws IOException {
 		while(true) {
-			System.out.println("1.내정보 or 2.주문하기 or 3.주문내역");
+			System.out.println("1.내정보 or 2.주문하기 or 3.주문내역 4.로그아웃");
 			int choice = s.nextInt();
 			s.nextLine();
 			switch(choice) {
-			case 1: my.printInfo(); break;
-			case 2: order(); continue;
-			case 3: break;
+			case 1: my.printInfo(); continue;
+			case 2: 
+				out.writeInt(choice); out.flush();
+				order(); continue;
+			case 3: 
+				out.writeInt(choice); out.flush();
+				return;
+			case 4: 
+				out.writeInt(choice); out.flush();
+				return;
 			default: System.out.println("번호 오류");
 			}
 		}
@@ -77,6 +84,7 @@ public class ClientTool {
 		//주문하기
 		Order myOrder = new Order(my);
 		myOrder.orderMain();
+		
 		out.writeObject(myOrder); out.flush(); //주문 객체 전송
 		System.out.println("주문 완료");
 	}
@@ -91,7 +99,7 @@ public class ClientTool {
 		
 		if(my!=null) {
 			System.out.println("로그인 성공");
-			loginHome();
+//			loginHome();
 //			MenuSFM.menuLoad(); //메뉴판 읽기
 //			MenuSFM.menuPrintConsole(); //메뉴판 출력
 //			//주문하기
