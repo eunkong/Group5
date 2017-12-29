@@ -93,7 +93,7 @@ public class ReceiptManager {
 				e.printStackTrace();
 			}
 		}
-		
+		//
 		
 		/**
 		 * 주문번호와 주문정보를 받아 콘솔에 영수증 출력하는 메소드

@@ -90,7 +90,7 @@ public class Connection extends Thread{
 			while(flag) {
 				int select = in.readInt();
 				System.out.println("선택 = "+ select);
-				
+				//
 				//배달맨 배달가능
 				if(select == DELIVERY) {
 					System.out.println("배달인  배달 가능합니다.");
