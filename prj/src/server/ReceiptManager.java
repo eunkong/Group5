@@ -19,7 +19,7 @@ import master.Order;
 //영수증 파일 관리 클래스
 public class ReceiptManager {
 		public static final File db = new File("files", "receiptlist.db");
-		public static String[] state = {"","주문완료","요리중","배달중","배달완료"};
+		public static String[] state = {"","주문완료","요리중","요리완료","배달중","배달완료"};
 
 		/**
 		 * 전체 영수증 파일 불러오는 메소드		
