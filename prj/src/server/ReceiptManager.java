@@ -19,6 +19,7 @@ import master.Order;
 //영수증 파일 관리 클래스
 public class ReceiptManager {
 		public static final File db = new File("files", "receiptlist.db");
+		public static String[] state = {"","주문완료","요리중","배달중","배달완료"};
 
 		/**
 		 * 전체 영수증 파일 불러오는 메소드		
@@ -120,6 +121,7 @@ public class ReceiptManager {
 		 */
 		public static void printReceipt(Long orderNum, Order order) {
 				System.out.println();
+				System.out.println("\t[주문상태]"+state[order.getOrderState()]);
 				System.out.println("\t======= 짜 장 전 설   영 수 증 =======");
 				System.out.println("\t주문번호 : "+ orderNum);
 				System.out.println("\t주문시간 : "+ order.getOrdertime());
