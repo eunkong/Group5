@@ -1,28 +1,11 @@
 package gui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionListener;
-import java.lang.invoke.StringConcatFactory;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.*;
+import javax.swing.*;
+import javax.swing.table.*;
 
 import master.MenuSFM;
 
@@ -66,6 +49,10 @@ class Window01 extends JFrame {
 	private JButton moreOrLess= new JButton("+");
 	private JButton reset = new JButton("삭제");
 	private JButton setMode = new JButton(modeName[orderMode-1]);
+	
+	private JMenuBar mb = new JMenuBar(); 
+	private JMenu basicmenu = new JMenu("Menu");
+	private JMenu setting = new JMenu("Setting");
 	
 	private OrderInfo window = new OrderInfo(this, true);
 	private MyInfo window1 = new MyInfo(this, true);
@@ -270,19 +257,20 @@ class Window01 extends JFrame {
 		orderinfo.addActionListener(e -> {
 			window1.setVisible(true);
 		});
-		
-		reset.addActionListener(e->{
-			DefaultTableModel m =(DefaultTableModel)jTable.getModel();
-			while(m.getRowCount()>1) {
-				m.removeRow(0);
+	
+		reset.addActionListener(e->{resetOrder();});
+		order.addActionListener(e->{
+			if(((DefaultTableModel)jTable.getModel()).getRowCount()==1) {
+				JOptionPane.showMessageDialog(null, "먼저 메뉴를 골라주세요", "", JOptionPane.WARNING_MESSAGE);	
+				return;
 			}
-			m.setValueAt(0, 0, 2);
-			m.setValueAt(0, 0, 3);
-			for (String s: MenuSFM.getGroupString()) {
-				for (String string : MenuSFM.getMenuName(s)) {
-					orders.put(string, 0);
-				}
-			}
+			/**@code{
+			 * 여기에 주인에게 주문 내역을 보내는 코드가 들어감
+			 * }
+			  */
+			
+			JOptionPane.showMessageDialog(null, "정상적으로 주문되었습니다", "", JOptionPane.INFORMATION_MESSAGE);
+			resetOrder();
 		});
 		
 		setMode.addActionListener(e->{orderMode=1+(orderMode)%modeName.length; setMode.setText(modeName[orderMode-1]);});
@@ -292,6 +280,21 @@ class Window01 extends JFrame {
 	
 
 	private void menu() {
+		
+		JMenuItem loginMenu=new JMenuItem("login/signup");
+		JMenuItem exit=new JMenuItem("exit");
+		
+		loginMenu.addActionListener(e->{JFrame f= new Window02();});
+		exit.addActionListener(e->{dispose();});
+		
+		basicmenu.add(loginMenu);
+		basicmenu.add(exit);
+		
+		mb.add(basicmenu);
+		mb.add(setting);
+		
+		setJMenuBar(mb);
+		
 	}
 	
 	private void ordering(String order,int mode) {
@@ -303,7 +306,7 @@ class Window01 extends JFrame {
 				int n=Integer.parseInt(s);
 				if(n<0) throw new Exception();
 			} catch (Exception e) {
-				JOptionPane.showConfirmDialog(null, "잘못된 입력입니다", "", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "잘못된 입력입니다", "", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
@@ -323,7 +326,21 @@ class Window01 extends JFrame {
 			break;
 		}
 	}
+	private void resetOrder() {
+		DefaultTableModel m =(DefaultTableModel)jTable.getModel();
+		while(m.getRowCount()>1) {
+			m.removeRow(0);
+		}
+		m.setValueAt(0, 0, 2);
+		m.setValueAt(0, 0, 3);
+		for (String s: MenuSFM.getGroupString()) {
+			for (String string : MenuSFM.getMenuName(s)) {
+				orders.put(string, 0);
+			}
+		}
+	}
 }
+
 
 public class main {
 	public static void main(String[] args) {
