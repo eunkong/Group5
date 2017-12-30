@@ -5,11 +5,14 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.lang.invoke.StringConcatFactory;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -37,30 +40,44 @@ class Window01 extends JFrame {
 	private boolean pm = true;
 	
 	private Map<String, Integer> orders = new HashMap<>();
+	{
+		for (String s: MenuSFM.getGroupString()) {
+			for (String string : MenuSFM.getMenuName(s)) {
+				orders.put(string, 0);
+			}
+		}
+	}
 	
 	private static final int ROW = MenuSFM.getMenus().size();
-	private static final int COL = 6;
-
+	private static final int COL = 4;
+	
+	private static final int INSERT_MODE=1;
+	private static final int CLICK_MODE=2;
+	
+	private int orderMode=INSERT_MODE;
+	private String[] modeName= {"입력","클릭"};
+	
 	private JButton[] groups = new JButton[ROW];
-	private JButton[][] menus = new JButton[ROW][COL - 2];
+	private JButton[][] menus = new JButton[ROW][COL];
 
 	private JButton myinfo = new JButton("주문 정보");
 	private JButton orderinfo = new JButton("내 정보");
 	private JButton order = new JButton("주문");
-	private JButton more = new JButton("+");
-	private JButton less = new JButton("-");
+	private JButton moreOrLess= new JButton("+");
 	private JButton reset = new JButton("삭제");
+	private JButton setMode = new JButton(modeName[orderMode-1]);
 	
 	private OrderInfo window = new OrderInfo(this, true);
 	private MyInfo window1 = new MyInfo(this, true);
 
-	private String columnNames[] = { "분류", "메뉴명", "수량" };
+	private String columnNames[] = { "분류", "메뉴명", "수량","가격(원)" };
 
-	private Object rowData[][] = { { 1, "짜장면", 1 }, { 2, "볶음밥", 200 }, { 3, "탕수육", 300 }, { 4, "탕수육", 300 },
-			{ 5, "탕수육", 300 }, { 6, "탕수육", 300 }, { 6, "탕수육", 300 }, { 6, "탕수육", 300 }, { 6, "탕수육", 300 } };
+	
+//	private Object rowData[][] = { { 1, "짜장면", 1 }, { 2, "볶음밥", 200 }, { 3, "탕수육", 300 }, { 4, "탕수육", 300 },
+//			{ 5, "탕수육", 300 }, { 6, "탕수육", 300 }, { 6, "탕수육", 300 }, { 6, "탕수육", 300 }, { 6, "탕수육", 300 } };
 
 	// DefaultTableModel을 선언하고 데이터 담기
-	private DefaultTableModel defaultTableModel = new DefaultTableModel(rowData, columnNames);
+	private DefaultTableModel defaultTableModel = new DefaultTableModel(new Object[][] {{"총 수량","총 액",0,0}}, columnNames);
 
 	// JTable에 DefaultTableModel을 담기
 	private JTable jTable = new JTable(defaultTableModel);
@@ -68,6 +85,9 @@ class Window01 extends JFrame {
 	private JScrollPane jScollPane = new JScrollPane(jTable);
 
 	public Window01() {
+		
+		
+		
 		design();
 		event();
 		menu();
@@ -97,7 +117,7 @@ class Window01 extends JFrame {
 
 		jpanel2.setBounds(180, 70, 450, 420);
 		bg.add(jpanel2);
-		jpanel2.setLayout(new GridLayout(ROW, COL - 1));
+		jpanel2.setLayout(new GridLayout(ROW, COL));
 		for (int i = 0; i < menus.length; i++) {
 			for (int j = 0; j < menus[i].length; j++) {
 				menus[i][j] = new JButton("");
@@ -117,6 +137,7 @@ class Window01 extends JFrame {
 		jTable.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
 		jTable.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
 
+
 		myinfo.setBounds(665, 10, 114, 31);
 		bg.add(myinfo);
 
@@ -126,10 +147,10 @@ class Window01 extends JFrame {
 		order.setBounds(660, 435, 250, 55);
 		bg.add(order);
 		
-		more.setBounds(660, 402, 70, 30);
-		bg.add(more);
-		less.setBounds(750, 402, 70, 30);
-		bg.add(less);
+		moreOrLess.setBounds(660, 402, 70, 30);
+		bg.add(moreOrLess);
+		setMode.setBounds(750, 402, 70, 30);
+		bg.add(setMode);
 		reset.setBounds(840, 402, 70, 30);
 		bg.add(reset);
 		
@@ -163,21 +184,78 @@ class Window01 extends JFrame {
 			 */
 
 			for (String string : menu) {
-				if (idx == menus.length * (menus[0].length))
+				if (idx == ROW* COL)
 					break;
-				menus[idx / menus[0].length][idx % menus[0].length].setText(string);
+				menus[idx / COL][idx % COL].setText(string);
 				idx++;
 			}
 		};
 		
-		ActionListener act3 = e -> {
-			if (e.getActionCommand().equals("-"))
-				pm = false;
-			else
-				pm = true;
+		ActionListener act2 = e -> {
+			
+			
+			String order=e.getActionCommand();
+			
+			ordering(order, orderMode);
+			
+			int num=orders.get(order);
+			
+			String ordergname="";
+			
+			for (Iterator<String> ite = MenuSFM.getGroupString().iterator(); ite.hasNext();) {
+				String gp=ite.next();
+				if(MenuSFM.getMenuName(gp).contains(order)) {
+					ordergname=gp;
+				}
+				
+			}
+			if(ordergname=="")return;
+			
+			DefaultTableModel m =
+	                (DefaultTableModel)jTable.getModel();
+			
+			
+	        //모델에 데이터 추가 , 마지막 출에 새로운 데이터를 추가합니다
+			if(num==0||(!pm&&orderMode==CLICK_MODE)) {
+				for (int row = 0; row < m.getRowCount(); row++) {
+					if(order.equals(m.getValueAt(row, 1))) {
+					m.setValueAt(num, row, 2);
+					m.setValueAt(num*MenuSFM.getMenu(order).getPrice(), row, 3);
+					}
+					
+				}
+			}else{
+	        m.insertRow(m.getRowCount()-1, new Object[]{ordergname,order,num,num*MenuSFM.getMenu(order).getPrice()});
+			}
+			
+			
+			int menuSum=0;
+			int priceSum=0;
+			
+			for (int i = 0; i < m.getRowCount()-1; i++) {
+			priceSum+=(int)m.getValueAt(i, 3);
+			menuSum+=(int)m.getValueAt(i, 2);
+			if(m.getValueAt(i, 2).equals(0))
+				m.removeRow(i);	
+			}
+			m.setValueAt(menuSum,m.getRowCount()-1 , 2);
+			m.setValueAt(new DecimalFormat("#,###,###").format(priceSum),m.getRowCount()-1 , 3);
+			
+	        jTable.updateUI();
 		};
-		more.addActionListener(act3);
-		less.addActionListener(act3);
+		for (int i = 0; i < ROW; i++) {
+			for (int j = 0; j < COL; j++) {
+				menus[i][j].addActionListener(act2);
+			}
+		}
+		
+		ActionListener act3 = e -> {
+			if (e.getActionCommand().equals("+"))
+				{pm = false; moreOrLess.setText("-");}
+			else
+				{pm = true;moreOrLess.setText("+");}
+		};
+		moreOrLess.addActionListener(act3);
 		
 		for (int i = 0; i < groups.length; i++) {
 			groups[i].addActionListener(act1);
@@ -190,22 +268,44 @@ class Window01 extends JFrame {
 		orderinfo.addActionListener(e -> {
 			window1.setVisible(true);
 		});
-		ActionListener act4 = e -> {
-			for (int i = 0; i < rowData[0].length; i++) {
-				if(orders.get((String)rowData[i][1])>0);
-				{
-					JTable table=new JTable(defaultTableModel);
-					
-				}
-			}
-		};
 		
+		reset.addActionListener(e->{
+		});
+		
+		setMode.addActionListener(e->{orderMode=1+(orderMode)%modeName.length; setMode.setText(modeName[orderMode-1]);});
 		
 	}
 	
 	
 
 	private void menu() {
+	}
+	
+	private void ordering(String order,int mode) {
+		int num=0;
+		switch (mode) {
+		case INSERT_MODE:
+			String s=JOptionPane.showInputDialog("주문/수정하실"+order+"의 개수를 입력하세요");
+			boolean flag=Pattern.compile("(^([0-9]*)$)").matcher(s).find();
+			if(!flag) {
+				JOptionPane.showConfirmDialog(null, "잘못된 입력입니다", "", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			num=Integer.parseInt(s);
+			orders.put(order, num);
+			
+			break;
+		case CLICK_MODE:
+			
+			num=orders.get(order)+(pm?1:-1);
+			
+			if(num<0) {num=0;return;}
+			
+			
+			
+			orders.put(order, num);
+			break;
+		}
 	}
 }
 
