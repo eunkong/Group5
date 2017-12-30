@@ -195,7 +195,7 @@ class Window01 extends JFrame {
 			
 			
 			String order=e.getActionCommand();
-			
+			int temp=orders.get(order);
 			ordering(order, orderMode);
 			
 			int num=orders.get(order);
@@ -216,7 +216,7 @@ class Window01 extends JFrame {
 			
 			
 	        //모델에 데이터 추가 , 마지막 출에 새로운 데이터를 추가합니다
-			if(num==0||(!pm&&orderMode==CLICK_MODE)) {
+			if(temp!=0||(!pm&&orderMode==CLICK_MODE)) {
 				for (int row = 0; row < m.getRowCount(); row++) {
 					if(order.equals(m.getValueAt(row, 1))) {
 					m.setValueAt(num, row, 2);
