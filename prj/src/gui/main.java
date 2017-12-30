@@ -194,11 +194,13 @@ class Window01 extends JFrame {
 		ActionListener act2 = e -> {
 			
 			
-			String order=e.getActionCommand();
-			int temp=orders.get(order);
-			ordering(order, orderMode);
+			String order=e.getActionCommand();//지금 클릭해서 주문한 메뉴 이름
 			
-			int num=orders.get(order);
+			int temp=orders.get(order);//주문 추가/수정이전의 개수 ex) 짜장면 4개 새로주문 =>0 ,  짬뽕 4개에서 3개로 변경=>4
+			
+			ordering(order, orderMode);//모드에 따라서 주문
+			
+			int num=orders.get(order);//주문 추가/수정 후의 개수 ex) 짜장면 4개 새로주문 =>4 ,  짬뽕 4개에서 3개로 변경=>3
 			
 			String ordergname="";
 			
@@ -216,16 +218,16 @@ class Window01 extends JFrame {
 			
 			
 	        //모델에 데이터 추가 , 마지막 출에 새로운 데이터를 추가합니다
-			if(temp!=0||(!pm&&orderMode==CLICK_MODE)) {
+			if(temp!=0||(!pm&&orderMode==CLICK_MODE)) {//신규주문이 아니거나 클릭모드로 주문수를 줄이고 있는 경우
 				for (int row = 0; row < m.getRowCount(); row++) {
 					if(order.equals(m.getValueAt(row, 1))) {
-					m.setValueAt(num, row, 2);
-					m.setValueAt(num*MenuSFM.getMenu(order).getPrice(), row, 3);
+					m.setValueAt(num, row, 2);//메뉴 개수 설정
+					m.setValueAt(num*MenuSFM.getMenu(order).getPrice(), row, 3);//메뉴 가격 × 메뉴 개수
 					}
 					
 				}
 			}else{
-	        m.insertRow(m.getRowCount()-1, new Object[]{ordergname,order,num,num*MenuSFM.getMenu(order).getPrice()});
+	        m.insertRow(m.getRowCount()-1, new Object[]{ordergname,order,num,num*MenuSFM.getMenu(order).getPrice()});//신규주문인 경우
 			}
 			
 			
@@ -270,6 +272,17 @@ class Window01 extends JFrame {
 		});
 		
 		reset.addActionListener(e->{
+			DefaultTableModel m =(DefaultTableModel)jTable.getModel();
+			while(m.getRowCount()>1) {
+				m.removeRow(0);
+			}
+			m.setValueAt(0, 0, 2);
+			m.setValueAt(0, 0, 3);
+			for (String s: MenuSFM.getGroupString()) {
+				for (String string : MenuSFM.getMenuName(s)) {
+					orders.put(string, 0);
+				}
+			}
 		});
 		
 		setMode.addActionListener(e->{orderMode=1+(orderMode)%modeName.length; setMode.setText(modeName[orderMode-1]);});
@@ -286,11 +299,14 @@ class Window01 extends JFrame {
 		switch (mode) {
 		case INSERT_MODE:
 			String s=JOptionPane.showInputDialog("주문/수정하실"+order+"의 개수를 입력하세요");
-			boolean flag=Pattern.compile("(^([0-9]*)$)").matcher(s).find();
-			if(!flag) {
+			try {
+				int n=Integer.parseInt(s);
+				if(n<0) throw new Exception();
+			} catch (Exception e) {
 				JOptionPane.showConfirmDialog(null, "잘못된 입력입니다", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
+			
 			num=Integer.parseInt(s);
 			orders.put(order, num);
 			
