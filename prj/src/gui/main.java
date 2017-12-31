@@ -63,7 +63,8 @@ class Window01 extends JFrame {
 	private MyInfo window1 = new MyInfo(this, true);
 
 	private String columnNames[] = { "ºÐ·ù", "¸Þ´º¸í", "¼ö·®","°¡°Ý(¿ø)" };
-
+	
+	
 	
 //	private Object rowData[][] = { { 1, "Â¥Àå¸é", 1 }, { 2, "ººÀ½¹ä", 200 }, { 3, "ÅÁ¼öÀ°", 300 }, { 4, "ÅÁ¼öÀ°", 300 },
 //			{ 5, "ÅÁ¼öÀ°", 300 }, { 6, "ÅÁ¼öÀ°", 300 }, { 6, "ÅÁ¼öÀ°", 300 }, { 6, "ÅÁ¼öÀ°", 300 }, { 6, "ÅÁ¼öÀ°", 300 } };
@@ -76,6 +77,7 @@ class Window01 extends JFrame {
 	// JScrollPane¿¡ JTableÀ» ´ã±â
 	private JScrollPane jScollPane = new JScrollPane(jTable);
 
+	boolean loginout=false;
 	public Window01() {
 		
 		
@@ -185,6 +187,11 @@ class Window01 extends JFrame {
 		};
 		
 		ActionListener act2 = e -> {
+			
+			if(!loginout) {
+				JOptionPane.showMessageDialog(null, "¸ÕÀú ·Î±×ÀÎ/È¸¿ø°¡ÀÔ ÇØÁÖ¼¼¿ä","",JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 			
 			String order=e.getActionCommand();//Áö±Ý Å¬¸¯ÇØ¼­ ÁÖ¹®ÇÑ ¸Þ´º ÀÌ¸§
 			
@@ -305,12 +312,26 @@ class Window01 extends JFrame {
 	private void menu() {
 		
 		JMenuItem loginMenu=new JMenuItem("login/signup");
+		JMenuItem logoutMenu=new JMenuItem("logout");
 		JMenuItem exit=new JMenuItem("exit");
 		
-		loginMenu.addActionListener(e->{JFrame f= new Window02();});
+		loginMenu.addActionListener(e->{
+			if(loginout) {JOptionPane.showMessageDialog(null, "ÀÌ¹Ì ·Î±×ÀÎ »óÅÂÀÔ´Ï´Ù.","",JOptionPane.WARNING_MESSAGE);
+			return;
+			}
+			Login f= new Login(this); 
+			if(loginout)
+			f.setVisible(false);});
+		
+		logoutMenu.addActionListener(e->{
+			if(loginout) {loginout=false;JOptionPane.showMessageDialog(null, "·Î±×¾Æ¿ô µÇ¼Ì½À´Ï´Ù.","",JOptionPane.INFORMATION_MESSAGE);}
+			else JOptionPane.showMessageDialog(null, "¸ÕÀú ·Î±×ÀÎ ÇØÁÖ¼¼¿ä","",JOptionPane.WARNING_MESSAGE);
+		});
+		
 		exit.addActionListener(e->{dispose();});
 		
 		basicmenu.add(loginMenu);
+		basicmenu.add(logoutMenu);
 		basicmenu.add(setMode);
 		basicmenu.add(exit);
 		

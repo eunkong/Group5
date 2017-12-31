@@ -2,9 +2,17 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.Map;
+
 import javax.swing.*;
 
-class Window02 extends JFrame{
+import client.Member;
+
+public class Login extends JFrame{
 	private JPanel bg = new JPanel(new BorderLayout());
 	
 	
@@ -17,9 +25,12 @@ class Window02 extends JFrame{
 	
 	private JButton jbt1 = new JButton("Login");
 	private JButton jbt2 = new JButton("Sign Up");
-
+	private boolean nowLog=false;
 	
-	public Window02() {
+	Window01 wd=null;
+	
+	public Login(Window01 wd) {
+		
 		design();
 		event();
 		menu();
@@ -31,6 +42,7 @@ class Window02 extends JFrame{
 //		setAlwaysOnTop(true);//항상위
 		setResizable(false);
 		setVisible(true);
+		this.wd=wd;
 	}
 
 	private void design() {
@@ -69,14 +81,39 @@ class Window02 extends JFrame{
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);//x 키 누르면 창 닫기
 //		setDefaultCloseOperation(HIDE_ON_CLOSE);//x키 누르면 숨김
 //		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//x키 방지(+이벤트)
+		
+		jbt1.addActionListener(e->{
+			try (ObjectInputStream in = new ObjectInputStream(
+					new BufferedInputStream(
+							new FileInputStream(new File("files", "memberlist.db"))));){
+				
+				@SuppressWarnings("unchecked")
+				Map<String, Member> map = (Map<String, Member>) in.readObject();
+				
+				for (String string : map.keySet()) {
+					Member mem=map.get(string);
+					
+					if(jtf1.getText().equals(mem.getId())&&jtf2.getText().equals(mem.getPwd()))
+					{
+						nowLog=true;
+						wd.loginout=nowLog;
+						JOptionPane.showMessageDialog(null, "로그인에 성공하였습니다."
+							,"",JOptionPane.INFORMATION_MESSAGE);
+						if(nowLog)
+						this.setVisible(false);
+						return;
+					};
+				}
+				JOptionPane.showMessageDialog(null,"로그인 실패", "", JOptionPane.WARNING_MESSAGE);
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+		});
+		
 	}
 
 	private void menu() {
 	}
-}
-
-public class Login {
-	public static void main(String[] args) {
-		JFrame f = new Window02();
-	}
+	
+	
 }
