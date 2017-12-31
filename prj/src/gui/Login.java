@@ -15,7 +15,6 @@ import client.Member;
 public class Login extends JFrame{
 	private JPanel bg = new JPanel(new BorderLayout());
 	
-	
 	private JLabel jlable1 = new JLabel("Login System");
 	private JLabel jlable2 = new JLabel("UserName");
 	private JLabel jlable3 = new JLabel("UserPassword");
@@ -25,11 +24,11 @@ public class Login extends JFrame{
 	
 	private JButton jbt1 = new JButton("Login");
 	private JButton jbt2 = new JButton("Sign Up");
-	private boolean nowLog=false;
 	
-	Window01 wd=null;
 	
-	public Login(Window01 wd) {
+	MainOrderView wd=null;
+	
+	public Login(MainOrderView wd) {
 		
 		design();
 		event();
@@ -95,11 +94,9 @@ public class Login extends JFrame{
 					
 					if(jtf1.getText().equals(mem.getId())&&jtf2.getText().equals(mem.getPwd()))
 					{
-						nowLog=true;
-						wd.loginout=nowLog;
+						wd.setLoginout(true);
 						JOptionPane.showMessageDialog(null, "로그인에 성공하였습니다."
 							,"",JOptionPane.INFORMATION_MESSAGE);
-						if(nowLog)
 						this.setVisible(false);
 						return;
 					};
@@ -111,6 +108,7 @@ public class Login extends JFrame{
 		});
 		
 	}
+
 
 	private void menu() {
 	}

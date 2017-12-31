@@ -7,11 +7,14 @@ import java.text.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
+import client.*;
 import master.MenuSFM;
 
-class Window01 extends JFrame {
+class MainOrderView extends JFrame {
+	
+	private boolean loginout=false;
+	
 	private JPanel bg = new JPanel();
-
 	private JPanel jpanel1 = new JPanel();
 	private JPanel jpanel2 = new JPanel();
 	private JPanel jpanel3 = new JPanel();
@@ -77,8 +80,7 @@ class Window01 extends JFrame {
 	// JScrollPane에 JTable을 담기
 	private JScrollPane jScollPane = new JScrollPane(jTable);
 
-	boolean loginout=false;
-	public Window01() {
+	public MainOrderView() {
 		
 		
 		
@@ -315,18 +317,21 @@ class Window01 extends JFrame {
 		JMenuItem logoutMenu=new JMenuItem("logout");
 		JMenuItem exit=new JMenuItem("exit");
 		
+		JMenuItem settingItem=new JMenuItem("setting");
+		
 		loginMenu.addActionListener(e->{
 			if(loginout) {JOptionPane.showMessageDialog(null, "이미 로그인 상태입니다.","",JOptionPane.WARNING_MESSAGE);
 			return;
 			}
-			Login f= new Login(this); 
-			if(loginout)
-			f.setVisible(false);});
+			new Login(this); 
+			});
 		
 		logoutMenu.addActionListener(e->{
 			if(loginout) {loginout=false;JOptionPane.showMessageDialog(null, "로그아웃 되셨습니다.","",JOptionPane.INFORMATION_MESSAGE);}
 			else JOptionPane.showMessageDialog(null, "먼저 로그인 해주세요","",JOptionPane.WARNING_MESSAGE);
 		});
+		
+		settingItem.addActionListener(e->{new Window07();});
 		
 		exit.addActionListener(e->{dispose();});
 		
@@ -334,6 +339,8 @@ class Window01 extends JFrame {
 		basicmenu.add(logoutMenu);
 		basicmenu.add(setMode);
 		basicmenu.add(exit);
+		
+		setting.add(settingItem);
 		
 		mb.add(basicmenu);
 		mb.add(setting);
@@ -390,14 +397,21 @@ class Window01 extends JFrame {
 		gopp=!gopp;
 		menus[ROW-1][COL-1].setText(str.equals("곱빼기")?"보통":"곱빼기");
 	}
+
+
+	public void setLoginout(boolean loginout) {
+		this.loginout = loginout;
+	}
 	
+
 }
-
-
-public class main {
+	
+	
+public class Main{
 	public static void main(String[] args) {
-		JFrame f = new Window01();
+		new MainOrderView();
 	}
 }
+
 
 // https://m.blog.naver.com/PostView.nhn?blogId=tkddlf4209&logNo=220599772823&proxyReferer=https%3A%2F%2Fwww.google.co.kr%2F
