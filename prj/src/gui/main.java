@@ -30,6 +30,8 @@ class Window01 extends JFrame {
 			}
 		}
 	}
+	private boolean gopp=false;
+	private int djs=1;
 	
 	private static final int ROW = MenuSFM.getMenus().size();
 	private static final int COL = 4;
@@ -37,8 +39,9 @@ class Window01 extends JFrame {
 	private static final int INSERT_MODE=1;
 	private static final int CLICK_MODE=2;
 	
+	
 	private int orderMode=INSERT_MODE;
-	private String[] modeName= {"입력","클릭"};
+	private String[] modeName= {"insert","click"};
 	
 	private JButton[] groups = new JButton[ROW];
 	private JButton[][] menus = new JButton[ROW][COL];
@@ -48,11 +51,13 @@ class Window01 extends JFrame {
 	private JButton order = new JButton("주문");
 	private JButton moreOrLess= new JButton("+");
 	private JButton reset = new JButton("삭제");
-	private JButton setMode = new JButton(modeName[orderMode-1]);
+	private JButton setFoodSize = new JButton("");
+	
 	
 	private JMenuBar mb = new JMenuBar(); 
 	private JMenu basicmenu = new JMenu("Menu");
 	private JMenu setting = new JMenu("Setting");
+	private JMenuItem setMode=new JMenuItem(modeName[orderMode-1]+" mode");
 	
 	private OrderInfo window = new OrderInfo(this, true);
 	private MyInfo window1 = new MyInfo(this, true);
@@ -136,8 +141,8 @@ class Window01 extends JFrame {
 		
 		moreOrLess.setBounds(660, 402, 70, 30);
 		bg.add(moreOrLess);
-		setMode.setBounds(750, 402, 70, 30);
-		bg.add(setMode);
+		setFoodSize.setBounds(750, 402, 70, 30);
+		bg.add(setFoodSize);
 		reset.setBounds(840, 402, 70, 30);
 		bg.add(reset);
 		
@@ -176,18 +181,20 @@ class Window01 extends JFrame {
 				menus[idx / COL][idx % COL].setText(string);
 				idx++;
 			}
+			if(gp.equals("면류")) setFoodSize.setText("보통");
 		};
 		
 		ActionListener act2 = e -> {
 			
-			
 			String order=e.getActionCommand();//지금 클릭해서 주문한 메뉴 이름
 			
+			if(order.equals("")||order==null)return;
 			int temp=orders.get(order);//주문 추가/수정이전의 개수 ex) 짜장면 4개 새로주문 =>0 ,  짬뽕 4개에서 3개로 변경=>4
 			
 			ordering(order, orderMode);//모드에 따라서 주문
 			
 			int num=orders.get(order);//주문 추가/수정 후의 개수 ex) 짜장면 4개 새로주문 =>4 ,  짬뽕 4개에서 3개로 변경=>3
+			
 			
 			String ordergname="";
 			
@@ -198,7 +205,7 @@ class Window01 extends JFrame {
 				}
 				
 			}
-			if(ordergname=="")return;
+			if(ordergname.equals(""))return;
 			
 			DefaultTableModel m =
 	                (DefaultTableModel)jTable.getModel();
@@ -214,7 +221,8 @@ class Window01 extends JFrame {
 					
 				}
 			}else{
-	        m.insertRow(m.getRowCount()-1, new Object[]{ordergname,order,num,num*MenuSFM.getMenu(order).getPrice()});//신규주문인 경우
+	        m.insertRow(m.getRowCount()-1, new Object[]{ordergname,order,num,
+	        		num*(MenuSFM.getMenu(order).getPrice()+(gopp?1000:0))});//신규주문인 경우
 			}
 			
 			
@@ -237,6 +245,9 @@ class Window01 extends JFrame {
 				menus[i][j].addActionListener(act2);
 			}
 		}
+		
+		
+		
 		
 		ActionListener act3 = e -> {
 			if (e.getActionCommand().equals("+"))
@@ -273,7 +284,11 @@ class Window01 extends JFrame {
 			resetOrder();
 		});
 		
-		setMode.addActionListener(e->{orderMode=1+(orderMode)%modeName.length; setMode.setText(modeName[orderMode-1]);});
+		setFoodSize.addActionListener(e->{
+			gopp=!gopp;
+			setFoodSize.setText(setFoodSize.getText().equals("보통")?"곱빼기":"보통");
+		});
+		setMode.addActionListener(e->{orderMode=1+(orderMode)%modeName.length; setMode.setText(modeName[orderMode-1]+" mode");});
 		
 	}
 	
@@ -288,16 +303,17 @@ class Window01 extends JFrame {
 		exit.addActionListener(e->{dispose();});
 		
 		basicmenu.add(loginMenu);
+		basicmenu.add(setMode);
 		basicmenu.add(exit);
 		
 		mb.add(basicmenu);
 		mb.add(setting);
-		
 		setJMenuBar(mb);
 		
 	}
 	
 	private void ordering(String order,int mode) {
+		
 		int num=0;
 		switch (mode) {
 		case INSERT_MODE:
@@ -339,6 +355,13 @@ class Window01 extends JFrame {
 			}
 		}
 	}
+	
+	private void foodSize(String str) {
+		if(!str.equals("보통")&&!str.equals("곱빼기"))return;
+		gopp=!gopp;
+		menus[ROW-1][COL-1].setText(str.equals("곱빼기")?"보통":"곱빼기");
+	}
+	
 }
 
 
