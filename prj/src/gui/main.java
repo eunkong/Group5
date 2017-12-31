@@ -271,8 +271,16 @@ class Window01 extends JFrame {
 	
 		reset.addActionListener(e->{resetOrder();});
 		order.addActionListener(e->{
+			int priceSum=0;
+			for (String name : orders.keySet()) {
+				priceSum+=MenuSFM.getMenu(name).getPrice()*orders.get(name);
+			}
 			if(((DefaultTableModel)jTable.getModel()).getRowCount()==1) {
+				
 				JOptionPane.showMessageDialog(null, "먼저 메뉴를 골라주세요", "", JOptionPane.WARNING_MESSAGE);	
+				return;
+			}else if(priceSum<10000) {
+				JOptionPane.showMessageDialog(null, "만원이상 배달 가능합니다", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			/**@code{
