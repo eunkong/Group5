@@ -24,12 +24,14 @@ public class ClientTool {
 	public ObjectOutputStream out;
 	public ObjectInput in;
 	public Scanner s;
+	final static int CLIENT = 1;
 	
 	ClientTool() throws UnknownHostException, IOException {
 		socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
 		out = new ObjectOutputStream(socket.getOutputStream());
 		in = new ObjectInputStream(socket.getInputStream());
 		s = new Scanner(System.in);
+		out.writeInt(CLIENT); out.flush(); //클라이언트라는 정보를 서버에 넘김
 		//in 만들때 ObjectInputStream(BufferedInputStream(socket.getInputStream()));
 		//하면 더이상 진행되지 않음. (왜..?)
 	}
