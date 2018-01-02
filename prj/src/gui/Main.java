@@ -12,7 +12,7 @@ import master.MenuSFM;
 
 class MainOrderView extends JFrame {
 	
-	private boolean loginout=false;
+	String cusId="";
 	
 	private JPanel bg = new JPanel();
 	private JPanel jpanel1 = new JPanel();
@@ -33,6 +33,7 @@ class MainOrderView extends JFrame {
 			}
 		}
 	}
+	Member member;
 	private boolean gopp=false;
 	private int djs=1;
 	
@@ -80,10 +81,11 @@ class MainOrderView extends JFrame {
 	// JScrollPane에 JTable을 담기
 	private JScrollPane jScollPane = new JScrollPane(jTable);
 
-	public MainOrderView() {
+	public MainOrderView(Member member) {
 		
 		
-		
+		this.member=member;
+		window1.generateInfo(member);
 		design();
 		event();
 		menu();
@@ -190,10 +192,6 @@ class MainOrderView extends JFrame {
 		
 		ActionListener act2 = e -> {
 			
-			if(!loginout) {
-				JOptionPane.showMessageDialog(null, "먼저 로그인/회원가입 해주세요","",JOptionPane.WARNING_MESSAGE);
-				return;
-			}
 			
 			String order=e.getActionCommand();//지금 클릭해서 주문한 메뉴 이름
 			
@@ -313,29 +311,22 @@ class MainOrderView extends JFrame {
 
 	private void menu() {
 		
-		JMenuItem loginMenu=new JMenuItem("login/signup");
 		JMenuItem logoutMenu=new JMenuItem("logout");
 		JMenuItem exit=new JMenuItem("exit");
 		
 		JMenuItem settingItem=new JMenuItem("setting");
 		
-		loginMenu.addActionListener(e->{
-			if(loginout) {JOptionPane.showMessageDialog(null, "이미 로그인 상태입니다.","",JOptionPane.WARNING_MESSAGE);
-			return;
-			}
-			new Login(this); 
-			});
 		
 		logoutMenu.addActionListener(e->{
-			if(loginout) {loginout=false;JOptionPane.showMessageDialog(null, "로그아웃 되셨습니다.","",JOptionPane.INFORMATION_MESSAGE);}
-			else JOptionPane.showMessageDialog(null, "먼저 로그인 해주세요","",JOptionPane.WARNING_MESSAGE);
+			this.dispose();
+			JOptionPane.showMessageDialog(null, "정상적으로 로그아웃 되었습니다.", "", JOptionPane.WARNING_MESSAGE);
+			new Login();
 		});
 		
 		settingItem.addActionListener(e->{new Window07();});
 		
 		exit.addActionListener(e->{dispose();});
 		
-		basicmenu.add(loginMenu);
 		basicmenu.add(logoutMenu);
 		basicmenu.add(setMode);
 		basicmenu.add(exit);
@@ -399,17 +390,18 @@ class MainOrderView extends JFrame {
 	}
 
 
-	public void setLoginout(boolean loginout) {
-		this.loginout = loginout;
-	}
 	
+	public void setCusId(String id) {
+		cusId=id;
+	}
 
 }
 	
 	
 public class Main{
 	public static void main(String[] args) {
-		new MainOrderView();
+//		new MainOrderView();
+		new Login();
 	}
 }
 

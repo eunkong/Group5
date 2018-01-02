@@ -20,15 +20,13 @@ public class Login extends JFrame{
 	private JLabel jlable3 = new JLabel("UserPassword");
 
 	private JTextField jtf1 = new JTextField();
-	private JTextField jtf2 = new JTextField();
+	private JPasswordField jtf2 = new JPasswordField();
 	
-	private JButton jbt1 = new JButton("Login");
-	private JButton jbt2 = new JButton("Sign Up");
+	private JButton idArea = new JButton("Login");
+	private JButton pwArea = new JButton("Sign Up");
 	
 	
-	MainOrderView wd=null;
-	
-	public Login(MainOrderView wd) {
+	public Login() {
 		
 		design();
 		event();
@@ -41,7 +39,6 @@ public class Login extends JFrame{
 //		setAlwaysOnTop(true);//항상위
 		setResizable(false);
 		setVisible(true);
-		this.wd=wd;
 	}
 
 	private void design() {
@@ -67,11 +64,11 @@ public class Login extends JFrame{
 		bg.add(jtf2);
 		jtf2.setColumns(10);
 		
-		jbt1.setBounds(30, 251, 97, 23);
-		bg.add(jbt1);
+		idArea.setBounds(30, 251, 97, 23);
+		bg.add(idArea);
 		
-		jbt2.setBounds(147, 251, 97, 23);
-		bg.add(jbt2);
+		pwArea.setBounds(147, 251, 97, 23);
+		bg.add(pwArea);
 	}
 
 	private void event() {
@@ -81,7 +78,7 @@ public class Login extends JFrame{
 //		setDefaultCloseOperation(HIDE_ON_CLOSE);//x키 누르면 숨김
 //		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//x키 방지(+이벤트)
 		
-		jbt1.addActionListener(e->{
+		idArea.addActionListener(e->{
 			try (ObjectInputStream in = new ObjectInputStream(
 					new BufferedInputStream(
 							new FileInputStream(new File("files", "memberlist.db"))));){
@@ -94,10 +91,10 @@ public class Login extends JFrame{
 					
 					if(jtf1.getText().equals(mem.getId())&&jtf2.getText().equals(mem.getPwd()))
 					{
-						wd.setLoginout(true);
 						JOptionPane.showMessageDialog(null, "로그인에 성공하였습니다."
 							,"",JOptionPane.INFORMATION_MESSAGE);
 						this.setVisible(false);
+						new MainOrderView(mem);
 						return;
 					};
 				}

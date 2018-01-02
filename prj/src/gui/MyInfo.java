@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Font;
 import java.awt.Frame;
 
 import javax.swing.JDialog;
@@ -25,37 +26,42 @@ public class MyInfo extends JDialog{
 	}
 	
 	void generateInfo(Member mem) {
-		System.out.println(mem==null);
 	if(mem==null) {
 		lb.setText("로그인 정보가 없습니다");
 		return;
 		}	
 		StringBuffer buffer=new StringBuffer("");
 		
+		lb.setFont(new Font("", Font.PLAIN, 20));
+		
+		buffer.append("<html>");
+		
 		buffer.append("id:");
 		buffer.append(mem.getId());
-		buffer.append("\n");
+		buffer.append("<br>");
 	
 		buffer.append("pw:");
 		buffer.append(mem.getPwd());
-		buffer.append("\n");
-	/*	
+		buffer.append("<br>");
+		
 		buffer.append("phone number:");
 		buffer.append(mem.getPhoneNumber());
-		buffer.append("\n");
+		buffer.append("<br>");
 		
 		buffer.append("address:");
 		buffer.append(mem.getAddress());
-		buffer.append("\n");
+		buffer.append("<br>");
 		
 		buffer.append("point:");
 		buffer.append(mem.getPoint());
-		buffer.append("\n");
+		buffer.append("<br>");
 		
 		buffer.append("grade:");
 		buffer.append(mem.getGrade());
-		buffer.append("\n");
-		*/
+		buffer.append("<br>");
+		
+		buffer.append("<html>");
+		
 		lb.setText(buffer.toString());
 	 }
 	}

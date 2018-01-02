@@ -3,9 +3,11 @@ package gui;
 import java.awt.Frame;
 
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 
 public class OrderInfo extends JDialog{
 
+	JLabel lb=new JLabel("");
 	public OrderInfo(Frame owner, boolean modal) {
 		super(owner, modal);
 		
@@ -16,5 +18,7 @@ public class OrderInfo extends JDialog{
 //		setDefaultCloseOperation(EXIT_ON_CLOSE);
 //		setVisible(true);
 	}
+	
+	
 	
 }
