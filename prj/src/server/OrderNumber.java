@@ -1,16 +1,20 @@
 package server;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import master.Order;
 
 //주문번호 생성 클래스
 public class OrderNumber {
-	private static Calendar cal = Calendar.getInstance();
-	private static String date=(cal.get(Calendar.YEAR)-2000)+""+(1+cal.get(Calendar.MONTH))+""+cal.get(Calendar.DAY_OF_MONTH);
+	private static Date d;
+	private static Format f = new SimpleDateFormat("yyMMdd");
+	private static String date;
 	private static String numberStart = "0001";	//주문 시작 번호, 가게 인기도에따라 주문번호 자리수 변경가능
 	/**
 	 * 일자별 주문번호를 생성하는 메소드
@@ -18,6 +22,8 @@ public class OrderNumber {
 	 * 일자나 년도가 변경되면 numberStart번부터 시작
 	 */
 	public static Long getOrderNumber(){
+			d = new Date();						//주문번호 받을 때, 현재 날짜
+			date = f.format(d);
 		try {
 			Map<Long, Order> map = ReceiptManager.loadDatabase();			//최초주문이 없다면?
 			List<Long> list = new ArrayList<>(map.keySet());

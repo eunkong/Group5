@@ -105,6 +105,11 @@ public class Connection extends Thread{
 				order.setOrderState(DELIVERING);	//배달중으로 바꾼다.
 				System.out.println(order.getOrderState()+"배달 중이다.");	//test
 				ReceiptManager.saveDatabase(num, order);
+				boolean delivery_complete = in.readBoolean(); //배달완료시 입력 받음		
+				System.out.println(delivery_complete?"배달완료":"배달미완료");
+				order.setOrderState(COMPLETE);	//배달완료로 바꾼다.
+				System.out.println(order.getOrderState());  //test
+				ReceiptManager.saveDatabase(num, order);
 				return;	//하나하면 빠져나간다.
 			}
 		}
