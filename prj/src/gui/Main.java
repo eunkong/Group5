@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import client.*;
+import master.ForguiShow;
+import master.MenuManager;
 import master.MenuSFM;
 
 class MainOrderView extends JFrame {
@@ -67,7 +69,12 @@ class MainOrderView extends JFrame {
 	private MyInfo window1 = new MyInfo(this, true);
 
 	private String columnNames[] = { "분류", "메뉴명", "수량","가격(원)" };
-	
+	String[] lookNfeel = { "com.jtattoo.plaf.mcwin.McWinLookAndFeel", "com.jtattoo.plaf.smart.SmartLookAndFeel",//2
+			"com.jtattoo.plaf.acryl.AcrylLookAndFeel","com.jtattoo.plaf.aero.AeroLookAndFeel","com.jtattoo.plaf.aero.AeroLookAndFeel",//3
+			"com.jtattoo.plaf.aluminium.AluminiumLookAndFeel","com.jtattoo.plaf.bernstein.BernsteinLookAndFeel",//2
+			"com.jtattoo.plaf.graphite.GraphiteLookAndFeel","com.jtattoo.plaf.hifi.HiFiLookAndFeel","com.jtattoo.plaf.mint.MintLookAndFeel",//3
+			"com.jtattoo.plaf.luna.LunaLookAndFeel","com.jtattoo.plaf.mcwin.McWinLookAndFeel"//2
+	};//look&feel 테마 이름 ㄹ
 	
 	
 //	private Object rowData[][] = { { 1, "짜장면", 1 }, { 2, "볶음밥", 200 }, { 3, "탕수육", 300 }, { 4, "탕수육", 300 },
@@ -323,11 +330,24 @@ class MainOrderView extends JFrame {
 			new Login();
 		});
 		
+		
 		settingItem.addActionListener(e->{new Window07();});
 		
 		exit.addActionListener(e->{dispose();});
 		
 		basicmenu.add(logoutMenu);
+		
+		if(member.getId().equals("master")) {
+			JMenuItem menuChange=new JMenuItem("menu manage");
+			menuChange.addActionListener(e->{
+				
+				MenuSFM.menuLoad();//files에서 menu목록 가져와서 MenuSFM에 재저장(내용을 읽어옴)
+				new ForguiShow();//GUI로 메뉴 관리시작
+
+			});
+			basicmenu.add(menuChange);	
+		}
+		
 		basicmenu.add(setMode);
 		basicmenu.add(exit);
 		
@@ -335,6 +355,7 @@ class MainOrderView extends JFrame {
 		
 		mb.add(basicmenu);
 		mb.add(setting);
+		
 		setJMenuBar(mb);
 		
 	}
