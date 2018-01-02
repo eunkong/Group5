@@ -14,11 +14,13 @@ import server.ReceiptManager;
 public class Deliveryman {
 	public static void main(String[] args){
 		System.out.println("<<배달맨>>");
+		boolean delivery;
 		try(Socket socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
 				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 				Scanner s = new Scanner(System.in);){
 			while(true) {
+				delivery = false;
 				System.out.print("배달가능여부 : (0이면 가능)");
 				int state = s.nextInt(); //배달맨에게 배달 가능여부 입력받기
 				if(state!=0) continue;
@@ -39,6 +41,8 @@ public class Deliveryman {
 				}
 				
 				Thread.sleep(3000);
+				delivery = true;
+				out.writeBoolean(delivery); out.flush(); //배달완료 상태를 서버에 넘김
 				System.out.println("배달완료!");
 			}
 			
