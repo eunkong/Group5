@@ -92,7 +92,7 @@ public class MyInfo extends JDialog {
 
 	}
 
-//	void generateInfo(Member mem) {
+	void generateInfo(Member mem) {
 //		if (mem == null) {
 //			lb.setText("로그인 정보가 없습니다");
 //			return;
@@ -131,4 +131,5 @@ public class MyInfo extends JDialog {
 //
 //		lb.setText(buffer.toString());
 //	}
+	}
 }
