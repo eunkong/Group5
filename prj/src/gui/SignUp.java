@@ -2,11 +2,13 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -14,20 +16,20 @@ import javax.swing.JTextField;
 class SignUp extends JDialog {
 	private JPanel bg = new JPanel(new BorderLayout());
 
-	private static JTextField tf0 = new JTextField();
-	private static JTextField tf1 = new JTextField();
-	private static JPasswordField tf2 = new JPasswordField();
-	private static JTextField tf3 = new JTextField();
-	private static JTextField tf4 = new JTextField();
+	private static JTextField idTf = new JTextField();
+	private static JTextField pwTf1 = new JTextField();
+	private static JTextField pwTf2 = new JTextField();
+	private static JTextField pnumTf = new JTextField();
+	private static JTextField addressTf = new JTextField();
 
-	private static JLabel jl0 = new JLabel("�̸�");
-	private static JLabel jl1 = new JLabel("���̵�");
-	private static JLabel jl2 = new JLabel("��й�ȣ");
-	private static JLabel jl3 = new JLabel("��ȭ��ȣ");
-	private static JLabel jl4 = new JLabel("�ּ�");
+	private static JLabel idLb = new JLabel("아이디");
+	private static JLabel pwLb1 = new JLabel("비밀번호");
+	private static JLabel pwLb2 = new JLabel("비밀번호확인");
+	private static JLabel pnumLb = new JLabel("전화번호");
+	private static JLabel addressLb = new JLabel("주소");
 	
-	private static JButton bt0 = new JButton("ȸ������");
-	private static JButton bt1 = new JButton("���");
+	private static JButton signInNow = new JButton("회원가입");
+	private static JButton cancelBt = new JButton("취소");
 
 	public SignUp(Frame log, boolean modal) {
 		super(log, modal);
@@ -35,57 +37,99 @@ class SignUp extends JDialog {
 		event();
 		menu();
 
-		setTitle("ȸ������");
+		setTitle("회원가입");
 		setSize(400, 500);
 		setLocationRelativeTo(log);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
 	private void design() {
-		setContentPane(bg);// bg�� ��濡 ��ġ�϶�
-		// this�� �ƴ϶� bg�� �۾��� ������ �� �ִ�
+		setContentPane(bg);// bg를 배경에 설치하라
+		// this가 아니라 bg에 작업을 수행할 수 있다
 		bg.setLayout(null);
 
-		tf0.setBounds(128, 35, 170, 35);
-		bg.add(tf0);
-		tf1.setBounds(128, 100, 170, 35);
-		bg.add(tf1);
-		tf2.setBounds(128, 165, 170, 35);
-		bg.add(tf2);
-		tf3.setBounds(128, 230, 170, 35);
-		bg.add(tf3);
-		tf4.setBounds(128, 295, 220, 35);
-		bg.add(tf4);
+		idTf.setBounds(128, 35, 170, 35);
+		bg.add(idTf);
+		pwTf1.setBounds(128, 100, 170, 35);
+		bg.add(pwTf1);
+		pwTf2.setBounds(128, 165, 170, 35);
+		bg.add(pwTf2);
+		pnumTf.setBounds(128, 230, 170, 35);
+		bg.add(pnumTf);
+		addressTf.setBounds(128, 295, 220, 35);
+		bg.add(addressTf);
 
-		jl0.setBounds(27, 45, 57, 15);
-		bg.add(jl0);
-		jl1.setBounds(27, 110, 57, 15);
-		bg.add(jl1);
-		jl2.setBounds(27, 175, 57, 15);
-		bg.add(jl2);
-		jl3.setBounds(27, 240, 57, 15);
-		bg.add(jl3);
-		jl4.setBounds(27, 305, 57, 15);
-		bg.add(jl4);
+		idLb.setBounds(27, 45, 57, 15);
+		bg.add(idLb);
+		pwLb1.setBounds(27, 110, 57, 15);
+		bg.add(pwLb1);
+		pwLb2.setBounds(27, 175, 57, 15);
+		bg.add(pwLb2);
+		pnumLb.setBounds(27, 240, 57, 15);
+		bg.add(pnumLb);
+		addressLb.setBounds(27, 305, 57, 15);
+		bg.add(addressLb);
 		
-		bt0.setBounds(70, 370, 113, 35);
-		bg.add(bt0);
+		signInNow.setBounds(70, 370, 113, 35);
+		bg.add(signInNow);
 		
-		bt1.setBounds(220, 370, 113, 35);
-		bg.add(bt1);
+		cancelBt.setBounds(220, 370, 113, 35);
+		bg.add(cancelBt);
 
 	}
 
 	private void event() {
-		// JFrame���� �⺻������ �����ϴ� ���� �ɼ�
-		// setDefaultCloseOperation(EXIT_ON_CLOSE);//x Ű ������ ����
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);// x Ű ������ â �ݱ�
-		// setDefaultCloseOperation(HIDE_ON_CLOSE);//xŰ ������ ����
-		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//xŰ ����(+�̺�Ʈ)
+		// JFrame에서 기본적으로 제공하는 종료 옵션
+		// setDefaultCloseOperation(EXIT_ON_CLOSE);//x 키 누르면 종료
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);// x 키 누르면 창 닫기
+		// setDefaultCloseOperation(HIDE_ON_CLOSE);//x키 누르면 숨김
+		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//x키 방지(+이벤트)
 		
-		bt1.addActionListener(e->{
-			System.exit(0);
+		cancelBt.addActionListener(e->{
+			dispose();
 		});
+		signInNow.addActionListener(e->{
+			String id=idTf.getText();
+			String pw=pwTf1.getText();
+			String pwCheck=pwTf2.getText();
+			String address=addressTf.getText();
+			String pnum=pnumTf.getText();
+			
+			
+			Pattern check=Pattern.compile("^[0-9|a-z|A-Z]{4,20}$");
+			Pattern checkpnum=Pattern.compile("^010[0-9]{8}$");
+			
+			if(!(check.matcher(id).find()&&check.matcher(pw).find())) {
+				JOptionPane.showMessageDialog(null, "아이디/비밀번호는 4~20글자사이 영문혹은 숫자 혼합만 가능합니다.", "", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			
+			if(!pw.equals(pwCheck)) {			
+				JOptionPane.showMessageDialog(null, "비밀번호 확인을 다시 입력해 주세요", "", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			
+			if(pw.equals(id)) {
+				JOptionPane.showMessageDialog(null, "아이디와 비밀번호는 같을 수 없습니다.", "", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			
+			if(!checkpnum.matcher(pnum).find()) {
+				JOptionPane.showMessageDialog(null, "핸드폰번호를 다시 입력해 주세요(010으로 시작, 11자리 숫자)", "", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			
+			if(address.equals("")||address==null) {
+				JOptionPane.showMessageDialog(null, "주소를 입력해 주세요", "", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			
+			/*
+			 * 새로운 회원 정보를 서버에 보낸후 member.db에 추가하는 코드
+			 */
+			JOptionPane.showMessageDialog(null, "회원가입이 완료 되었습니다.", "", JOptionPane.INFORMATION_MESSAGE);
+		});
+		
 	}
 
 	private void menu() {
