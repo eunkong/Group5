@@ -366,6 +366,7 @@ class MainOrderView extends JFrame {
 		switch (mode) {
 		case INSERT_MODE:
 			String s=JOptionPane.showInputDialog("주문/수정하실"+order+"의 개수를 입력하세요");
+			if(s.equals(null))return;
 			try {
 				int n=Integer.parseInt(s);
 				if(n<0) throw new Exception();

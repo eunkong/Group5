@@ -34,6 +34,8 @@ public class MemIdx {
 		for (String string : map.keySet()) {
 			System.out.println("id:"+string);
 			System.out.println("pw:"+map.get(string).getPwd());
+			System.out.println("address:"+map.get(string).getAddress());
+			System.out.println("pnum:"+map.get(string).getPhoneNumber());
 			System.out.println();
 		}
 		in.close();
