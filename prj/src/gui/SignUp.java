@@ -1,15 +1,17 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Frame;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-class Window11 extends JFrame {
+class SignUp extends JDialog {
 	private JPanel bg = new JPanel(new BorderLayout());
 
 	private static JTextField tf0 = new JTextField();
@@ -27,18 +29,16 @@ class Window11 extends JFrame {
 	private static JButton bt0 = new JButton("회원가입");
 	private static JButton bt1 = new JButton("취소");
 
-	public Window11() {
+	public SignUp(Frame log, boolean modal) {
+		super(log, modal);
 		design();
 		event();
 		menu();
 
 		setTitle("회원가입");
 		setSize(400, 500);
-		// setLocation(100, 100);
-		setLocationByPlatform(true); // 위치를 운영체제가 정하도록 설정
-		// setAlwaysOnTop(true);//항상위
-		setResizable(false);
-		setVisible(true);
+		setLocationRelativeTo(log);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
 	private void design() {
@@ -89,11 +89,5 @@ class Window11 extends JFrame {
 	}
 
 	private void menu() {
-	}
-}
-
-public class Sign_up {
-	public static void main(String[] args) {
-		JFrame f = new Window11();
 	}
 }
