@@ -2,6 +2,11 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.swing.JButton;
@@ -12,6 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import client.Member;
 
 class SignUp extends JDialog {
 	private JPanel bg = new JPanel(new BorderLayout());
@@ -99,7 +106,26 @@ class SignUp extends JDialog {
 			Pattern check=Pattern.compile("^[0-9|a-z|A-Z]{4,20}$");
 			Pattern checkpnum=Pattern.compile("^010[0-9]{8}$");
 			
-			if(!(check.matcher(id).find()&&check.matcher(pw).find())) {
+			if(!check.matcher(id).find()) {
+				JOptionPane.showMessageDialog(null, "아이디/비밀번호는 4~20글자사이 영문혹은 숫자 혼합만 가능합니다.", "", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			
+			try (ObjectInputStream in = new ObjectInputStream(
+					new BufferedInputStream(new FileInputStream(new File("files", "memberlist.db"))));) {
+
+				@SuppressWarnings("unchecked")
+				Map<String, Member> map = (Map<String, Member>) in.readObject();
+
+				if(map.containsKey(id)) {
+				JOptionPane.showMessageDialog(null, "이미 사용중인 아이디 입니다.", "", JOptionPane.WARNING_MESSAGE);
+				return;
+				}
+			} catch (Exception err) {
+				// TODO: handle exception
+			}
+			
+			if(!check.matcher(pw).find()) {
 				JOptionPane.showMessageDialog(null, "아이디/비밀번호는 4~20글자사이 영문혹은 숫자 혼합만 가능합니다.", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
@@ -128,6 +154,7 @@ class SignUp extends JDialog {
 			 * 새로운 회원 정보를 서버에 보낸후 member.db에 추가하는 코드
 			 */
 			JOptionPane.showMessageDialog(null, "회원가입이 완료 되었습니다.", "", JOptionPane.INFORMATION_MESSAGE);
+			dispose();
 		});
 		
 	}
