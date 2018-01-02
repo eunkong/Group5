@@ -331,7 +331,7 @@ class MainOrderView extends JFrame {
 		});
 		
 		
-		settingItem.addActionListener(e->{new Window07();});
+		settingItem.addActionListener(e->{});
 		
 		exit.addActionListener(e->{dispose();});
 		

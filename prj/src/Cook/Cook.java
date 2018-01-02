@@ -29,7 +29,6 @@ public class Cook {
 			
 			while(true) {
 				orderlist = (Map<Long, Order>)in.readObject(); //주문서 받기
-				System.out.println(orderlist);
 				if(orderlist!=null) {
 					System.out.println("고객정보");
 					Iterator<Long> iterator = orderlist.keySet().iterator();
