@@ -104,10 +104,14 @@ public class Login extends JFrame{
 
 				if(e.getKeyCode()==KeyEvent.VK_ENTER)
 				loginNow();
+				if(e.getKeyCode()==KeyEvent.VK_ESCAPE)
+				dispose();
 			}	
 		};
 		idArea.addKeyListener(enterKey);
 		pwArea.addKeyListener(enterKey);
+		
+		
 	}
 
 
@@ -124,6 +128,7 @@ public class Login extends JFrame{
 		
 		fg.add(searchId);
 		fg.add(searchPw);
+		
 		
 		mb.add(fg);
 		setJMenuBar(mb);	
@@ -152,7 +157,7 @@ public class Login extends JFrame{
 			JOptionPane.showMessageDialog(null,"로그인 실패", "", JOptionPane.WARNING_MESSAGE);
 		} catch (Exception e2) {
 			// TODO: handle exception
-			}
+		}
 	}
 	
 }

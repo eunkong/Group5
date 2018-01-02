@@ -5,6 +5,8 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +41,7 @@ public class MyPw extends JFrame{
 		menu();
 		
 		setTitle("아이디/비밀번호 찾기");
-		setSize(300, 400);
+		setSize(300, 300);
 //		setLocation(100, 100);
 		setLocationByPlatform(true);	//위치를 운영체제가 정하도록 설정
 //		setAlwaysOnTop(true);//항상위
@@ -57,22 +59,22 @@ public class MyPw extends JFrame{
 		title.setBounds(72, 10, 133, 47);
 		bg.add(title);
 		
-		idText.setBounds(12, 106, 87, 29);
+		idText.setBounds(70, 106, 87, 29);
 		bg.add(idText);
 		
-		pnumText.setBounds(12, 170, 87, 29);
+		pnumText.setBounds(12, 135, 87, 29);
 		bg.add(pnumText);
 		
-		idArea.setBounds(128, 110, 116, 21);
+		idArea.setBounds(110, 110, 130, 21);
 		bg.add(idArea);
 		idArea.setColumns(10);
 		
-		pnumArea.setBounds(128, 174, 116, 21);
+		pnumArea.setBounds(110, 140, 130, 21);
 		bg.add(pnumArea);
 		pnumArea.setColumns(10);
 		
 		
-		searchButton.setBounds(30, 251, 97, 23);
+		searchButton.setBounds(170, 170, 80, 23);
 		bg.add(searchButton);
 		
 	}
@@ -85,46 +87,63 @@ public class MyPw extends JFrame{
 //		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//x키 방지(+이벤트)
 		
 		ActionListener act=e->{
-			String pw="";
-			try (ObjectInputStream in = new ObjectInputStream(
-				new BufferedInputStream(
-						new FileInputStream(new File("files", "memberlist.db"))));){
-				Map<String, Member> map = (Map<String, Member>) in.readObject();
-				Member mem;
-				try {
-					String id=idArea.getText();
-					mem=map.get(id);
-					if(!(mem.getPhoneNumber()).equals(pnumArea.getText())) {
-						JOptionPane.showMessageDialog(null, "잘못된 핸드폰 번호 입니다.");
-						return;
-					}
-					pw=mem.getPwd();
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "ERROR","",JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-			} catch (Exception err) {
-				// TODO: handle exception
-			}
-			StringBuffer pwd=new StringBuffer(pw.substring(0,(1+pw.length())/2));
-			while(pw.length()-pwd.length()>0) {
-				pwd.append("*");
-			
-			}
-			JOptionPane.showMessageDialog(null, "회원님의 아이디와 전화번호로 검색된 비밀번호는 "+pwd.toString()+"입니다.");
-			dispose();
+			searchMethod();
 		};
 		
 		searchButton.addActionListener(act);
-		idArea.addActionListener(act);
-		pnumArea.addActionListener(act);
+		
+		KeyAdapter actKey=new KeyAdapter() {
+			/* (non-Javadoc)
+				 * @see java.awt.event.KeyAdapter#keyPressed(java.awt.event.KeyEvent)
+				 */
+				@Override
+				public void keyPressed(KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+
+					if(e.getKeyCode()==KeyEvent.VK_ENTER)
+					searchMethod();
+					if(e.getKeyCode()==KeyEvent.VK_ESCAPE)
+					dispose();
+				}	
+			};
+		
+		idArea.addKeyListener(actKey);
+		pnumArea.addKeyListener(actKey);
 	}
 
 	private void menu() {
 		
 	}
 	private void searchMethod() {
+		String pw="";
+		try (ObjectInputStream in = new ObjectInputStream(
+			new BufferedInputStream(
+					new FileInputStream(new File("files", "memberlist.db"))));){
+			Map<String, Member> map = (Map<String, Member>) in.readObject();
+			Member mem;
+			try {
+				String id=idArea.getText();
+				mem=map.get(id);
+				if(!(mem.getPhoneNumber()).equals(pnumArea.getText())) {
+					JOptionPane.showMessageDialog(null, "잘못된 핸드폰 번호 입니다.","",JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				pw=mem.getPwd();
+			} catch (Exception e2) {
+				JOptionPane.showMessageDialog(null, "잘못된 아이디 입니다","",JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+		} catch (Exception err) {
+			// TODO: handle exception
+		}
+		StringBuffer pwd=new StringBuffer(pw.substring(0,(1+pw.length())/2));
+		while(pw.length()-pwd.length()>0) {
+			pwd.append("*");
 		
+		}
+		JOptionPane.showMessageDialog(null, "회원님의 아이디와 전화번호로 검색된 비밀번호는 "+pwd.toString()+"입니다.");
+		dispose();
 	}
 }
 

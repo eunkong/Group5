@@ -3,14 +3,8 @@
  */
 package gui;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.Map;
-
+import java.util.*;
+import java.io.*;
 import client.*;
 /**
  * @author 204-26
@@ -25,21 +19,26 @@ public class MemIdx {
 	 * @throws FileNotFoundException 
 	 * @throws ClassNotFoundException 
 	 */
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException {
 		// TODO Auto-generated method stub
-		ObjectInputStream in = new ObjectInputStream(
+		try (ObjectInputStream in = new ObjectInputStream(
 				new BufferedInputStream(
 						new FileInputStream(new File("files", "memberlist.db"))));
-		Map<String, Member> map = (Map<String, Member>) in.readObject();
-		for (String string : map.keySet()) {
-			System.out.println("id:"+string);
-			System.out.println("pw:"+map.get(string).getPwd());
-			System.out.println("address:"+map.get(string).getAddress());
-			System.out.println("pnum:"+map.get(string).getPhoneNumber());
-			System.out.println();
+				){
+			Map<String, Member> map = new TreeMap<>((Map<String, Member>) in.readObject());
+			int total=map.size();
+			for (String string : map.keySet()) {
+				System.out.println("id:"+string);
+				System.out.println("pw:"+map.get(string).getPwd());
+				System.out.println("address:"+map.get(string).getAddress());
+				System.out.println("pnum:"+map.get(string).getPhoneNumber());
+				System.out.println();
+			}	
+			System.out.println("รั "+total+"ธํ");
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
-		in.close();
-		
 	}
 
 }

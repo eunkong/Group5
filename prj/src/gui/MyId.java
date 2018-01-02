@@ -4,6 +4,8 @@
 package gui;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,7 +38,7 @@ import client.Member;
 		menu();
 		
 		setTitle("아이디/비밀번호 찾기");
-		setSize(300, 400);
+		setSize(300, 200);
 //		setLocation(100, 100);
 		setLocationByPlatform(true);	//위치를 운영체제가 정하도록 설정
 //		setAlwaysOnTop(true);//항상위
@@ -53,15 +55,15 @@ import client.Member;
 		title.setBounds(72, 10, 133, 47);
 		bg.add(title);
 		
-		pnumText.setBounds(12, 106, 87, 29);
+		pnumText.setBounds(5, 76, 87, 29);
 		bg.add(pnumText);
 		
 		
-		pnumArea.setBounds(128, 110, 116, 21);
+		pnumArea.setBounds(90, 80, 116, 21);
 		bg.add(pnumArea);
 		pnumArea.setColumns(10);
 		
-		searchButton.setBounds(30, 251, 97, 23);
+		searchButton.setBounds(205, 80, 80, 23);
 		bg.add(searchButton);
 		
 	}
@@ -73,33 +75,53 @@ import client.Member;
 //		setDefaultCloseOperation(HIDE_ON_CLOSE);//x키 누르면 숨김
 //		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//x키 방지(+이벤트)
 		searchButton.addActionListener(e->{
-			String id="";
-			try (ObjectInputStream in = new ObjectInputStream(
-				new BufferedInputStream(
-						new FileInputStream(new File("files", "memberlist.db"))));){
-				Map<String, Member> map = (Map<String, Member>) in.readObject();
-				for (String string : map.keySet()) {
-					Member mem=map.get(string);
-					if(mem.getPhoneNumber().equals(pnumArea.getText())) {
-						id=mem.getId();
-						break;
-					}
-				}
-			} catch (Exception e2) {
-				// TODO: handle exception
-			}
-			if(id.equals(""))JOptionPane.showMessageDialog(null, "검색된 아이디가 없습니다.");
-			else { JOptionPane.showMessageDialog(null, "회원님의 번호로 검색된 아이디는 "+id+"입니다.");
-			dispose();
-			}
-			
+				searchId();
 		});
-	
+		
+		pnumArea.addKeyListener(
+			new KeyAdapter() {
+			/* (non-Javadoc)
+			 * @see java.awt.event.KeyAdapter#keyPressed(java.awt.event.KeyEvent)
+			 */
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				if(e.getKeyCode()==KeyEvent.VK_ENTER)
+				searchId();
+				if(e.getKeyCode()==KeyEvent.VK_ESCAPE)
+				dispose();
+			}	
+		});
+		
 	}
 
 	private void menu() {
 		
 	}
+	
+	private void searchId() {
+		String id="";
+		try (ObjectInputStream in = new ObjectInputStream(
+			new BufferedInputStream(
+					new FileInputStream(new File("files", "memberlist.db"))));){
+			Map<String, Member> map = (Map<String, Member>) in.readObject();
+			for (String string : map.keySet()) {
+				Member mem=map.get(string);
+				if(mem.getPhoneNumber().equals(pnumArea.getText())) {
+					id=mem.getId();
+					break;
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if(id.equals(""))JOptionPane.showMessageDialog(null, "검색된 아이디가 없습니다.");
+		else { JOptionPane.showMessageDialog(null, "회원님의 번호로 검색된 아이디는 "+id+"입니다.");
+		dispose();
+		}
+	
+	}
+	
 }
 
 
