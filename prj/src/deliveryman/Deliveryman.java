@@ -16,6 +16,7 @@ public class Deliveryman {
 	static boolean deliveryState;
 	public static void main(String[] args){
 		System.out.println("<<¹è´Þ¸Ç>>");
+		//
 		try(Socket socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
 				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
