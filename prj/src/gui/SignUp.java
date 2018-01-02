@@ -22,14 +22,14 @@ class SignUp extends JDialog {
 	private static JTextField pnumTf = new JTextField();
 	private static JTextField addressTf = new JTextField();
 
-	private static JLabel idLb = new JLabel("ì•„ì´ë””");
-	private static JLabel pwLb1 = new JLabel("ë¹„ë°€ë²ˆí˜¸");
-	private static JLabel pwLb2 = new JLabel("ë¹„ë°€ë²ˆí˜¸í™•ì¸");
-	private static JLabel pnumLb = new JLabel("ì „í™”ë²ˆí˜¸");
-	private static JLabel addressLb = new JLabel("ì£¼ì†Œ");
+	private static JLabel idLb = new JLabel("¾ÆÀÌµğ");
+	private static JLabel pwLb1 = new JLabel("ºñ¹Ğ¹øÈ£");
+	private static JLabel pwLb2 = new JLabel("ºñ¹Ğ¹øÈ£È®ÀÎ");
+	private static JLabel pnumLb = new JLabel("ÀüÈ­¹øÈ£");
+	private static JLabel addressLb = new JLabel("ÁÖ¼Ò");
 	
-	private static JButton signInNow = new JButton("íšŒì›ê°€ì…");
-	private static JButton cancelBt = new JButton("ì·¨ì†Œ");
+	private static JButton signInNow = new JButton("È¸¿ø°¡ÀÔ");
+	private static JButton cancelBt = new JButton("Ãë¼Ò");
 
 	public SignUp(Frame log, boolean modal) {
 		super(log, modal);
@@ -37,15 +37,15 @@ class SignUp extends JDialog {
 		event();
 		menu();
 
-		setTitle("íšŒì›ê°€ì…");
+		setTitle("È¸¿ø°¡ÀÔ");
 		setSize(400, 500);
 		setLocationRelativeTo(log);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
 	private void design() {
-		setContentPane(bg);// bgë¥¼ ë°°ê²½ì— ì„¤ì¹˜í•˜ë¼
-		// thisê°€ ì•„ë‹ˆë¼ bgì— ì‘ì—…ì„ ìˆ˜í–‰í•  ìˆ˜ ìˆë‹¤
+		setContentPane(bg);// bg¸¦ ¹è°æ¿¡ ¼³Ä¡ÇÏ¶ó
+		// this°¡ ¾Æ´Ï¶ó bg¿¡ ÀÛ¾÷À» ¼öÇàÇÒ ¼ö ÀÖ´Ù
 		bg.setLayout(null);
 
 		idTf.setBounds(128, 35, 170, 35);
@@ -79,11 +79,11 @@ class SignUp extends JDialog {
 	}
 
 	private void event() {
-		// JFrameì—ì„œ ê¸°ë³¸ì ìœ¼ë¡œ ì œê³µí•˜ëŠ” ì¢…ë£Œ ì˜µì…˜
-		// setDefaultCloseOperation(EXIT_ON_CLOSE);//x í‚¤ ëˆ„ë¥´ë©´ ì¢…ë£Œ
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);// x í‚¤ ëˆ„ë¥´ë©´ ì°½ ë‹«ê¸°
-		// setDefaultCloseOperation(HIDE_ON_CLOSE);//xí‚¤ ëˆ„ë¥´ë©´ ìˆ¨ê¹€
-		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//xí‚¤ ë°©ì§€(+ì´ë²¤íŠ¸)
+		// JFrame¿¡¼­ ±âº»ÀûÀ¸·Î Á¦°øÇÏ´Â Á¾·á ¿É¼Ç
+		// setDefaultCloseOperation(EXIT_ON_CLOSE);//x Å° ´©¸£¸é Á¾·á
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);// x Å° ´©¸£¸é Ã¢ ´İ±â
+		// setDefaultCloseOperation(HIDE_ON_CLOSE);//xÅ° ´©¸£¸é ¼û±è
+		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//xÅ° ¹æÁö(+ÀÌº¥Æ®)
 		
 		cancelBt.addActionListener(e->{
 			dispose();
@@ -100,34 +100,34 @@ class SignUp extends JDialog {
 			Pattern checkpnum=Pattern.compile("^010[0-9]{8}$");
 			
 			if(!(check.matcher(id).find()&&check.matcher(pw).find())) {
-				JOptionPane.showMessageDialog(null, "ì•„ì´ë””/ë¹„ë°€ë²ˆí˜¸ëŠ” 4~20ê¸€ìì‚¬ì´ ì˜ë¬¸í˜¹ì€ ìˆ«ì í˜¼í•©ë§Œ ê°€ëŠ¥í•©ë‹ˆë‹¤.", "", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "¾ÆÀÌµğ/ºñ¹Ğ¹øÈ£´Â 4~20±ÛÀÚ»çÀÌ ¿µ¹®È¤Àº ¼ıÀÚ È¥ÇÕ¸¸ °¡´ÉÇÕ´Ï´Ù.", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			
 			if(!pw.equals(pwCheck)) {			
-				JOptionPane.showMessageDialog(null, "ë¹„ë°€ë²ˆí˜¸ í™•ì¸ì„ ë‹¤ì‹œ ì…ë ¥í•´ ì£¼ì„¸ìš”", "", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "ºñ¹Ğ¹øÈ£ È®ÀÎÀ» ´Ù½Ã ÀÔ·ÂÇØ ÁÖ¼¼¿ä", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			
 			if(pw.equals(id)) {
-				JOptionPane.showMessageDialog(null, "ì•„ì´ë””ì™€ ë¹„ë°€ë²ˆí˜¸ëŠ” ê°™ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.", "", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "¾ÆÀÌµğ¿Í ºñ¹Ğ¹øÈ£´Â °°À» ¼ö ¾ø½À´Ï´Ù.", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			
 			if(!checkpnum.matcher(pnum).find()) {
-				JOptionPane.showMessageDialog(null, "í•¸ë“œí°ë²ˆí˜¸ë¥¼ ë‹¤ì‹œ ì…ë ¥í•´ ì£¼ì„¸ìš”(010ìœ¼ë¡œ ì‹œì‘, 11ìë¦¬ ìˆ«ì)", "", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "ÇÚµåÆù¹øÈ£¸¦ ´Ù½Ã ÀÔ·ÂÇØ ÁÖ¼¼¿ä(010À¸·Î ½ÃÀÛ, 11ÀÚ¸® ¼ıÀÚ)", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			
 			if(address.equals("")||address==null) {
-				JOptionPane.showMessageDialog(null, "ì£¼ì†Œë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”", "", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "ÁÖ¼Ò¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			
 			/*
-			 * ìƒˆë¡œìš´ íšŒì› ì •ë³´ë¥¼ ì„œë²„ì— ë³´ë‚¸í›„ member.dbì— ì¶”ê°€í•˜ëŠ” ì½”ë“œ
+			 * »õ·Î¿î È¸¿ø Á¤º¸¸¦ ¼­¹ö¿¡ º¸³½ÈÄ member.db¿¡ Ãß°¡ÇÏ´Â ÄÚµå
 			 */
-			JOptionPane.showMessageDialog(null, "íšŒì›ê°€ì…ì´ ì™„ë£Œ ë˜ì—ˆìŠµë‹ˆë‹¤.", "", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "È¸¿ø°¡ÀÔÀÌ ¿Ï·á µÇ¾ú½À´Ï´Ù.", "", JOptionPane.INFORMATION_MESSAGE);
 		});
 		
 	}
