@@ -68,7 +68,7 @@ public class Order implements Serializable {
 
 
 	}*/
-//
+
 	public void order(Map<Menu,Integer> ordertemp) {
 		
 		priceSum=0;
