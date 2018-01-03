@@ -76,8 +76,8 @@ class MainOrderView extends JFrame {
 	private JButton[] groups = new JButton[ROW];
 	private JButton[][] menus = new JButton[ROW][COL];
 
-	private JButton myinfo = new JButton("주문 정보");
-	private JButton orderinfo = new JButton("내 정보");
+	private JButton orderinfo = new JButton("주문 정보");
+	private JButton myinfo = new JButton("내 정보");
 	private JButton order = new JButton("주문");
 	private JButton moreOrLess= new JButton("+");
 	private JButton reset = new JButton("삭제");
@@ -89,8 +89,8 @@ class MainOrderView extends JFrame {
 	private JMenu setting = new JMenu("Setting");
 	private JMenuItem setMode=new JMenuItem(modeName[orderMode-1]+" mode");
 	
-	private OrderInfo window;
-	private MyInfo window1 ;
+	private OrderInfo OrderInfoView = new OrderInfo(this, true);
+	private MyInfo MyInfoView = new MyInfo(this, true);
 
 	private String columnNames[] = { "분류", "메뉴명", "수량","가격(원)" };
 	String[] lookNfeel = { "com.jtattoo.plaf.mcwin.McWinLookAndFeel", "com.jtattoo.plaf.smart.SmartLookAndFeel",//2
@@ -116,9 +116,9 @@ class MainOrderView extends JFrame {
 		
 		
 		this.member=member;
-		window = new OrderInfo(this, true,member);
-		window1 = new MyInfo(this, true);
-		window1.generateInfo(member);
+//		window = new OrderInfo(this, true,member);
+//		window1 = new MyInfo(this, true);
+//		window1.generateInfo(member);
 		design();
 		event();
 		menu();
@@ -169,10 +169,10 @@ class MainOrderView extends JFrame {
 		jTable.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
 
 
-		myinfo.setBounds(665, 10, 114, 31);
+		myinfo.setBounds(800, 10, 114, 31);
 		bg.add(myinfo);
-
-		orderinfo.setBounds(800, 10, 114, 31);
+		
+		orderinfo.setBounds(665, 10, 114, 31);
 		bg.add(orderinfo);
 
 		order.setBounds(660, 435, 250, 55);
@@ -302,11 +302,11 @@ class MainOrderView extends JFrame {
 		}
 
 		myinfo.addActionListener(e -> {
-			window.setVisible(true);
+			MyInfoView.setVisible(true);
 		});
 
 		orderinfo.addActionListener(e -> {
-			window1.setVisible(true);
+			OrderInfoView.setVisible(true);
 		});
 	
 		reset.addActionListener(e->{resetOrder();});
