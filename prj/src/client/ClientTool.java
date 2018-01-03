@@ -26,7 +26,7 @@ public class ClientTool {
 	public Scanner s;
 	final static int CLIENT = 1;
 	
-	ClientTool() throws UnknownHostException, IOException {
+	public ClientTool() throws UnknownHostException, IOException {
 		socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
 		out = new ObjectOutputStream(socket.getOutputStream());
 		in = new ObjectInputStream(socket.getInputStream());
@@ -44,15 +44,10 @@ public class ClientTool {
 			out.writeInt(choice); out.flush();
 			
 			switch(choice) {
-			case REGISTER: register();
+			case REGISTER: //register();
 				continue;
 			case LOGIN: 
-				if(login()) {
-					loginHome();
-					continue;
-				}else {
-					continue;
-				}
+				continue;
 			case END: end(); break; //종료
 			default: System.out.println("번호 오류"); continue;
 			}
@@ -103,46 +98,32 @@ public class ClientTool {
 		System.out.println("주문 완료");
 	}
 
-	private boolean login() throws IOException, ClassNotFoundException {
-		System.out.print("ID : ");
-		out.writeUTF(s.nextLine()); out.flush(); //id를 server에 넘김
-		System.out.print("PWD : ");
-		out.writeUTF(s.nextLine()); out.flush(); //pwd를 server에 넘김
+	public Member login(String id, String pwd) throws IOException, ClassNotFoundException {
+		out.writeInt(2); out.flush(); //서버에 로그인(2)을 넘김
+		out.writeUTF(id); out.flush(); //id를 server에 넘김
+		out.writeUTF(pwd); out.flush(); //pwd를 server에 넘김
 		
 		my = (Member)in.readObject();
 		
-		if(my!=null) {
+		return my;
+//		return my!=null;
+		
+		/*if(my!=null) {
 			System.out.println("로그인 성공");
-//			loginHome();
-//			MenuSFM.menuLoad(); //메뉴판 읽기
-//			MenuSFM.menuPrintConsole(); //메뉴판 출력
-//			//주문하기
-//			Order myOrder = new Order(my);
-//			myOrder.orderMain();
-//			out.writeObject(myOrder); out.flush(); //주문 객체 전송
-//			System.out.println("주문 완료");
 			return true;
 		}else {
 			System.out.println("로그인 실패");
 			return false;
-		}
+		}*/
 	}
 
-	private void register() throws IOException, ClassNotFoundException {
-		System.out.print("ID : ");
-		out.writeUTF(s.nextLine()); out.flush(); //id를 server에 넘김
-		System.out.print("PWD : ");
-		out.writeUTF(s.nextLine()); out.flush(); //pwd를 server에 넘김
-		System.out.print("전화번호  : ");
-		out.writeUTF(s.nextLine()); out.flush(); //phoneNumber를 server에 넘김
-		System.out.print("주소 : ");
-		out.writeUTF(s.nextLine()); out.flush(); //address를 server에 넘김
-		registerResult = in.readBoolean();
-		if(registerResult==true) {
-			System.out.println("회원가입 성공");
-		}else {
-			System.out.println("회원가입 실패");
-		}
+	public boolean register(String id, String pwd, String phone, String address) throws IOException, ClassNotFoundException {
+		out.writeInt(1); out.flush(); //서버에 회원가입(1)을 넘김
+		out.writeUTF(id); out.flush(); //id를 server에 넘김
+		out.writeUTF(pwd); out.flush(); //pwd를 server에 넘김
+		out.writeUTF(phone); out.flush(); //phoneNumber를 server에 넘김
+		out.writeUTF(address); out.flush(); //address를 server에 넘김
+		return registerResult = in.readBoolean();
 	}
 
 	private void end() throws IOException {
