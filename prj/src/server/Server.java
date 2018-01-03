@@ -3,8 +3,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import master.ForguiShow;
-import master.MenuSFM;
+import serverGui.ServerMainFrame;
 
 public class Server {
 	public static final int REGISTER = 1;
@@ -12,9 +11,7 @@ public class Server {
 	public static File target = new File("files", "menus.db");
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 
-		MenuSFM.menuLoad();//files에서 menu목록 가져와서 MenuSFM에 재저장(내용을 읽어옴)
-		new ForguiShow();//GUI로 메뉴 관리시작
-		
+		new ServerMainFrame();
 		//멀티 TCP 서버
 		try(ServerSocket server = new ServerSocket(20000);){
 			
