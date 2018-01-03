@@ -3,14 +3,21 @@ package gui;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import client.Member;
+import master.Order;
 
 public class OrderInfo extends JDialog{
 	private JPanel bg = new JPanel();
@@ -77,6 +84,29 @@ public class OrderInfo extends JDialog{
 		jTable.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
 		jTable.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
 		
+		/*try {
+			Map<Long,Order> orderIdx=MainOrderView.ct.myorderlist(); //오류
+			
+			if(orderIdx==null) {
+				JOptionPane.showMessageDialog(null, "주문 내역이 없습니다!","",JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			DefaultTableModel tp=(DefaultTableModel)jTable.getModel();
+			
+			for (long onumber: orderIdx.keySet()) {
+				Order orderTemp=orderIdx.get(onumber);
+				Member memtp=orderTemp.getMember();
+				tp.addRow(new Object[] {onumber,orderTemp.getOrdertime(),memtp.getAddress(),
+				memtp.getPhoneNumber(),orderTemp.getOrderState(),orderTemp.getPriceSum()		
+				});
+			}
+			
+			 jTable.updateUI();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return;
+		}*/
 		
 		
 	}

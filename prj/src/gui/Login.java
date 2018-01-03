@@ -90,7 +90,6 @@ public class Login extends JFrame {
 
 		signup.setBounds(147, 251, 97, 23);
 		bg.add(signup);
-
 	}
 
 	private void event() {

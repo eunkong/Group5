@@ -79,8 +79,10 @@ public class ClientTool {
 		}
 	}
 
-	private void myorderlist() throws ClassNotFoundException, IOException {
+	public Map<Long, Order> myorderlist() throws ClassNotFoundException, IOException {
 		Map<Long, Order> orderlist = (Map<Long, Order>)in.readObject();
+		return orderlist;
+		/*
 		if(orderlist==null) {
 			System.out.println("주문 내역이 없습니다");
 		}else if(orderlist.size()==0){
@@ -88,6 +90,7 @@ public class ClientTool {
 		}else {
 			ReceiptManager.printReceipt(orderlist);
 		}
+		*/
 	}
 
 	public void order(Map<Menu, Integer> m) throws IOException {
