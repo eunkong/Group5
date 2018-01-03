@@ -100,7 +100,7 @@ public class ForguiShow extends JFrame {
 				case JOptionPane.YES_OPTION:// 예를 누를경우
 					MenuSFM.menuWrite();// 객체로 저장 Yes나 No나 둘다 종료하므로 break;나 return; 필요없음
 				case JOptionPane.NO_OPTION:
-					System.exit(0);// JFrame종료
+					dispose();// JFrame종료
 					return;// 콘솔창 종료
 				// 취소를 누를경우 아무런 이벤트도 필요없으므로 따로 설정하지 않음
 				}
