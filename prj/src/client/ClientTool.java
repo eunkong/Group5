@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Scanner;
 
+import master.Menu;
 import master.MenuSFM;
 import master.Order;
 import server.ReceiptManager;
@@ -27,7 +28,7 @@ public class ClientTool {
 	final static int CLIENT = 1;
 	
 	public ClientTool() throws UnknownHostException, IOException {
-		socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
+		socket = new Socket(InetAddress.getByName("192.168.0.246"), 20000);
 		out = new ObjectOutputStream(socket.getOutputStream());
 		in = new ObjectInputStream(socket.getInputStream());
 		s = new Scanner(System.in);
@@ -65,7 +66,7 @@ public class ClientTool {
 			case 1: my.printInfo(); continue;
 			case 2: 
 				out.writeInt(choice); out.flush();
-				order(); continue;
+//				order(); continue;
 			case 3: 
 				out.writeInt(choice); out.flush();
 				myorderlist();
@@ -80,21 +81,33 @@ public class ClientTool {
 
 	private void myorderlist() throws ClassNotFoundException, IOException {
 		Map<Long, Order> orderlist = (Map<Long, Order>)in.readObject();
-		if(orderlist.size()==0) {
+		if(orderlist==null) {
 			System.out.println("주문 내역이 없습니다");
+		}else if(orderlist.size()==0){
+			System.out.println("0");
 		}else {
 			ReceiptManager.printReceipt(orderlist);
 		}
 	}
 
-	private void order() throws IOException {
-		MenuSFM.menuLoad(); //메뉴판 읽기
-		MenuSFM.menuPrintConsole(); //메뉴판 출력
+	public void order(Map<Menu, Integer> m) throws IOException {
+//		MenuSFM.menuLoad(); //메뉴판 읽기
+//		MenuSFM.menuPrintConsole(); //메뉴판 출력
 		//주문하기
 		Order myOrder = new Order(my);
-		myOrder.orderMain();
 		
+		out.writeInt(2); out.flush(); //서버에 주문하기(2)를 넘김
+		myOrder.order(m);
+		System.out.println(myOrder.getPriceSum());
+		System.out.println(myOrder.getMember());
+		for (Menu menu : myOrder.getOrderIdx().keySet()) {
+			System.out.println(menu.getName());
+			System.out.println(myOrder.getOrderIdx().get(menu));
+			System.out.println();
+		}
+		out.writeBoolean(true); out.flush();
 		out.writeObject(myOrder); out.flush(); //주문 객체 전송
+		
 		System.out.println("주문 완료");
 	}
 

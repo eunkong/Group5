@@ -26,21 +26,14 @@ public class Order implements Serializable {
 	}
 
 	
-
+/*
 	public void orderMain() {
 
 		MenuSFM.menuLoad();
 
 		priceSum = 0;
 
-		while (true) {
-			System.out.println();
-			System.out.println("1.주문하기");
-			System.out.println("2.주문수정");
-			System.out.println("3.정보편집");
-			System.out.println("4.주문보기");
-			System.out.println("5.정보보기");
-			System.out.println("0.종료");
+			
 			int choice = 0;
 			try {
 				choice = sc.nextInt();
@@ -73,12 +66,18 @@ public class Order implements Serializable {
 				break;
 			}
 
+
+	}*/
+	//test
+	public void order(Map<Menu,Integer> ordertemp) {
+		
+		priceSum=0;
+		for (Menu menu : ordertemp.keySet()) {
+			priceSum+=menu.getPrice()*ordertemp.get(menu);
 		}
-
-	}
-
-	private void order() {
-		System.out.println("=====메뉴분류=====");
+		orderIdx=ordertemp;
+		member.setOrderCount(member.getOrderCount() + 1);
+		/*System.out.println("=====메뉴분류=====");
 
 		Set<String> groups = MenuSFM.getGroupString();
 
@@ -123,7 +122,7 @@ public class Order implements Serializable {
 		member.setOrderCount(member.getOrderCount() + 1);
 		priceSum += menu.getPrice() * num;
 		orderIdx.put(menu, num);
-		System.out.println("주문 완료");
+		System.out.println("주문 완료");*/
 	}
 
 	private void editOrder() {
@@ -184,6 +183,8 @@ public class Order implements Serializable {
 		editOrder();
 	}
 
+	
+	
 	private void infoEdit() {
 
 		System.out.println("1.아이디");

@@ -153,13 +153,11 @@ public class Login extends JFrame {
 	}
 
 	private void loginNow() {
-		
-		
 		String id=idArea.getText();
 		String pwd=pwArea.getText();
 		try {
-			ClientTool ct=new ClientTool();
-			Member mem=ct.login(id, pwd);
+			
+			Member mem=MainOrderView.ct.login(id, pwd);
 			if(mem==null) {
 				JOptionPane.showMessageDialog(null, "로그인 실패", "", JOptionPane.WARNING_MESSAGE);
 			    return;	
@@ -167,6 +165,7 @@ public class Login extends JFrame {
 			JOptionPane.showMessageDialog(null, "로그인에 성공하였습니다.", "", JOptionPane.INFORMATION_MESSAGE);
 			this.setVisible(false);
 			new MainOrderView(mem);
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -9,7 +9,7 @@ class Window07 extends JFrame{
 	
 	//Dialog 준비
 	//private JDialog window = new JDialog(this, "환경설정", false);
-	private MyInfo window = new MyInfo(this, true);
+	//private MyInfo window = new MyInfo(this, true);
 	
 	public Window07() {
 		design();
@@ -33,7 +33,7 @@ class Window07 extends JFrame{
 //		Dialog를 띄우는 코드 - Frame과 비슷
 //		window.setSize(300, 400);
 //		window.setLocationRelativeTo(bg);
-		window.setVisible(true);
+		//window.setVisible(true);
 		
 	}
 
