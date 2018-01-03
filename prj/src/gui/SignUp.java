@@ -5,19 +5,19 @@ import java.awt.Frame;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import client.ClientTool;
 import client.Member;
 
 class SignUp extends JDialog {
@@ -153,8 +153,20 @@ class SignUp extends JDialog {
 			/*
 			 * 새로운 회원 정보를 서버에 보낸후 member.db에 추가하는 코드
 			 */
-			JOptionPane.showMessageDialog(null, "회원가입이 완료 되었습니다.", "", JOptionPane.INFORMATION_MESSAGE);
-			dispose();
+			ClientTool ct;
+			try {
+				ct = new ClientTool();
+				if(ct.register(id, pw, pnum, address))
+					JOptionPane.showMessageDialog(null, "회원가입이 완료 되었습니다.", "", JOptionPane.INFORMATION_MESSAGE);
+					dispose();
+			} catch (Exception e1) {
+				System.err.println("예외");
+				e1.printStackTrace();
+				ct=null;
+			}
+			
+			
+			
 		});
 		
 	}

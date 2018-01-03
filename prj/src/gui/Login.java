@@ -8,7 +8,9 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -23,6 +25,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
+import client.Client;
+import client.ClientTool;
 import client.Member;
 
 public class Login extends JFrame {
@@ -149,7 +153,26 @@ public class Login extends JFrame {
 	}
 
 	private void loginNow() {
-		try (ObjectInputStream in = new ObjectInputStream(
+		
+		
+		String id=idArea.getText();
+		String pwd=pwArea.getText();
+		try {
+			ClientTool ct=new ClientTool();
+			Member mem=ct.login(id, pwd);
+			if(mem==null) {
+				JOptionPane.showMessageDialog(null, "로그인 실패", "", JOptionPane.WARNING_MESSAGE);
+			    return;	
+			}
+			JOptionPane.showMessageDialog(null, "로그인에 성공하였습니다.", "", JOptionPane.INFORMATION_MESSAGE);
+			this.setVisible(false);
+			new MainOrderView(mem);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		}
+		/*try (ObjectInputStream in = new ObjectInputStream(
 				new BufferedInputStream(new FileInputStream(new File("files", "memberlist.db"))));) {
 
 			@SuppressWarnings("unchecked")
@@ -169,7 +192,7 @@ public class Login extends JFrame {
 			JOptionPane.showMessageDialog(null, "로그인 실패", "", JOptionPane.WARNING_MESSAGE);
 		} catch (Exception e2) {
 			// TODO: handle exception
-		}
+		}*/
 	}
 
 }
