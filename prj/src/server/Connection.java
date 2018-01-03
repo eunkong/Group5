@@ -239,7 +239,10 @@ public class Connection extends Thread {
 				System.out.println("member선택 : " + memberSelect);
 				if (memberSelect == 2) { // 2.주문하기 선택시
 					// 주문정보 받음.
+					boolean result = in.readBoolean();
+					System.out.println(result);
 					Order order = (Order) in.readObject();
+					System.out.println(order.toString());
 					cal = Calendar.getInstance();
 					time = (cal.get(Calendar.YEAR) - 2000) + "년 " + (1 + cal.get(Calendar.MONTH)) + "월 "
 							+ cal.get(Calendar.DAY_OF_MONTH) + "일  " + cal.get(Calendar.HOUR_OF_DAY) + ":"
