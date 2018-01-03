@@ -61,7 +61,7 @@ public class Client {
 					MenuSFM.menuPrintConsole(); //메뉴판 출력
 					//주문하기
 					Order myOrder = new Order(my);
-					myOrder.orderMain();
+//					myOrder.orderMain();
 					out.writeObject(myOrder); out.flush(); //주문 객체 전송
 					System.out.println("주문 완료");
 				}else {

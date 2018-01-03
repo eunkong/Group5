@@ -1,15 +1,30 @@
 package gui;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.text.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-import client.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import client.ClientTool;
+import client.Member;
 import master.ForguiShow;
-import master.MenuManager;
+import master.Menu;
 import master.MenuSFM;
 
 class MainOrderView extends JFrame {
@@ -21,6 +36,15 @@ class MainOrderView extends JFrame {
 	private JPanel jpanel2 = new JPanel();
 	private JPanel jpanel3 = new JPanel();
 	
+	public static ClientTool ct;
+	static {	
+		try {
+		ct = new ClientTool();
+		} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	 }
+	}
 	static {
 		MenuSFM.menuLoad();
 	}
@@ -297,6 +321,22 @@ class MainOrderView extends JFrame {
 				JOptionPane.showMessageDialog(null, "만원이상 배달 가능합니다", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
+			Map<Menu,Integer> ordertemp=new HashMap<>();
+			
+			for (String string : orders.keySet()) {
+				if(orders.get(string)==0)continue;
+				Menu menu= MenuSFM.getMenu(string);
+				ordertemp.put(menu, orders.get(string));
+			}
+			
+			try {
+				
+				ct.order(ordertemp);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				return;
+			}
+			
 			/**@code{
 			 * 여기에 주인에게 주문 내역을 보내는 코드가 들어감
 			 * }
@@ -333,7 +373,7 @@ class MainOrderView extends JFrame {
 		
 		settingItem.addActionListener(e->{new Window07();});
 		
-		exit.addActionListener(e->{dispose();});
+		exit.addActionListener(e->{System.exit(0);});
 		
 		basicmenu.add(logoutMenu);
 		
