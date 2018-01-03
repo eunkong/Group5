@@ -16,6 +16,7 @@ public class Deliveryman {
 	static boolean deliveryState;
 	public static void main(String[] args){
 		System.out.println("<<배달맨>>");
+		//
 		try(Socket socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
 				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
@@ -24,10 +25,12 @@ public class Deliveryman {
 			
 			while(true) {
 				deliveryState = false;
-				System.out.print("배달가능여부 : (0이면 가능)");
+				System.out.print("배달가능여부 : (0이면 가능) / (1이면 종료)");
 				int state = s.nextInt(); //배달맨에게 배달 가능여부 입력받기
+				if(state==1) break;
 				if(state!=0) continue;
 				out.writeInt(state); out.flush(); //상태 전송
+				System.out.println("배달 상태 전송 완료");
 				s.nextLine();
 				
 				Map<Long, Order> orderlist = (Map<Long, Order>)in.readObject();
