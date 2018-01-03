@@ -2,9 +2,21 @@ package serverGui;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import master.Order;
+import server.ReceiptManager;
 
 class OrderManageWindow extends JDialog {
 	private JPanel bg = new JPanel();
@@ -17,10 +29,12 @@ class OrderManageWindow extends JDialog {
 	private JButton bt4 = new JButton("돌아가자");
 	
 
+
 	private String columnNames[] = { "주문번호", "주문시간", "고객아이디", "고객 주소","고객 연락처", "주문상태" };
 	// DefaultTableModel을 선언하고 데이터 담기
 	private DefaultTableModel defaultTableModel = new DefaultTableModel(new Object[][] {},
 			columnNames);
+	private DefaultTableModel m;
 	// JTable에 DefaultTableModel을 담기
 	private JTable jTable = new JTable(defaultTableModel);
 	// JScrollPane에 JTable을 담기
@@ -93,6 +107,64 @@ class OrderManageWindow extends JDialog {
 			dispose();
 		};
 		bt4.addActionListener(ac);
+		
+		
+		//전체영수증 출력
+		ActionListener ac1 = e->{
+			m = (DefaultTableModel)jTable.getModel();		//틀만들고 
+
+			ReceiptManager receiptManager = new ReceiptManager();
+			Map<Long, Order> map = ReceiptManager.loadDatabase();
+			Iterator<Long> iterator = map.keySet().iterator();
+			while(iterator.hasNext()) {
+				Long num = iterator.next();	//1개로만 한다.
+				Order order = map.get(num);
+				m.insertRow(m.getRowCount(), new Object[]{num,order.getOrdertime(),order.getMember().getId(),order.getMember().getAddress(),order.getMember().getPhoneNumber(),order.getOrderState()});
+			}
+			jTable.updateUI();
+		};
+		bt3.addActionListener(ac1);
+		
+		//고객별 조회
+		ActionListener ac2 = e->{
+			String inputId = JOptionPane.showInputDialog("아이디를 입력해주세요~");
+			
+			m = (DefaultTableModel)jTable.getModel();		//틀만들고 
+
+			ReceiptManager receiptManager = new ReceiptManager();
+			Map<Long, Order> map = ReceiptManager.getPerReceipt(inputId);
+			Iterator<Long> iterator = map.keySet().iterator();
+			while(iterator.hasNext()) {
+				Long num = iterator.next();	//1개로만 한다.
+				Order order = map.get(num);
+				m.insertRow(m.getRowCount(), new Object[]{num,order.getOrdertime(),order.getMember().getId(),order.getMember().getAddress(),order.getMember().getPhoneNumber(),order.getOrderState()});
+			}
+			jTable.updateUI();
+			
+		};
+		bt2.addActionListener(ac2);
+		
+		
+		
+		//기간별 조회
+		ActionListener ac3 = e->{
+			String start = JOptionPane.showInputDialog("조회 시작할 기간을 입력   ex) 180101");
+			String finish = JOptionPane.showInputDialog("조회종료할 기간도 입력해!  ex) 180101");
+			m = (DefaultTableModel)jTable.getModel();		//틀만들고 
+
+			ReceiptManager receiptManager = new ReceiptManager();
+			Map<Long, Order> map = ReceiptManager.getPeriodReceipt(start, finish);
+			Iterator<Long> iterator = map.keySet().iterator();
+			while(iterator.hasNext()) {
+				Long num = iterator.next();	//1개로만 한다.
+				Order order = map.get(num);
+				m.insertRow(m.getRowCount(), new Object[]{num,order.getOrdertime(),order.getMember().getId(),order.getMember().getAddress(),order.getMember().getPhoneNumber(),order.getOrderState()});
+			}
+			jTable.updateUI();
+			
+		};
+		bt1.addActionListener(ac3);
+		
 	}
 
 	private void menu() {

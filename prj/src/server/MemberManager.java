@@ -38,7 +38,7 @@ public class MemberManager {
 	 * memberlist.db에서 멤버정보 불러오는 메소드
 	 * @return Map<id, Member>
 	 */
-	private static Map<String, Member> loadDatabase() {
+	public static Map<String, Member> loadDatabase() {
 		try(
 			ObjectInputStream in = new ObjectInputStream(
 														new BufferedInputStream(
@@ -79,7 +79,7 @@ public class MemberManager {
 	 * memberlist.db에 파일 쓰는 메소드
 	 * @param map<id,Member>
 	 */
-	private static void saveDatabase(Map<String, Member> map) {
+	public static void saveDatabase(Map<String, Member> map) {
 		try(
 				ObjectOutputStream out = new ObjectOutputStream(
 															new BufferedOutputStream(
