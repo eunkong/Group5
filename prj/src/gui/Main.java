@@ -90,7 +90,7 @@ class MainOrderView extends JFrame {
 	private JMenuItem setMode=new JMenuItem(modeName[orderMode-1]+" mode");
 	
 	private OrderInfo window = new OrderInfo(this, true);
-	private MyInfo window1 = new MyInfo(this, true);
+	private MyInfo window1 ;
 
 	private String columnNames[] = { "분류", "메뉴명", "수량","가격(원)" };
 	String[] lookNfeel = { "com.jtattoo.plaf.mcwin.McWinLookAndFeel", "com.jtattoo.plaf.smart.SmartLookAndFeel",//2
@@ -116,7 +116,8 @@ class MainOrderView extends JFrame {
 		
 		
 		this.member=member;
-		window1.generateInfo(member);
+		window1 = new MyInfo(this, true);
+		window1.setMember(member);
 		design();
 		event();
 		menu();
