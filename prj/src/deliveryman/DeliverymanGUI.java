@@ -70,7 +70,6 @@ class DeliverymanGUI extends JDialog {
 	 */
 	private JLabel[] jb = new JLabel[columnNames.length];
 	private JLabel[] show = new JLabel[columnNames.length];
-	private JButton btReady = new JButton("배달준비");
 	private JButton btStart = new JButton("배달시작");
 	private JButton btFinish = new JButton("배달완료");
 	private JButton btBack = new JButton("종료");
@@ -111,14 +110,11 @@ class DeliverymanGUI extends JDialog {
 			show[i].setFont(new Font("", Font.PLAIN, 14));
 			bg.add(show[i]);
 		}
-		btReady.setBounds(50, 600, 90, 50);
-		btStart.setBounds(180, 600, 90, 50);
-		btFinish.setBounds(310, 600, 90, 50);
-		btBack.setBounds(440, 600, 90, 50);
+		btStart.setBounds(100, 600, 90, 50);
+		btFinish.setBounds(255, 600, 90, 50);
+		btBack.setBounds(410, 600, 90, 50);
 
-		bg.add(btReady);
 		bg.add(btStart);
-		btStart.setEnabled(false);
 		bg.add(btFinish);
 		btFinish.setEnabled(false);
 		bg.add(btBack);
@@ -133,16 +129,13 @@ class DeliverymanGUI extends JDialog {
 	}
 
 	private void event() {
-		btReady.addActionListener(e->{
-			btReady.setEnabled(false);
-			btStart.setEnabled(true);
+		btStart.addActionListener(e->{
+			btStart.setEnabled(false);
+			btFinish.setEnabled(true);
 			try {
-//				out.writeInt(DELIVERYMAN); out.flush();  //배달맨이라는 정보를 서버에 넘김
 				out.writeInt(0); out.flush(); //서버에 배달가느여부(0) 전송
 				JOptionPane.showMessageDialog(null,"배달준비완료!", "", JOptionPane.INFORMATION_MESSAGE);
-				
 				Map<Long, Order> orderlist = (Map<Long, Order>)in.readObject();
-				System.out.println("주문넘오왔나");
 				if(orderlist==null) {
 					JOptionPane.showMessageDialog(null, "배달할게 없음ㅋ", "", JOptionPane.INFORMATION_MESSAGE); 
 					System.exit(0);
@@ -156,23 +149,14 @@ class DeliverymanGUI extends JDialog {
 				show[3].setText(order.getMember().getAddress());//고객주소
 				show[4].setText(order.getMember().getPhoneNumber());//고객연락처
 				show[5].setText(state[order.getOrderState()]);//주문상태
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		});
-		btStart.addActionListener(e->{
-			btStart.setEnabled(false);
-			btFinish.setEnabled(true);
-			try {
-				out.writeBoolean(true); out.flush(); //서버에 완료 상태(true) 전송
+				out.writeBoolean(true); out.flush(); //배달중(true) 전송
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} 
 		});
 		btFinish.addActionListener(e->{
 			btFinish.setEnabled(false);
-			btReady.setEnabled(true);
+			btStart.setEnabled(true);
 			try {
 				deliveryState = true;
 				out.writeBoolean(deliveryState); out.flush(); //배달완료 상태를 서버에 넘김
