@@ -92,26 +92,17 @@ class DeliverymanGUI extends JDialog {
 	}
 
 	private void design() {
-		/*
-				Map<Long, Order> orderlist = (Map<Long, Order>)in.readObject();
-				if(orderlist==null) {
-					System.out.println("배달할 목록이 없습니다"); break;
-				}
-				System.out.println("고객정보");
-				Iterator<Long> iterator = orderlist.keySet().iterator();
-				while(iterator.hasNext()) {
-					Long num = iterator.next();
-					Order order = orderlist.get(num);
-					ReceiptManager.printReceipt(num, order);
-					break;
-				}
-*/
+		try {
+			out.writeInt(DELIVERYMAN); out.flush();  //배달맨이라는 정보를 서버에 넘김
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		setContentPane(bg); // bg를 배경에 설치하라
 		// this가 아니라 bg에 작업을 수행할 수 있다
 		bg.setLayout(null);
 		for (int i = 0; i < columnNames.length; i++) {
 			jb[i] = new JLabel(columnNames[i]);
-			jb[i].setBounds(50, 100 + i * 80, 100, 20);
+			jb[i].setBounds(50, 100 + i * 80, 150, 20);
 			jb[i].setFont(new Font("", Font.BOLD, 15));
 			bg.add(jb[i]);
 
@@ -146,26 +137,10 @@ class DeliverymanGUI extends JDialog {
 			btReady.setEnabled(false);
 			btStart.setEnabled(true);
 			try {
-				out.writeInt(DELIVERYMAN); out.flush();  //배달맨이라는 정보를 서버에 넘김
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		});
-		btStart.addActionListener(e->{
-			btStart.setEnabled(false);
-			btFinish.setEnabled(true);
-			try {
-				out.writeInt(0); out.flush(); //서버에 시작 상태(0) 전송
-				out.writeBoolean(true); out.flush(); //서버에 완료 상태(true) 전송
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			} 
-		});
-		btFinish.addActionListener(e->{
-			btStart.setEnabled(true);
-			btFinish.setEnabled(false);
-			try {
+//				out.writeInt(DELIVERYMAN); out.flush();  //배달맨이라는 정보를 서버에 넘김
+				out.writeInt(0); out.flush(); //서버에 배달가느여부(0) 전송
+				JOptionPane.showMessageDialog(null,"배달준비완료!", "", JOptionPane.INFORMATION_MESSAGE);
+				
 				Map<Long, Order> orderlist = (Map<Long, Order>)in.readObject();
 				System.out.println("주문넘오왔나");
 				if(orderlist==null) {
@@ -181,7 +156,28 @@ class DeliverymanGUI extends JDialog {
 				show[3].setText(order.getMember().getAddress());//고객주소
 				show[4].setText(order.getMember().getPhoneNumber());//고객연락처
 				show[5].setText(state[order.getOrderState()]);//주문상태
-				}
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
+		btStart.addActionListener(e->{
+			btStart.setEnabled(false);
+			btFinish.setEnabled(true);
+			try {
+				out.writeBoolean(true); out.flush(); //서버에 완료 상태(true) 전송
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			} 
+		});
+		btFinish.addActionListener(e->{
+			btFinish.setEnabled(false);
+			btReady.setEnabled(true);
+			try {
+				deliveryState = true;
+				out.writeBoolean(deliveryState); out.flush(); //배달완료 상태를 서버에 넘김
+				JOptionPane.showMessageDialog(null,"배달완료!", "", JOptionPane.INFORMATION_MESSAGE);
+				
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} 
@@ -190,6 +186,7 @@ class DeliverymanGUI extends JDialog {
 		btBack.addActionListener(e->{
 			System.exit(0);
 		});
+		
 	}
 
 	private void menu() {
