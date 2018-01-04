@@ -27,7 +27,17 @@ public class ClientTool {
 	public Scanner s;
 	final static int CLIENT = 1;
 
-	public ClientTool() throws UnknownHostException, IOException {
+	private static ClientTool tool;
+	static{
+		try {
+			tool = new ClientTool();
+		}catch(Exception e) {}
+	}
+	public static ClientTool getTool() {
+		return tool;
+	}
+	
+	private ClientTool() throws UnknownHostException, IOException {
 		socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
 		out = new ObjectOutputStream(socket.getOutputStream());
 		in = new ObjectInputStream(socket.getInputStream());

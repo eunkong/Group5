@@ -36,16 +36,16 @@ class MainOrderView extends JFrame {
 	private JPanel jpanel2 = new JPanel();
 	private JPanel jpanel3 = new JPanel();
 	
-	public static ClientTool ct;
-	static {	
-		try {
-		ct = new ClientTool();
-		ct.setClientTool();
-		} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	 }
-	}
+//	public static ClientTool ct;
+//	static {	
+//		try {
+//		ct = new ClientTool();
+//		ct.setClientTool();
+//		} catch (IOException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	 }
+//	}
 	static {
 		MenuSFM.menuLoad();
 	}
@@ -305,7 +305,7 @@ class MainOrderView extends JFrame {
 
 		myinfo.addActionListener(e -> {
 			try {
-				ct.myinfoOpen();
+				ClientTool.getTool().myinfoOpen();
 				myInfoView.setVisible(true);
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -340,7 +340,7 @@ class MainOrderView extends JFrame {
 			
 			try {
 				
-				ct.order(ordertemp);
+				ClientTool.getTool().order(ordertemp);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				return;
@@ -375,7 +375,7 @@ class MainOrderView extends JFrame {
 		
 		logoutMenu.addActionListener(e->{
 			try {
-				ct.logout();
+				ClientTool.getTool().logout();
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

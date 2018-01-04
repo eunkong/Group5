@@ -156,7 +156,7 @@ public class Login extends JFrame {
 		String pwd=pwArea.getText();
 		try {
 			
-			Member mem=MainOrderView.ct.login(id, pwd);
+			Member mem = ClientTool.getTool().login(id, pwd);
 			if(mem==null) {
 				JOptionPane.showMessageDialog(null, "로그인 실패", "", JOptionPane.WARNING_MESSAGE);
 			    return;	

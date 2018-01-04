@@ -4,6 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Frame;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Scanner;
 
 import javax.swing.*;
 
@@ -31,11 +36,9 @@ public class MyInfo extends JDialog {
 	private static JButton btCancel = new JButton("취소");
 
 	private static Member member;
-	public static ClientTool ct;
 	static {	
 		try {
-		ct = new ClientTool();
-		ct.setClientTool();
+		ClientTool.getTool().setClientTool();
 		} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -101,7 +104,7 @@ public class MyInfo extends JDialog {
 		btCancel.addActionListener(e->{
 			System.out.println("취소 버튼 클릭");
 				try {
-					ct.myinfoClose();
+					ClientTool.getTool().myinfoClose();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -109,7 +112,7 @@ public class MyInfo extends JDialog {
 		});
 		btEdit.addActionListener(e->{
 			try {
-				boolean result = ct.myinfoEdit(member.getPwd(), member.getPhoneNumber(), member.getAddress());
+				boolean result = ClientTool.getTool().myinfoEdit(member.getPwd(), member.getPhoneNumber(), member.getAddress());
 				if(result) JOptionPane.showMessageDialog(null, "회원정보가 수정되었습니다!", "", JOptionPane.INFORMATION_MESSAGE);
 				else JOptionPane.showMessageDialog(null, "회원정보가 수정되지 않았습니다", "", JOptionPane.INFORMATION_MESSAGE);
 			} catch (IOException | ClassNotFoundException e1) {

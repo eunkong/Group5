@@ -38,11 +38,9 @@ class SignUp extends JDialog {
 	
 	private static JButton signInNow = new JButton("회원가입");
 	private static JButton cancelBt = new JButton("취소");
-	public static ClientTool ct;
 	static {	
 		try {
-		ct = new ClientTool();
-		ct.setClientTool();
+		ClientTool.getTool().setClientTool();
 		} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -165,13 +163,12 @@ class SignUp extends JDialog {
 			 * 새로운 회원 정보를 서버에 보낸후 member.db에 추가하는 코드
 			 */
 			try {
-				if(ct.register(id, pw, pnum, address))
+				if(ClientTool.getTool().register(id, pw, pnum, address))
 					JOptionPane.showMessageDialog(null, "회원가입이 완료 되었습니다.", "", JOptionPane.INFORMATION_MESSAGE);
 					dispose();
 			} catch (Exception e1) {
 				System.err.println("예외");
 				e1.printStackTrace();
-				ct=null;
 			}
 			
 			

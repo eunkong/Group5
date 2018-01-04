@@ -139,8 +139,7 @@ public class OrderInfo extends JDialog{
 		while(tp.getRowCount()!=0) {tp.removeRow(0);}
 		
 		try {
-			ClientTool ct=new ClientTool();
-			orderIdx=MainOrderView.ct.myorderlist(); //오류
+			orderIdx=ClientTool.getTool().myorderlist(); //오류
 			
 			if(orderIdx==null) {
 				JOptionPane.showMessageDialog(null, "주문 내역이 없습니다!","",JOptionPane.WARNING_MESSAGE);
