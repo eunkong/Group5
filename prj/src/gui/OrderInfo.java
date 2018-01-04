@@ -103,14 +103,18 @@ public class OrderInfo extends JDialog{
 		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); //x키 방지(+이벤트설정)
 		bt1.addActionListener(e->{
 			
+			//^[01][0-9][01][0-9][123][0-9]$ 정규식 넣을 예정
+			String start = JOptionPane.showInputDialog("조회 시작할 기간을 입력   ex) 180101");
+			if(start.equals("")||start==null)return;
+			
+			String finish = JOptionPane.showInputDialog("조회종료할 기간도 입력해!  ex) 180101");
+			if(finish.equals("")||finish==null)return;
+			
+			//틀만들고 
 			DefaultTableModel tp=(DefaultTableModel)jTable.getModel();
 			while(tp.getRowCount()!=0) {tp.removeRow(0);}
-			
-			String start = JOptionPane.showInputDialog("조회 시작할 기간을 입력   ex) 180101");
-			String finish = JOptionPane.showInputDialog("조회종료할 기간도 입력해!  ex) 180101");
-			//틀만들고 
 
-			ReceiptManager receiptManager = new ReceiptManager();
+//			ReceiptManager receiptManager = new ReceiptManager();
 			Map<Long, Order> map = ReceiptManager.getPeriodReceipt(orderIdx, start, finish);
 			Iterator<Long> iterator = map.keySet().iterator();
 			while(iterator.hasNext()) {
