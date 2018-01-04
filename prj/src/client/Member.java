@@ -20,6 +20,16 @@ public class Member implements Serializable {
 		this.orderCount = 0;
 		this.point = 0;
 	}
+	public Member(String id, String pwd, String phoneNumber, String address, String grade, int orderCount, int point) {
+		super();
+		this.id = id;
+		this.pwd = pwd;
+		this.phoneNumber = phoneNumber;
+		this.address = address;
+		this.grade = grade;
+		this.orderCount = orderCount;
+		this.point = point;
+	}
 	public String getId() {
 		return id;
 	}

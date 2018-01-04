@@ -40,6 +40,7 @@ class MainOrderView extends JFrame {
 	static {	
 		try {
 		ct = new ClientTool();
+		ct.setClientTool();
 		} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -303,8 +304,12 @@ class MainOrderView extends JFrame {
 		}
 
 		myinfo.addActionListener(e -> {
-			
-			myInfoView.setVisible(true);
+			try {
+				ct.myinfoOpen();
+				myInfoView.setVisible(true);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 		});
 
 		orderinfo.addActionListener(e -> {

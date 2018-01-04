@@ -3,9 +3,11 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Frame;
+import java.io.IOException;
 
 import javax.swing.*;
 
+import client.ClientTool;
 import client.Member;
 
 public class MyInfo extends JDialog {
@@ -29,13 +31,23 @@ public class MyInfo extends JDialog {
 	private static JButton btCancel = new JButton("취소");
 
 	private static Member member;
-	public MyInfo(Frame owner, boolean modal) {
+	public static ClientTool ct;
+	static {	
+		try {
+		ct = new ClientTool();
+		ct.setClientTool();
+		} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	 }
+	}
 	
+	public MyInfo(Frame owner, boolean modal) {
 		super(owner, modal);
 		design();
 		event();
 		menu();
-
+		
 		setTitle("내정보");
 		setSize(400, 500);
 		setLocationRelativeTo(owner);
@@ -87,7 +99,22 @@ public class MyInfo extends JDialog {
 
 	private void event() {
 		btCancel.addActionListener(e->{
+			System.out.println("취소 버튼 클릭");
+				try {
+					ct.myinfoClose();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			dispose();
+		});
+		btEdit.addActionListener(e->{
+			try {
+				boolean result = ct.myinfoEdit(member.getPwd(), member.getPhoneNumber(), member.getAddress());
+				if(result) JOptionPane.showMessageDialog(null, "회원정보가 수정되었습니다!", "", JOptionPane.INFORMATION_MESSAGE);
+				else JOptionPane.showMessageDialog(null, "회원정보가 수정되지 않았습니다", "", JOptionPane.INFORMATION_MESSAGE);
+			} catch (IOException | ClassNotFoundException e1) {
+				e1.printStackTrace();
+			}
 		});
 
 	}
