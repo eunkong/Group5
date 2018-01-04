@@ -5,6 +5,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Menu;
+import java.awt.event.ActionListener;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,53 +20,56 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.html.HTMLDocument.Iterator;
+
+import cook.Cook;
+import master.MenuSFM;
+import master.Order;
 
 class FoodView extends JFrame {
+
+	private static final int TABLE_NUM = 6;
+
 	private JPanel bg = new JPanel(new BorderLayout());
 
-	private JPanel jp1 = new JPanel();
-	private JPanel jp2 = new JPanel();
-	private JPanel jp3 = new JPanel();
-	private JPanel jp4 = new JPanel();
-	private JPanel jp5 = new JPanel();
-	private JPanel jp6 = new JPanel();
+	private JPanel[] jp = new JPanel[TABLE_NUM];
+	{
+		for (int i = 0; i < TABLE_NUM; i++)
+			jp[i] = new JPanel();
+	}
 
-	private JButton jbt1 = new JButton("수락");
-	private JButton jbt2 = new JButton("완료");
-	private JButton jbt3 = new JButton("거절");
-	private JButton jbt4 = new JButton("수락");
-	private JButton jbt5 = new JButton("완료");
-	private JButton jbt6 = new JButton("거절");
-	private JButton jbt7 = new JButton("수락");
-	private JButton jbt8 = new JButton("완료");
-	private JButton jbt9 = new JButton("거절");
-	private JButton jbt10 = new JButton("수락");
-	private JButton jbt11 = new JButton("완료");
-	private JButton jbt12 = new JButton("거절");
-	private JButton jbt13 = new JButton("수락");
-	private JButton jbt14 = new JButton("완료");
-	private JButton jbt15 = new JButton("거절");
-	private JButton jbt16 = new JButton("수락");
-	private JButton jbt17 = new JButton("완료");
-	private JButton jbt18 = new JButton("거절");
+	private JButton[] jbtOk = new JButton[TABLE_NUM];
+	private JButton[] jbtCpt = new JButton[TABLE_NUM];
+	private JButton[] jbtCncl = new JButton[TABLE_NUM];
 
-	private String columnNames[] = { "주문번호", "분류", "메뉴명", "수량" };
-	private DefaultTableModel defaultTableModel = new DefaultTableModel(new Object[][] { { "ㄴㅇㄹ", "ㅇㅀ", 0, 0 } },
-			columnNames);
-	// JTable에 DefaultTableModel을 담기
-	private JTable jTable1 = new JTable(defaultTableModel);
-	private JTable jTable2 = new JTable(defaultTableModel);
-	private JTable jTable3 = new JTable(defaultTableModel);
-	private JTable jTable4 = new JTable(defaultTableModel);
-	private JTable jTable5 = new JTable(defaultTableModel);
-	private JTable jTable6 = new JTable(defaultTableModel);
+	{
+		for (int i = 0; i < TABLE_NUM; i++) {
+			jbtOk[i] = new JButton("수락");
+			jbtCpt[i] = new JButton("완료");
+			jbtCncl[i] = new JButton("거절");
+		}
+	}
+
+	private String columnNames[] = { "주문번호", "메뉴명", "수량" };
+	private DefaultTableModel[] defaultTableModel = new DefaultTableModel[TABLE_NUM];
+	{
+		for (int i = 0; i < TABLE_NUM; i++) {
+			defaultTableModel[i] = new DefaultTableModel(null, columnNames);
+		}
+	}
+
 	// JScrollPane에 JTable을 담기
-	private JScrollPane jScollPane1 = new JScrollPane(jTable1);
-	private JScrollPane jScollPane2 = new JScrollPane(jTable2);
-	private JScrollPane jScollPane3 = new JScrollPane(jTable3);
-	private JScrollPane jScollPane4 = new JScrollPane(jTable4);
-	private JScrollPane jScollPane5 = new JScrollPane(jTable5);
-	private JScrollPane jScollPane6 = new JScrollPane(jTable6);
+	private JTable[] jTable = new JTable[TABLE_NUM];
+	{
+		for (int i = 0; i < TABLE_NUM; i++)
+			jTable[i] = new JTable(defaultTableModel[i]);
+	}
+
+	private JScrollPane[] jScollPane = new JScrollPane[TABLE_NUM];
+	{
+		for (int i = 0; i < TABLE_NUM; i++)
+			jScollPane[i] = new JScrollPane(jTable[i]);
+	}
 
 	private JLabel jlabel = new JLabel("짜장면 짬뽕 짜장면 짬뽕");
 
@@ -67,7 +77,6 @@ class FoodView extends JFrame {
 		design();
 		event();
 		menu();
-
 		setTitle("????");
 		setSize(1200, 700);
 		setLocation(200, 100);
@@ -75,6 +84,7 @@ class FoodView extends JFrame {
 		// setAlwaysOnTop(true);//항상위
 		setResizable(false);
 		setVisible(true);
+		orderShow();
 	}
 
 	private void design() {
@@ -82,93 +92,27 @@ class FoodView extends JFrame {
 		// this가 아니라 bg에 작업을 수행할 수 있다
 		bg.setLayout(null);
 
-		jTable1.setRowHeight(15); // 높이 조절
-		jTable1.setPreferredScrollableViewportSize(new Dimension(230, 190)); // 사이즈?
-		jTable1.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
-		jTable1.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
-		jTable2.setRowHeight(15); // 높이 조절
-		jTable2.setPreferredScrollableViewportSize(new Dimension(230, 190)); // 사이즈?
-		jTable2.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
-		jTable2.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
-		jTable3.setRowHeight(15); // 높이 조절
-		jTable3.setPreferredScrollableViewportSize(new Dimension(230, 190)); // 사이즈?
-		jTable3.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
-		jTable3.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
-		jTable4.setRowHeight(15); // 높이 조절
-		jTable4.setPreferredScrollableViewportSize(new Dimension(230, 190)); // 사이즈?
-		jTable4.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
-		jTable4.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
-		jTable5.setRowHeight(15); // 높이 조절
-		jTable5.setPreferredScrollableViewportSize(new Dimension(230, 190)); // 사이즈?
-		jTable5.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
-		jTable5.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
-		jTable6.setRowHeight(15); // 높이 조절
-		jTable6.setPreferredScrollableViewportSize(new Dimension(230, 190)); // 사이즈?
-		jTable6.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
-		jTable6.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
+		for (int i = 0; i < TABLE_NUM; i++) {
 
-		// JPane
-		jp1.setBounds(40, 100, 300, 225);
-		bg.add(jp1);
-		jp1.add(jScollPane1);
-		jp2.setBounds(440, 100, 300, 225);
-		bg.add(jp2);
-		jp2.add(jScollPane2);
-		jp3.setBounds(840, 100, 300, 225);
-		bg.add(jp3);
-		jp3.add(jScollPane3);
-		jp4.setBounds(40, 390, 300, 225);
-		bg.add(jp4);
-		jp4.add(jScollPane4);
-		jp5.setBounds(440, 390, 300, 225);
-		bg.add(jp5);
-		jp5.add(jScollPane5);
-		jp6.setBounds(840, 390, 300, 225);
-		bg.add(jp6);
-		jp6.add(jScollPane6);
+			jTable[i].setRowHeight(15); // 높이 조절
+			jTable[i].setPreferredScrollableViewportSize(new Dimension(230, 190)); // 사이즈?
+			jTable[i].getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
 
-		// JButton
-		jbt1.setBounds(70, 335, 80, 23);
-		bg.add(jbt1);
-		jbt2.setBounds(150, 335, 80, 23);
-		bg.add(jbt2);
-		jbt3.setBounds(230, 335, 80, 23);
-		bg.add(jbt3);
+			int row = 400 * (i % 3);
+			int col = 280 * (i / 3);
 
-		jbt4.setBounds(470, 335, 80, 23);
-		bg.add(jbt4);
-		jbt5.setBounds(550, 335, 80, 23);
-		bg.add(jbt5);
-		jbt6.setBounds(630, 335, 80, 23);
-		bg.add(jbt6);
+			jp[i].setBounds(40 + row, 100 + col, 300, 225);
+			bg.add(jp[i]);
+			jp[i].add(jScollPane[i]);
 
-		jbt7.setBounds(870, 335, 80, 23);
-		bg.add(jbt7);
-		jbt8.setBounds(950, 335, 80, 23);
-		bg.add(jbt8);
-		jbt9.setBounds(1030, 335, 80, 23);
-		bg.add(jbt9);
+			jbtOk[i].setBounds(70 + row, 335 + col, 80, 23);
+			jbtCpt[i].setBounds(150 + row, 335 + col, 80, 23);
+			jbtCncl[i].setBounds(230 + row, 335 + col, 80, 23);
 
-		jbt10.setBounds(70, 625, 80, 23);
-		bg.add(jbt10);
-		jbt11.setBounds(150, 625, 80, 23);
-		bg.add(jbt11);
-		jbt12.setBounds(230, 625, 80, 23);
-		bg.add(jbt12);
-
-		jbt13.setBounds(470, 625, 80, 23);
-		bg.add(jbt13);
-		jbt14.setBounds(550, 625, 80, 23);
-		bg.add(jbt14);
-		jbt15.setBounds(630, 625, 80, 23);
-		bg.add(jbt15);
-
-		jbt16.setBounds(870, 625, 80, 23);
-		bg.add(jbt16);
-		jbt17.setBounds(950, 625, 80, 23);
-		bg.add(jbt17);
-		jbt18.setBounds(1030, 625, 80, 23);
-		bg.add(jbt18);
+			bg.add(jbtOk[i]);
+			bg.add(jbtCpt[i]);
+			bg.add(jbtCncl[i]);
+		}
 
 		jlabel.setForeground(Color.RED);
 		jlabel.setFont(new Font("굴림", Font.PLAIN, 40));
@@ -184,59 +128,198 @@ class FoodView extends JFrame {
 		// setDefaultCloseOperation(HIDE_ON_CLOSE); //x키 누르면 숨김
 		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); //x키 방지(+이벤트설정)
 		// 수락
-		jbt1.addActionListener(e -> {
-			jbt1.setEnabled(false);
+		jbtOk[0].addActionListener(e -> {
+			okAction(0);
 		});
-		jbt4.addActionListener(e -> {
-			jbt4.setEnabled(false);
+		jbtCpt[0].addActionListener(e -> {
+			cptAction(0);
 		});
-		jbt7.addActionListener(e -> {
-			jbt7.setEnabled(false);
-		});
-		jbt10.addActionListener(e -> {
-			jbt10.setEnabled(false);
-		});
-		jbt13.addActionListener(e -> {
-			jbt13.setEnabled(false);
-		});
-		jbt16.addActionListener(e -> {
-			jbt16.setEnabled(false);
+		jbtCncl[0].addActionListener(e -> {
+			cnclAction(0);
 		});
 
-		// 완료
-		jbt2.addActionListener(e -> {
-			jbt1.setEnabled(true);
+		jbtOk[1].addActionListener(e -> {
+			okAction(1);
 		});
-		jbt5.addActionListener(e -> {
-			jbt4.setEnabled(true);
+		jbtCpt[1].addActionListener(e -> {
+			cptAction(1);
 		});
-		jbt8.addActionListener(e -> {
-			jbt7.setEnabled(true);
-		});
-		jbt11.addActionListener(e -> {
-			jbt10.setEnabled(true);
-		});
-		jbt14.addActionListener(e -> {
-			jbt13.setEnabled(true);
-		});
-		jbt17.addActionListener(e -> {
-			jbt16.setEnabled(true);
+		jbtCncl[1].addActionListener(e -> {
+			cnclAction(1);
 		});
 
-		// 거절
-		jbt3.addActionListener(e -> {
+		jbtOk[2].addActionListener(e -> {
+			okAction(2);
 		});
-		jbt6.addActionListener(e -> {
+		jbtCpt[2].addActionListener(e -> {
+			cptAction(2);
 		});
-		jbt9.addActionListener(e -> {
-		});
-		jbt12.addActionListener(e -> {
-		});
-		jbt15.addActionListener(e -> {
-		});
-		jbt18.addActionListener(e -> {
+		jbtCncl[2].addActionListener(e -> {
+			cnclAction(2);
 		});
 
+		jbtOk[3].addActionListener(e -> {
+			okAction(3);
+		});
+		jbtCpt[3].addActionListener(e -> {
+			cptAction(3);
+		});
+		jbtCncl[3].addActionListener(e -> {
+			cnclAction(3);
+		});
+
+		jbtOk[4].addActionListener(e -> {
+			okAction(4);
+		});
+		jbtCpt[4].addActionListener(e -> {
+			cptAction(4);
+		});
+		jbtCncl[4].addActionListener(e -> {
+			cnclAction(4);
+		});
+
+		jbtOk[5].addActionListener(e -> {
+			okAction(5);
+		});
+		jbtCpt[5].addActionListener(e -> {
+			cptAction(5);
+		});
+		jbtCncl[5].addActionListener(e -> {
+			cnclAction(5);
+		});
+
+	}
+
+	private void okAction(int i) {
+		jbtOk[i].setEnabled(false);
+
+	}
+
+	private void cptAction(int num) {
+		
+		boolean cookFinish, cookStart;
+		
+		
+		try (Socket socket = new Socket(InetAddress.getByName("192.168.0.246"), 20000);
+				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());) {
+			//System.out.println("a");
+			out.writeInt(2);
+			out.flush();
+			Map<Long, Order> orderlist = (Map<Long, Order>) in.readObject();
+			
+			int i = 0;
+			
+			while (((DefaultTableModel) jTable[i].getModel()).getRowCount() != 0 && i < TABLE_NUM) {
+				i++;
+			}
+			if (i == TABLE_NUM) {
+				return ;
+			}
+
+			
+			System.out.println(orderlist.size());
+			
+			for (java.util.Iterator<Long> ite = orderlist.keySet().iterator();ite.hasNext() &&  i < TABLE_NUM; ) {
+				
+				DefaultTableModel dtemp = (DefaultTableModel) jTable[i].getModel();
+				
+				long numb = ite.next();
+				
+				
+				
+				Map<master.Menu, Integer> menuIdx = (orderlist.get(numb)).getOrderIdx();
+				for (java.util.Iterator<master.Menu> itr = menuIdx.keySet().iterator(); itr.hasNext();) {
+					master.Menu menu = itr.next();
+					dtemp.insertRow(dtemp.getRowCount(), new Object[] { numb, menu.getName(), menuIdx.get(menu) });
+					
+				}
+				jTable[i].updateUI();
+				i++;
+			}
+			cookStart = true;
+			out.writeBoolean(cookStart); out.flush(); //요리시작 상태 정보를 서버에 넘김
+			System.out.println("요리시작!");
+//			Thread.sleep(3000);
+			cookFinish = true;
+			out.writeBoolean(cookFinish); out.flush();
+			System.out.println("요리Rmt!");
+			
+	
+			
+		} catch (Exception e) {
+			System.out.println("ㅅㅂ");
+			return ;
+		}
+		
+	
+		jbtOk[num].setEnabled(true);
+		DefaultTableModel dtemp = (DefaultTableModel) jTable[num].getModel();
+		while (dtemp.getRowCount() != 0)
+			dtemp.removeRow(0);
+		orderShow();
+		
+		
+		
+	}
+
+	private void cnclAction(int i) {
+		DefaultTableModel dtemp = (DefaultTableModel) jTable[i].getModel();
+		
+		while (dtemp.getRowCount() != 0)
+			dtemp.removeRow(0);
+		orderShow();
+	}
+
+	private void orderShow() {
+
+		try (Socket socket = new Socket(InetAddress.getByName("192.168.0.246"), 20000);
+				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());) {
+			//System.out.println("a");
+			out.writeInt(2);
+			out.flush();
+			Map<Long, Order> orderlist = (Map<Long, Order>) in.readObject();
+			
+			int i = 0;
+			
+			while (((DefaultTableModel) jTable[i].getModel()).getRowCount() != 0 && i < TABLE_NUM) {
+				i++;
+			}
+			if (i == TABLE_NUM) {
+				return ;
+			}
+
+			
+			System.out.println(orderlist.size());
+			
+			for (java.util.Iterator<Long> ite = orderlist.keySet().iterator();ite.hasNext() &&  i < TABLE_NUM; ) {
+				
+				DefaultTableModel dtemp = (DefaultTableModel) jTable[i].getModel();
+				
+				long numb = ite.next();
+				
+				
+				
+				Map<master.Menu, Integer> menuIdx = (orderlist.get(numb)).getOrderIdx();
+				for (java.util.Iterator<master.Menu> itr = menuIdx.keySet().iterator(); itr.hasNext();) {
+					master.Menu menu = itr.next();
+					dtemp.insertRow(dtemp.getRowCount(), new Object[] { numb, menu.getName(), menuIdx.get(menu) });
+					
+				}
+				jTable[i].updateUI();
+				i++;
+			}
+
+	
+			
+		} catch (Exception e) {
+			System.out.println("ㅅㅂ");
+			return ;
+		}
+		
+		
+		
 	}
 
 	private void menu() {
@@ -245,6 +328,6 @@ class FoodView extends JFrame {
 
 public class Food {
 	public static void main(String[] args) {
-		Frame f = new FoodView();
+		new FoodView();
 	}
 }

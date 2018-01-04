@@ -38,7 +38,7 @@ public class ClientTool {
 	}
 	
 	private ClientTool() throws UnknownHostException, IOException {
-		socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
+		socket = new Socket(InetAddress.getByName("192.168.0.246"), 20000);
 		out = new ObjectOutputStream(socket.getOutputStream());
 		in = new ObjectInputStream(socket.getInputStream());
 		s = new Scanner(System.in);

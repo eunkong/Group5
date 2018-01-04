@@ -270,6 +270,16 @@ public class MenuSFM implements Serializable {// 메뉴관리
 
 		return new TreeSet<String>(menus.keySet());
 	}
+	public static String getGroupString(Menu menu) {// 분류들을 set으로 가져옴
+		String temp="";
+		if(getMenu(menu.getName())==null) return null;
+		for (Iterator<String> ite = menus.keySet().iterator(); ite.hasNext();) {
+			temp=ite.next();
+			if(getMenuName(temp).contains(menu.getName()))
+				break;
+		}
+		return temp;
+	}
 
 	public static Set<Menu> getMenuGroup(String group) {// 한 분류의 모든 메뉴를 set으로 가져옴
 
@@ -278,7 +288,7 @@ public class MenuSFM implements Serializable {// 메뉴관리
 
 		return menus.get(group);
 	}
-
+	
 	public static Map<String, Set<Menu>> getMenus() {// menus를 통째로 가져옴
 		return menus;
 	}
