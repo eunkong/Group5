@@ -89,7 +89,8 @@ class MainOrderView extends JFrame {
 	private JMenu setting = new JMenu("Setting");
 	private JMenuItem setMode=new JMenuItem(modeName[orderMode-1]+" mode");
 	
-	private MyInfo MyInfoView = new MyInfo(this, true);
+	private MyInfo myInfoView = new MyInfo(this, true);
+	
 
 	private String columnNames[] = { "분류", "메뉴명", "수량","가격(원)" };
 	String[] lookNfeel = { "com.jtattoo.plaf.mcwin.McWinLookAndFeel", "com.jtattoo.plaf.smart.SmartLookAndFeel",//2
@@ -115,6 +116,7 @@ class MainOrderView extends JFrame {
 		
 		
 		this.member=member;
+		myInfoView.setMember(member);
 //		window = new OrderInfo(this, true,member);
 //		window1 = new MyInfo(this, true);
 //		window1.generateInfo(member);
@@ -301,7 +303,8 @@ class MainOrderView extends JFrame {
 		}
 
 		myinfo.addActionListener(e -> {
-			MyInfoView.setVisible(true);
+			
+			myInfoView.setVisible(true);
 		});
 
 		orderinfo.addActionListener(e -> {
