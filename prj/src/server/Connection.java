@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import client.Member;
 import master.Order;
@@ -140,6 +141,7 @@ public class Connection extends Thread {
 					map1.put(num, order);
 					out.writeObject(map1);	//재구성한 맵을 넘긴다.
 					out.flush();
+					boolean delivery_start = in.readBoolean(); //배달시작 입력 받음	
 					order.setOrderState(DELIVERING);	//배달중으로 바꾼다.
 					System.out.println(order.getOrderState()+"배달 중이다.");	//test
 					ReceiptManager.saveDatabase(num, order);
@@ -162,33 +164,70 @@ public class Connection extends Thread {
 	 * 요리사 접근 메소드
 	 * @throws IOException
 	 * 
-	 * 
 	 */
 	private void chefAccess() throws IOException {
 		System.out.println("요리사 접속");
-		Map<Long, Order> map = ReceiptManager.loadDatabase();
-		Iterator<Long> iterator = map.keySet().iterator();
-		boolean checkTask = false;
-
-		Map<Long, Order> map1 = new HashMap();
-		while (iterator.hasNext()) { // 전체메뉴중에
-			Long num = iterator.next();
-			Order order = map.get(num);
-			// 쓰레드로 각각의 주문을 따로 처리
-			if (order.getOrderState() == ORDERCOMPLETE) { // 요리해야할 주문
-				map1.put(num, order); // 요리해야할 주문 넘김
-				checkTask=true;
-			}
-		}
-				out.writeObject(map1);
-				out.flush();
+		while(true) {//요리사 메뉴불러오기 , 전체반복
+			Map<Long, Order> map = ReceiptManager.loadDatabase();
+			TreeMap<Long, Order> tm = new TreeMap<Long, Order>(map);		
+			Iterator<Long> iterator = tm.keySet().iterator();			//map정렬 예전 주문부터 처리
+			
+			while (iterator.hasNext()) { // 전체메뉴중에
+				Long num = iterator.next();
+				Order order = map.get(num);
+				// 쓰레드로 각각의 주문을 따로 처리
+				// 쓰레드 안에 새로운 쓰레드를 만든다.
 				
-//				out.writeObject(null); // 요리사에게 전달할 주문이 없을 때
+				if (order.getOrderState() == ORDERCOMPLETE) { // 요리해야할 주문
+					Thread thread = new Thread() {
+						public void run() {
+							Map<Long, Order> map1 = new HashMap();
+							map1.put(num, order); // 요리해야할 주문 넘김
+							try {
+								out.writeObject(map1);
+								out.flush();
+								
+								if (in.readBoolean()) { // 요리중 상태 전달받음
+									order.setOrderState(COOKING);
+									ReceiptManager.saveDatabase(num, order);
+									System.out.println("[test]" + order.getOrderState() + "요리중이에요~");
+								}
+								if (in.readBoolean()) { // 요리완료 상태 전달받음
+									order.setOrderState(COOKINGCOMPLETE);
+									System.out.println("[test]" + order.getOrderState() + "요리다했다 배달가라."); // test
+									ReceiptManager.saveDatabase(num, order);
+								}
+								
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					};
+					thread.start();
+				}
+			}
+			out.writeObject(null); out.flush();	//신호, 요리해야할 주문을 다 보내고 나면 null값 보낸다. 
+			
+		}
+	}
+	
+// 요리사 교제 전	
+//	private void chefAccess() throws IOException {
+//		System.out.println("요리사 접속");
+//		Map<Long, Order> map = ReceiptManager.loadDatabase();
+//		Iterator<Long> iterator = map.keySet().iterator();
+//
+//		Map<Long, Order> map1 = new HashMap();
+//		while (iterator.hasNext()) { // 전체메뉴중에
+//			Long num = iterator.next();
+//			Order order = map.get(num);
+//			// 쓰레드로 각각의 주문을 따로 처리
+//			if (order.getOrderState() == ORDERCOMPLETE) { // 요리해야할 주문
+//				map1.put(num, order); // 요리해야할 주문 넘김
+//				
+//				out.writeObject(map1);
 //				out.flush();
 //				
-//			}
-//		}
-
 //				if (in.readBoolean()) { // 요리중 상태 전달받음
 //					order.setOrderState(COOKING);
 //					ReceiptManager.saveDatabase(num, order);
@@ -199,9 +238,16 @@ public class Connection extends Thread {
 //					System.out.println("[test]" + order.getOrderState() + "요리다했다 배달가라."); // test
 //					ReceiptManager.saveDatabase(num, order);
 //				}
+//				
 //			}
-
-	}
+//		}
+//				out.writeObject(null); // 요리사에게 전달할 주문이 없을 때
+//				out.flush();
+//
+//	}
+	
+	
+	
 
 	/**
 	 * 고객 접속 메소드
