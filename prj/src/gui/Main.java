@@ -114,8 +114,6 @@ class MainOrderView extends JFrame {
 	private JScrollPane jScollPane = new JScrollPane(jTable);
 
 	public MainOrderView(Member member) {
-		
-		
 		this.member=member;
 		myInfoView.setMember(member);
 //		window = new OrderInfo(this, true,member);

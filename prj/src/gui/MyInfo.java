@@ -1,14 +1,8 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.awt.Frame;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Scanner;
 
 import javax.swing.*;
 
@@ -36,14 +30,6 @@ public class MyInfo extends JDialog {
 	private static JButton btCancel = new JButton("취소");
 
 	private static Member member;
-	static {	
-		try {
-		ClientTool.getTool().setClientTool();
-		} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	 }
-	}
 	
 	public MyInfo(Frame owner, boolean modal) {
 		super(owner, modal);
@@ -109,10 +95,11 @@ public class MyInfo extends JDialog {
 					e1.printStackTrace();
 				}
 			dispose();
+			
 		});
 		btEdit.addActionListener(e->{
 			try {
-				boolean result = ClientTool.getTool().myinfoEdit(member.getPwd(), member.getPhoneNumber(), member.getAddress());
+				boolean result = ClientTool.getTool().myinfoEdit(tfPw.getText(), tfPhone.getText(), tfAddress.getText());
 				if(result) JOptionPane.showMessageDialog(null, "회원정보가 수정되었습니다!", "", JOptionPane.INFORMATION_MESSAGE);
 				else JOptionPane.showMessageDialog(null, "회원정보가 수정되지 않았습니다", "", JOptionPane.INFORMATION_MESSAGE);
 			} catch (IOException | ClassNotFoundException e1) {

@@ -163,11 +163,10 @@ public class ClientTool {
 	// 수정하기 메소드
 	public boolean myinfoEdit(String pwd, String phone, String address) throws IOException, ClassNotFoundException {
 		out.writeBoolean(true);	out.flush(); // 내정보 수정하기(true)를 서버에 넘김
-		System.out.println("내정보 수정하기 전송!");
 		Member editMy = new Member(my.getId(), pwd, phone, address);
-		out.writeObject(editMy);
-		out.flush(); // 내 정보 수정한 객체를 넘김
+		out.writeObject(editMy); out.flush(); // 내 정보 수정한 객체를 넘김
 		editMy = (Member) in.readObject();
+		System.out.println("받을 객체 : " + editMy.toString());
 		if (editMy != null) {
 			my = editMy;
 			return true;
@@ -178,7 +177,6 @@ public class ClientTool {
 	// 취소 메소드
 	public void myinfoClose() throws IOException {
 		out.writeBoolean(false); out.flush();
-		System.out.println("내정보 수정하기 전송!");
 	}
 
 	// 내정보 시작될때 메소드
