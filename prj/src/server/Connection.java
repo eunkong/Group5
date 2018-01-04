@@ -196,7 +196,7 @@ public class Connection extends Thread {
 	}
 
 	/**
-	 * 
+	 * 고객 접속 메소드
 	 * 
 	 * 
 	 * @throws IOException
@@ -235,8 +235,29 @@ public class Connection extends Thread {
 
 			// 주문서받고 주문정보 저장
 			while (true) {
-				int memberSelect = in.readInt(); // 고객에게 2.주문하기, 3.주문내역, 4. 로그아웃 전달 (1.은 대기)
+				int memberSelect = in.readInt(); // 고객에게 1. 내정보  2.주문하기, 3.주문내역, 4. 로그아웃 전달 (1.은 대기)
 				System.out.println("member선택 : " + memberSelect);
+				
+				if(memberSelect==1) {		// 1. 내정보 수정하기 선택시
+					//수정할지 안할지를 알아야한다.
+					System.out.println("memberSelect 1일때 : " + memberSelect);
+					boolean editBoolean = in.readBoolean();
+					System.out.println("[test] 수정할거야? "+editBoolean);
+					
+					if(!editBoolean) {		//수정 안할 경우
+						continue;
+					}
+					if(editBoolean) {		//수정할 경우
+						System.out.println("[test] 수정 시작할게요~");
+						Member editMember = (Member) in.readObject();
+						System.out.println("[test] 수정할 아이디 받았습니다 : "+ editMember.getId());
+						System.out.println("[test] "+editMember.getPhoneNumber());
+						System.out.println("[test] "+editMember.getAddress());
+						Member editComplete = MemberManager.editInfo(editMember);
+						out.writeObject(editComplete);
+					}
+				}
+				
 				if (memberSelect == 2) { // 2.주문하기 선택시
 					// 주문정보 받음.
 					boolean result = in.readBoolean();

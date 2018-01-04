@@ -74,7 +74,63 @@ public class MemberManager {
 		saveDatabase(map);
 		return true;
 	}
-
+	
+	/**
+	 * 회원가입 메소드(오버로딩)
+	 * @param id
+	 * @param password
+	 * @param phone
+	 * @param address
+	 * @param grade
+	 * @param orderCount
+	 * @param point
+	 * @return
+	 */
+	public static boolean register(String id, String password, String phone, String address, String grade, int orderCount, int point) {
+		Map<String, Member> map = loadDatabase();
+		
+		Iterator<String> iterator = map.keySet().iterator();
+		while(iterator.hasNext()) {
+			if(id.equals(iterator.next()))
+				return false;
+		}
+		
+		map.put(id, new Member(id, password,phone,address,grade,orderCount,point));
+		saveDatabase(map);
+		return true;
+		
+	}
+	
+	
+	/**
+	 * 회원정보 수정 메소드
+	 * @param Member
+	 */
+	public static Member editInfo(Member member){
+		String editId = member.getId();
+		String editPwd = member.getPwd();
+		String editPhone = member.getPhoneNumber();
+		String editAddress = member.getAddress();
+		
+		Map<String, Member> map = loadDatabase();
+		Iterator<String> iterator = map.keySet().iterator();
+		
+		while(iterator.hasNext()) {
+			if(editId.equals(iterator.next())) {
+				Member mem = map.get(editId);
+				mem.setPwd(editPwd);
+				mem.setPhoneNumber(editPhone);
+				mem.setAddress(editAddress);
+				//db에 넣는다.
+				map.put(editId, mem);	//디비에 최신화
+				saveDatabase(map);
+				return member;
+			}
+		}
+		return null;
+	}
+	
+	
 	/**
 	 * memberlist.db에 파일 쓰는 메소드
 	 * @param map<id,Member>
@@ -91,6 +147,8 @@ public class MemberManager {
 			e.printStackTrace();
 		}
 	}
+
+
 }
 
 

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -19,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
 
 import client.Member;
 import master.MenuSFM;
+import master.Order;
 import server.MemberManager;
 
 class GuestManageWindow extends JDialog {
@@ -88,7 +90,7 @@ class GuestManageWindow extends JDialog {
 		jTable.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
 
 		// 창에 뿌려주는 거
-		m = (DefaultTableModel) jTable.getModel(); // 틀만들고
+		m = (DefaultTableModel)jTable.getModel();		//틀만들고 
 
 		System.out.println("m.getRowCount() : " + m.getRowCount());
 
@@ -115,6 +117,26 @@ class GuestManageWindow extends JDialog {
 
 		ActionListener ac = e -> {
 			// 뒤로간다? (=현재창을 닫고 이전창을 열어준다)
+			
+			//고객 정보 초기화
+			// 창에 뿌려주는 거
+			m = (DefaultTableModel)jTable.getModel();		//틀만들고 
+			while(m.getRowCount()!=0) {m.removeRow(0);} 	//테이블 초기화
+			System.out.println("m.getRowCount() : " + m.getRowCount());
+			MemberManager member = new MemberManager();
+			Map<String, Member> map = member.loadDatabase();
+			TreeMap<String,Member> tmap = new TreeMap<String, Member>(map);	//정렬
+			Iterator<String> iterator = tmap.keySet().iterator();   //내림차순
+			while (iterator.hasNext()) {
+				String id = iterator.next(); // 1개로만 한다.
+				Member man = map.get(id);
+				m.insertRow(m.getRowCount(), new Object[] { man.getId(), man.getPwd(), man.getPhoneNumber(),
+						man.getAddress(), man.getGrade(), man.getOrderCount(), man.getPoint() });
+			}
+			m.insertRow(m.getRowCount(), new Object[] { "", "", "", "", "", "", "" });
+			jTable.updateUI();
+			
+			//사라지게
 			dispose();
 		};
 		bt4.addActionListener(ac);
@@ -153,12 +175,27 @@ class GuestManageWindow extends JDialog {
 
 			// 마지막행의 처음부터 끝까지 값을 가져온다. 그리고 그 값으로 회원가입한다.
 			String[] array = new String[7];
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 7; i++) {
 				String a = (String) m.getValueAt(lastRow, i);
 				array[i] = a;
 				System.out.println(a);
 			}
-			MemberManager.register(array[0], array[1], array[2], array[3]);
+			
+			//주문수, 마일리지 숫자 이외 들어올시 처리
+			int array5, array6;
+			try {
+				array5 = Integer.parseInt(array[5]);
+			}catch(Exception e1) {
+				array5=0;
+			}
+			
+			try {
+				array6 = Integer.parseInt(array[6]);
+			}catch(Exception e1) {
+				array6=0;
+			}
+			
+			MemberManager.register(array[0], array[1], array[2], array[3], array[4], array5, array6);
 
 			m.insertRow(m.getRowCount(), new Object[] { "", "", "", "", "", "", "" });
 			jTable.updateUI();
