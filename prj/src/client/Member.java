@@ -1,7 +1,7 @@
 package client;
 
 import java.io.Serializable;
-
+//
 public class Member implements Serializable {
 	private String id, pwd, phoneNumber, address, grade;
 	private int orderCount, point;

@@ -366,9 +366,16 @@ class MainOrderView extends JFrame {
 		
 		
 		logoutMenu.addActionListener(e->{
-			ct.logout();
+			try {
+				ct.logout();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "로그 아웃에 실패하였습니다", "", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			this.dispose();
-			JOptionPane.showMessageDialog(null, "정상적으로 로그아웃 되었습니다.", "", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "정상적으로 로그아웃 되었습니다.", "", JOptionPane.INFORMATION_MESSAGE);
 			new Login();
 		});
 		

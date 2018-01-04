@@ -15,6 +15,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import client.ClientTool;
@@ -24,14 +25,14 @@ class SignUp extends JDialog {
 	private JPanel bg = new JPanel(new BorderLayout());
 
 	private static JTextField idTf = new JTextField();
-	private static JTextField pwTf1 = new JTextField();
-	private static JTextField pwTf2 = new JTextField();
+	private static JTextField pwTf1 = new JPasswordField();
+	private static JTextField pwTf2 = new JPasswordField();
 	private static JTextField pnumTf = new JTextField();
 	private static JTextField addressTf = new JTextField();
 
 	private static JLabel idLb = new JLabel("아이디");
-	private static JLabel pwLb1 = new JLabel("비밀번호");
-	private static JLabel pwLb2 = new JLabel("비밀번호확인");
+	private static JLabel pwLb1 = new JLabel("패스워드");
+	private static JLabel pwLb2 = new JLabel("패스워드확인");
 	private static JLabel pnumLb = new JLabel("전화번호");
 	private static JLabel addressLb = new JLabel("주소");
 	
