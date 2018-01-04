@@ -13,22 +13,23 @@ import javax.swing.*;
  * @see MenuSFM  
  */
 @SuppressWarnings("serial")
-public class MenuBoard extends JFrame{
+public class MenuBoard extends JDialog{
 	/** 
 	 * @see #design
 	 * 
 	 */
-	private JPanel bg = new JPanel(new BorderLayout());
-	private JToolBar tb1=new JToolBar();
-	private JToolBar tb2=new JToolBar();
+	private JPanel bg = new JPanel();
+	
+	private JPanel bg1 = new JPanel();
+	//private JToolBar tb = new JToolBar();
 	
 	/** 
 	 * 출력되는 글자의 크기를 컨트롤하기 위한 JButton
 	 * @see #design
 	 * @see #event
 	 */
-	private JButton bt1=new JButton("+");//글씨크기 키우기
-	private JButton bt2=new JButton("-");//글씨크기 줄이기
+	//private JButton bt1=new JButton("+");//글씨크기 키우기
+	//private JButton bt2=new JButton("-");//글씨크기 줄이기
 	
 	/**
 	 * 그룹별 메뉴가 출력
@@ -39,18 +40,17 @@ public class MenuBoard extends JFrame{
 	
 	private int fontsize=13;//폰트 사이즈. bt1,bt2 버튼으로 글씨를 키우거나 줄일때 사용
 	
-	public MenuBoard() {
+	
+	public MenuBoard(Frame owner, boolean modal) {
+		super(owner, modal);
 		design();
 		event();
 		menu();
 		
 		setTitle("메뉴목록");
-		setSize(600, 500);
-//		setLocation(100, 100);
-		setLocationByPlatform(true);	//위치를 운영체제가 정하도록 설정
-//		setAlwaysOnTop(true);//항상위
-		setResizable(true);
-		setVisible(true);
+		setSize(700, 300);
+		setLocationRelativeTo(owner);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 	/** 
 	 * 출력화면 구성
@@ -66,10 +66,10 @@ public class MenuBoard extends JFrame{
 //		MenuSFM.menuLoad();
 		setContentPane(bg);//bg를 배경에 설치하라
 		//this가 아니라 bg에 작업을 수행할 수 있다
-		bg.add(tb1,BorderLayout.CENTER);
-		bg.add(tb2,BorderLayout.NORTH);
+		bg.add(bg1);
+		//bg.add(tb,BorderLayout.NORTH);
 		
-		tb1.setLayout(new GridLayout(3, (MenuSFM.getGroupString().size()+2)/3));
+		//bg1.setLayout(new GridLayout(3, (MenuSFM.getGroupString().size()+2)/3));
 		
 		Set<String> temp=new TreeSet<>(MenuSFM.getGroupString());//분류 이름을 Set으로 가져옴
 		//콘솔과 같은 순서대로 나오게 하기위해 TreeSet
@@ -81,12 +81,12 @@ public class MenuBoard extends JFrame{
 			
 			String string = ite.next();//분류이름
 			jb.add(new JLabel(MenuSFM.menuPrintJLabel(string)));//분류에 따른 메뉴를 출력시킬  String(html을 String 에 넣음)
-			tb1.add(jb.get(i));//툴바1에 분류에 따른 메뉴목록 추가
+			bg1.add(jb.get(i));//툴바1에 분류에 따른 메뉴목록 추가
 			jb.get(i).setFont(new Font("", Font.PLAIN, fontsize));//처음엔 15사이즈의 폰트로 출력하도록 설정
 		}
-			tb2.add(bt1);
-			tb2.add(bt2);
-			tb2.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+			//tb.add(bt1);
+			//tb.add(bt2);
+			//tb.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 	}
 	/**
 	 * @see #fontSizeConntrol
@@ -97,13 +97,13 @@ public class MenuBoard extends JFrame{
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);//x 키 누르면 창 닫기
 //		setDefaultCloseOperation(HIDE_ON_CLOSE);//x키 누르면 숨김
 //		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//x키 방지(+이벤트)
-		bt1.addActionListener(e->{
-			fontSizeConntrol(true);
-		});
-		
-		bt2.addActionListener(e->{
-			fontSizeConntrol(false);
-		});
+//		bt1.addActionListener(e->{
+//			fontSizeConntrol(true);
+//		});
+//		
+//		bt2.addActionListener(e->{
+//			fontSizeConntrol(false);
+//		});
 		//ActionListener로 이벤트 추가
 	}
 	private void menu() {

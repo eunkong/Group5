@@ -1,9 +1,13 @@
 package master;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 /** 
  * 메뉴관리 GUI
  * 
@@ -22,7 +26,6 @@ public class ForguiShow extends JFrame {
 	 *  
 	 */
 	private JPanel bg = new JPanel(new BorderLayout());
-	private JToolBar tb = new JToolBar();
 
 	/**
 	 * 
@@ -42,6 +45,8 @@ public class ForguiShow extends JFrame {
 	 * @see	#event()
 	 * @see #menu()
 	 */
+	private MenuBoard menuboard = new MenuBoard(this, true);
+	
 	public ForguiShow() {// 강사님의 기본 틀대로 만든 JFrame 상속 클래스
 
 		mains();
@@ -64,13 +69,12 @@ public class ForguiShow extends JFrame {
 
 		setContentPane(bg);// bg를 배경에 설치하라
 
-		bg.add(tb, BorderLayout.CENTER);// JToolBar를 중앙에 설치
+		bg.setLayout(new GridLayout(USING.length, 1));
 
-		tb.setLayout(new GridLayout(USING.length, 1));
 		
 		for (int i = 0; i < USING.length; i++) {
 			bts[i] = new JButton(USING[i]);
-			tb.add(bts[i]);// for문으로버튼 추가
+			bg.add(bts[i]);// for문으로버튼 추가
 		}
 		// this가 아니라 bg에 작업을 수행할 수 있다
 	}
@@ -136,7 +140,7 @@ public class ForguiShow extends JFrame {
 		switch (key) {
 		case "메뉴보기":
 			MenuSFM.menuPrintConsole();// 콘솔창에서 메뉴목록 확인가능
-			new MenuBoard();// 새창에서 메뉴 보여줌
+			menuboard.setVisible(true);
 			break;
 
 		case "메뉴추가":
