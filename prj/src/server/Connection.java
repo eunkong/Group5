@@ -159,6 +159,7 @@ public class Connection extends Thread {
 
 
 	/**
+	 * 요리사 접근 메소드
 	 * @throws IOException
 	 * 
 	 * 
@@ -167,32 +168,39 @@ public class Connection extends Thread {
 		System.out.println("요리사 접속");
 		Map<Long, Order> map = ReceiptManager.loadDatabase();
 		Iterator<Long> iterator = map.keySet().iterator();
+		boolean checkTask = false;
 
+		Map<Long, Order> map1 = new HashMap();
 		while (iterator.hasNext()) { // 전체메뉴중에
 			Long num = iterator.next();
 			Order order = map.get(num);
 			// 쓰레드로 각각의 주문을 따로 처리
 			if (order.getOrderState() == ORDERCOMPLETE) { // 요리해야할 주문
-				System.out.println("[test] 메뉴 정보 넘김"); // test
-				Map<Long, Order> map1 = new HashMap();
-				map1.put(num, order); // 요리해야할 주문 1개 넘김
-				out.writeObject(map1);
-				out.flush();
-
-				if (in.readBoolean()) { // 요리중 상태 전달받음
-					order.setOrderState(COOKING);
-					ReceiptManager.saveDatabase(num, order);
-					System.out.println("[test]" + order.getOrderState() + "요리중이에요~");
-				}
-				if (in.readBoolean()) { // 요리완료 상태 전달받음
-					order.setOrderState(COOKINGCOMPLETE);
-					System.out.println("[test]" + order.getOrderState() + "요리다했다 배달가라."); // test
-					ReceiptManager.saveDatabase(num, order);
-				}
+				map1.put(num, order); // 요리해야할 주문 넘김
+				checkTask=true;
 			}
 		}
-		out.writeObject(null); // 요리사에게 전달할 주문이 없을 때
-		out.flush();
+				out.writeObject(map1);
+				out.flush();
+				
+//				out.writeObject(null); // 요리사에게 전달할 주문이 없을 때
+//				out.flush();
+//				
+//			}
+//		}
+
+//				if (in.readBoolean()) { // 요리중 상태 전달받음
+//					order.setOrderState(COOKING);
+//					ReceiptManager.saveDatabase(num, order);
+//					System.out.println("[test]" + order.getOrderState() + "요리중이에요~");
+//				}
+//				if (in.readBoolean()) { // 요리완료 상태 전달받음
+//					order.setOrderState(COOKINGCOMPLETE);
+//					System.out.println("[test]" + order.getOrderState() + "요리다했다 배달가라."); // test
+//					ReceiptManager.saveDatabase(num, order);
+//				}
+//			}
+
 	}
 
 	/**
@@ -241,6 +249,14 @@ public class Connection extends Thread {
 				if(memberSelect==1) {		// 1. 내정보 수정하기 선택시
 					//수정할지 안할지를 알아야한다.
 					System.out.println("memberSelect 1일때 : " + memberSelect);
+					
+					//해당 아이디의 최신 내정보 전송
+					Map<String, Member> map = MemberManager.loadDatabase();
+					Member memberNew = map.get(id_login);
+					System.out.println("주소변경한거 보낸다. : "+memberNew.getAddress());
+					out.writeObject(memberNew); out.flush();
+					
+					
 					boolean editBoolean = in.readBoolean();
 					System.out.println("[test] 수정할거야? "+editBoolean);
 					
@@ -251,8 +267,8 @@ public class Connection extends Thread {
 						System.out.println("[test] 수정 시작할게요~");
 						Member editMember = (Member) in.readObject();
 						System.out.println("[test] 수정할 아이디 받았습니다 : "+ editMember.getId());
-						System.out.println("[test] "+editMember.getPhoneNumber());
-						System.out.println("[test] "+editMember.getAddress());
+						System.out.println("[test] 수정할 번호 받았어요 :"+editMember.getPhoneNumber());
+						System.out.println("[test] 수정할 주소도 받았다~ : "+editMember.getAddress());
 						Member editComplete = MemberManager.editInfo(editMember);
 						out.writeObject(editComplete);
 					}

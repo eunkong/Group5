@@ -172,33 +172,39 @@ class GuestManageWindow extends JDialog {
 		ActionListener act3 = e -> {
 			int lastRow = m.getRowCount() - 1; // 마지막 행
 			int lastCol = m.getColumnCount(); // 마지막 열
-
+			boolean nullCheck = true;					//추가할 내용이 없는 데, 추가버튼을 누를 경우 방지 
 			// 마지막행의 처음부터 끝까지 값을 가져온다. 그리고 그 값으로 회원가입한다.
 			String[] array = new String[7];
 			for (int i = 0; i < 7; i++) {
 				String a = (String) m.getValueAt(lastRow, i);
 				array[i] = a;
 				System.out.println(a);
+				if(!a.equals("")) {
+					nullCheck = false;
+				}
+			}
+			if(!nullCheck) {						//추가할 내용이 있을 때			
+				//주문수, 마일리지 숫자 이외 들어올시 처리
+				int array5, array6;
+				try {
+					array5 = Integer.parseInt(array[5]);
+				}catch(Exception e1) {
+					array5=0;
+				}
+				
+				try {
+					array6 = Integer.parseInt(array[6]);
+				}catch(Exception e1) {
+					array6=0;
+				}
+				
+				MemberManager.register(array[0], array[1], array[2], array[3], array[4], array5, array6);
+				
+				m.insertRow(m.getRowCount(), new Object[] { "", "", "", "", "", "", "" });
+				jTable.updateUI();
 			}
 			
-			//주문수, 마일리지 숫자 이외 들어올시 처리
-			int array5, array6;
-			try {
-				array5 = Integer.parseInt(array[5]);
-			}catch(Exception e1) {
-				array5=0;
-			}
 			
-			try {
-				array6 = Integer.parseInt(array[6]);
-			}catch(Exception e1) {
-				array6=0;
-			}
-			
-			MemberManager.register(array[0], array[1], array[2], array[3], array[4], array5, array6);
-
-			m.insertRow(m.getRowCount(), new Object[] { "", "", "", "", "", "", "" });
-			jTable.updateUI();
 		};
 		bt1.addActionListener(act3);
 		
@@ -212,12 +218,26 @@ class GuestManageWindow extends JDialog {
 			String value = (String) jTable.getValueAt(row, col);
 			System.out.println("value : " + value);
 
-			//선택 행의 값을 불러와 배열에 저장한다.
-			String[] array = new String[7];
-			for (int i = 0; i < 4; i++) {
+			// 마지막행의 처음부터 끝까지 값을 가져온다. 그리고 그 값을 수정한다.
+			String[] array = new String[5];
+			for (int i = 0; i < 5; i++) {
 				String a = (String) m.getValueAt(row, i);
 				array[i] = a;
 				System.out.println(a);
+			}
+			
+			//주문수, 마일리지 숫자 이외 들어올시 처리
+			int array5, array6;
+			try {
+				array5 = (int) m.getValueAt(row, 5);
+			}catch(Exception e1) {
+				array5=0;
+			}
+			
+			try {
+				array6 = (int) m.getValueAt(row, 6);
+			}catch(Exception e1) {
+				array6=0;
 			}
 			
 			//선택행 값 변경 적용
@@ -229,11 +249,12 @@ class GuestManageWindow extends JDialog {
 				if (id.equals(value)) {
 					System.out.println("일치하는 아이디 발견");
 					//해당 맵값을 수정한다.
-					map.put(id, new Member(id, array[1], array[2], array[3]));
+					map.put(id, new Member(id, array[1], array[2], array[3], array[4], array5, array6));
 					break;
 				}
 			}
 			member.saveDatabase(map);
+			jTable.updateUI();
 		};
 		bt2.addActionListener(act4);
 
