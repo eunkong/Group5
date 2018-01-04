@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.swing.*;
 
+
 import client.ClientTool;
 import client.Member;
 
@@ -40,8 +41,8 @@ public class MyInfo extends JDialog {
 		setTitle("내정보");
 		setSize(400, 500);
 		setLocationRelativeTo(owner);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		// setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); //X키 비활성화
+//		 setDefaultCloseOperation(EXIT_ON_CLOSE);
 		// setVisible(true);
 	}
 
@@ -100,8 +101,12 @@ public class MyInfo extends JDialog {
 		btEdit.addActionListener(e->{
 			try {
 				boolean result = ClientTool.getTool().myinfoEdit(tfPw.getText(), tfPhone.getText(), tfAddress.getText());
-				if(result) JOptionPane.showMessageDialog(null, "회원정보가 수정되었습니다!", "", JOptionPane.INFORMATION_MESSAGE);
-				else JOptionPane.showMessageDialog(null, "회원정보가 수정되지 않았습니다", "", JOptionPane.INFORMATION_MESSAGE);
+				if(result) {
+					JOptionPane.showMessageDialog(null, "회원정보가 수정되었습니다!", "", JOptionPane.INFORMATION_MESSAGE);
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(null, "회원정보가 수정되지 않았습니다", "", JOptionPane.INFORMATION_MESSAGE);
+				}
 			} catch (IOException | ClassNotFoundException e1) {
 				e1.printStackTrace();
 			}

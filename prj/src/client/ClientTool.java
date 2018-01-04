@@ -166,9 +166,7 @@ public class ClientTool {
 		Member editMy = new Member(my.getId(), pwd, phone, address);
 		out.writeObject(editMy); out.flush(); // 내 정보 수정한 객체를 넘김
 		editMy = (Member) in.readObject();
-		System.out.println("받을 객체 : " + editMy.toString());
 		if (editMy != null) {
-			my = editMy;
 			return true;
 		}
 		return false;
@@ -180,12 +178,14 @@ public class ClientTool {
 	}
 
 	// 내정보 시작될때 메소드
-	public void myinfoOpen() {
+	public Member myinfoOpen() throws ClassNotFoundException {
 		try {
-			out.writeInt(1);
-			out.flush(); // 내정보(1)을 서버에 넘김
+			out.writeInt(1); out.flush(); // 내정보(1)을 서버에 넘김
+			Member my = (Member)ClientTool.getTool().in.readObject();
+			return my;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return null;
 		}
 	}
 

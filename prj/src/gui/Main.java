@@ -115,7 +115,7 @@ class MainOrderView extends JFrame {
 
 	public MainOrderView(Member member) {
 		this.member=member;
-		myInfoView.setMember(member);
+//		myInfoView.setMember(member); //¼öÁ¤Áß
 //		window = new OrderInfo(this, true,member);
 //		window1 = new MyInfo(this, true);
 //		window1.generateInfo(member);
@@ -303,7 +303,8 @@ class MainOrderView extends JFrame {
 
 		myinfo.addActionListener(e -> {
 			try {
-				ClientTool.getTool().myinfoOpen();
+				member = ClientTool.getTool().myinfoOpen();
+				myInfoView.setMember(member);
 				myInfoView.setVisible(true);
 			} catch (Exception e1) {
 				e1.printStackTrace();
