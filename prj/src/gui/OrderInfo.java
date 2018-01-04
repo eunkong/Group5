@@ -107,8 +107,8 @@ public class OrderInfo extends JDialog{
 			e1.printStackTrace();
 			return;
 		}*/
-		
-		
+		//이상하게 안댐 왠지 목록이 안뜸
+ 		
 	}
 
 	private void event() {
