@@ -27,8 +27,8 @@ class OrderManageWindow extends JDialog {
 	private JButton bt2 = new JButton("고객별 조회");
 	private JButton bt3 = new JButton("전체주문");
 	private JButton bt4 = new JButton("돌아가자");
-	
 
+	public static String[] state = {"","주문완료","요리중","요리완료","배달중","배달완료"};
 
 	private String columnNames[] = { "주문번호", "주문시간", "고객아이디", "고객 주소","고객 연락처", "주문상태" };
 	// DefaultTableModel을 선언하고 데이터 담기
@@ -119,7 +119,7 @@ class OrderManageWindow extends JDialog {
 			while(iterator.hasNext()) {
 				Long num = iterator.next();	//1개로만 한다.
 				Order order = map.get(num);
-				m.insertRow(m.getRowCount(), new Object[]{num,order.getOrdertime(),order.getMember().getId(),order.getMember().getAddress(),order.getMember().getPhoneNumber(),order.getOrderState()});
+				m.insertRow(m.getRowCount(), new Object[]{num,order.getOrdertime(),order.getMember().getId(),order.getMember().getAddress(),order.getMember().getPhoneNumber(),state[order.getOrderState()]});
 			}
 			jTable.updateUI();
 		};

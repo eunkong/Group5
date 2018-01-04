@@ -208,6 +208,29 @@ public class ReceiptManager {
 		}
 		
 		
+		/**
+		 * 매개변수로 받은 맵 내에서 입력받은 기간 영수증 가져오는 메소드
+		 * @param Map<주문번호, Order>, start, end
+		 * @return Map<주문번호, Order>
+		 */
+		public static Map<Long, Order> getPeriodReceipt(Map<Long, Order> mapInput, String start, String end){
+			 Set<Long> set = mapInput.keySet();
+			 Iterator<Long> iterator = set.iterator();
+			 Map<Long, Order> map = new HashMap<>();
+			 while(iterator.hasNext()) {
+				 Long orderNum = iterator.next();
+				 Order order = mapInput.get(orderNum);
+				 String orderDate = orderNum.toString().substring(0, 6);
+				 Long orderDateLong = Long.parseLong(orderDate);
+				 Long startLong = Long.parseLong(start);
+				 Long endLong = Long.parseLong(end);
+				 if(orderDateLong<=endLong&&orderDateLong>=startLong)	
+						map.put(orderNum, order);		
+			 }
+			 return map;
+		}
+		
+		
 		
 
 }
