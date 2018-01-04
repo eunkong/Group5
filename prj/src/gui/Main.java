@@ -89,7 +89,6 @@ class MainOrderView extends JFrame {
 	private JMenu setting = new JMenu("Setting");
 	private JMenuItem setMode=new JMenuItem(modeName[orderMode-1]+" mode");
 	
-	private OrderInfo orderInfoView = new OrderInfo(this, true);
 	private MyInfo MyInfoView = new MyInfo(this, true);
 
 	private String columnNames[] = { "분류", "메뉴명", "수량","가격(원)" };
@@ -306,7 +305,7 @@ class MainOrderView extends JFrame {
 		});
 
 		orderinfo.addActionListener(e -> {
-			orderInfoView.setVisible(true);
+			new OrderInfo(this, true);
 		});
 	
 		reset.addActionListener(e->{resetOrder();});
@@ -367,6 +366,7 @@ class MainOrderView extends JFrame {
 		
 		
 		logoutMenu.addActionListener(e->{
+			ct.logout();
 			this.dispose();
 			JOptionPane.showMessageDialog(null, "정상적으로 로그아웃 되었습니다.", "", JOptionPane.WARNING_MESSAGE);
 			new Login();

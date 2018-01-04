@@ -78,8 +78,16 @@ public class ClientTool {
 			}
 		}
 	}
+	public void logout(){
+		try {
+			out.writeInt(4); out.flush(); //서버에 로그아웃(4) 정보를 넘김
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public Map<Long, Order> myorderlist() throws ClassNotFoundException, IOException {
+		out.writeInt(3); out.flush(); //서버에 주문내역(3)을 넘김
 		Map<Long, Order> orderlist = (Map<Long, Order>)in.readObject();
 		return orderlist;
 		/*
