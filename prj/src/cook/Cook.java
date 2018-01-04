@@ -16,10 +16,10 @@ public class Cook {
 	private static boolean cookFinish, cookStart;
 	private static Map<Long, Order> orderlist;
 	private static int cookChoice;
-
+//
 	public static void main(String[] args) {
 		System.out.println("<<¿ä¸®»ç>>");
-		try(Socket socket = new Socket(InetAddress.getByName("192.168.0.246"), 20000);
+		try(Socket socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
 				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 				Scanner s = new Scanner(System.in);){

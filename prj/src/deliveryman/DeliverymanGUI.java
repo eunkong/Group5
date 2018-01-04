@@ -80,29 +80,6 @@ class DeliverymanGUI extends JDialog {
 		design();
 		event();
 		menu();
-		try {
-			out.writeInt(DELIVERYMAN); out.flush();  //배달맨이라는 정보를 서버에 넘김
-			out.writeInt(0); out.flush(); //서버에 시작 상태(0) 전송
-			out.writeBoolean(true); out.flush(); //서버에 완료 상태(true) 전송
-			Map<Long, Order> orderlist = (Map<Long, Order>)in.readObject();
-			System.out.println("주문넘오왔나");
-			if(orderlist==null) {
-				JOptionPane.showMessageDialog(null, "배달할게 없음ㅋ", "", JOptionPane.INFORMATION_MESSAGE); 
-				System.exit(0);
-			}
-			Iterator<Long> iterator = orderlist.keySet().iterator();
-			Long num = iterator.next();
-			Order order = orderlist.get(num);
-			show[0].setText(num.toString()); //주문번호
-			show[1].setText(order.getOrdertime()); //주문시간
-			show[2].setText(order.getMember().getId()); //고객아이디
-			show[3].setText(order.getMember().getAddress());//고객주소
-			show[4].setText(order.getMember().getPhoneNumber());//고객연락처
-			show[5].setText(state[order.getOrderState()]);//주문상태
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		setTitle("주문관리");
 		setSize(600, 800);
@@ -168,12 +145,19 @@ class DeliverymanGUI extends JDialog {
 		btReady.addActionListener(e->{
 			btReady.setEnabled(false);
 			btStart.setEnabled(true);
+			try {
+				out.writeInt(DELIVERYMAN); out.flush();  //배달맨이라는 정보를 서버에 넘김
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		});
 		btStart.addActionListener(e->{
 			btStart.setEnabled(false);
 			btFinish.setEnabled(true);
 			try {
 				out.writeInt(0); out.flush(); //서버에 시작 상태(0) 전송
+				out.writeBoolean(true); out.flush(); //서버에 완료 상태(true) 전송
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} 
@@ -182,30 +166,27 @@ class DeliverymanGUI extends JDialog {
 			btStart.setEnabled(true);
 			btFinish.setEnabled(false);
 			try {
-				out.writeBoolean(true); out.flush(); //서버에 완료 상태(true) 전송
-				System.out.println("불린 넘어갔냐");
 				Map<Long, Order> orderlist = (Map<Long, Order>)in.readObject();
 				System.out.println("주문넘오왔나");
 				if(orderlist==null) {
 					JOptionPane.showMessageDialog(null, "배달할게 없음ㅋ", "", JOptionPane.INFORMATION_MESSAGE); 
-					return;
+					System.exit(0);
 				}
 				Iterator<Long> iterator = orderlist.keySet().iterator();
 				Long num = iterator.next();
 				Order order = orderlist.get(num);
 				show[0].setText(num.toString()); //주문번호
- 				show[1].setText(order.getOrdertime()); //주문시간
- 				show[2].setText(order.getMember().getId()); //고객아이디
- 				System.out.println("[test] order.getMember().getId() : "+order.getMember().getId());
- 				show[3].setText(order.getMember().getAddress());//고객주소
- 				show[4].setText(order.getMember().getPhoneNumber());//고객연락처
- 				show[5].setText(state[order.getOrderState()]);//주문상태
-				
-					
+				show[1].setText(order.getOrdertime()); //주문시간
+				show[2].setText(order.getMember().getId()); //고객아이디
+				show[3].setText(order.getMember().getAddress());//고객주소
+				show[4].setText(order.getMember().getPhoneNumber());//고객연락처
+				show[5].setText(state[order.getOrderState()]);//주문상태
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} 
 		});
+		
 		btBack.addActionListener(e->{
 			System.exit(0);
 		});
