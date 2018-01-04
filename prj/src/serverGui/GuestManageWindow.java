@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -16,11 +15,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import client.Member;
 import master.MenuSFM;
-import master.Order;
 import server.MemberManager;
 
 class GuestManageWindow extends JDialog {
@@ -32,6 +31,19 @@ class GuestManageWindow extends JDialog {
 	private JButton bt2 = new JButton("수정");
 	private JButton bt3 = new JButton("삭제");
 	private JButton bt4 = new JButton("나가자");
+	
+	private JLabel jlb1 = new JLabel("아이디");
+	private JLabel jlb2 = new JLabel("비밀번호");
+	private JLabel jlb3 = new JLabel("전화번호");
+	private JLabel jlb4 = new JLabel("고객 주소");
+	
+	private JTextField jtf1 = new JTextField();
+	private JTextField jtf2 = new JTextField();
+	private JTextField jtf3 = new JTextField();
+	private JTextField jtf4 = new JTextField();
+	
+	private JButton bt5 = new JButton("추가");
+	
 
 	private String columnNames[] = { "아이디", "비밀번호", "전화번호", "고객 주소", "등급", "주문 수", "포인트" };
 	// DefaultTableModel을 선언하고 데이터 담기
@@ -60,7 +72,7 @@ class GuestManageWindow extends JDialog {
 		// this가 아니라 bg에 작업을 수행할 수 있다
 		bg.setLayout(null);
 
-		jpanel.setBounds(47, 166, 1092, 569);
+		jpanel.setBounds(47, 166, 1092, 500);
 		bg.add(jpanel);
 
 		jlabel.setFont(new Font("굴림", Font.PLAIN, 70));
@@ -85,12 +97,35 @@ class GuestManageWindow extends JDialog {
 		// jTable.getColumnModel().getColumn(3).setPreferredWidth(3);
 		// jTable.setBackground(Color.DARK_GRAY); //색
 		jTable.setRowHeight(25); // 높이 조절
-		jTable.setPreferredScrollableViewportSize(new Dimension(1050, 500)); // 사이즈?
+		jTable.setPreferredScrollableViewportSize(new Dimension(1050, 470)); // 사이즈?
 		jTable.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
 		jTable.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
+		
+		jlb1.setBounds(50, 696, 60, 36);
+		bg.add(jlb1);
+		jlb2.setBounds(289, 696, 60, 36);
+		bg.add(jlb2);
+		jlb3.setBounds(524, 696, 60, 36);
+		bg.add(jlb3);
+		jlb4.setBounds(802, 696, 60, 36);
+		bg.add(jlb4);
+		
+		jtf1.setBounds(110, 696, 125, 36);
+		bg.add(jtf1);
+		jtf2.setBounds(360, 696, 125, 36);
+		bg.add(jtf2);
+		jtf3.setBounds(590, 696, 164, 36);
+		bg.add(jtf3);
+		jtf4.setBounds(860, 696, 164, 36);
+		bg.add(jtf4);
+		
+		bt5.setBounds(1050, 696, 81, 36);
+		bg.add(bt5);
+		
+		
 
 		// 창에 뿌려주는 거
-		m = (DefaultTableModel)jTable.getModel();		//틀만들고 
+		m = (DefaultTableModel) jTable.getModel(); // 틀만들고
 
 		System.out.println("m.getRowCount() : " + m.getRowCount());
 
@@ -117,26 +152,6 @@ class GuestManageWindow extends JDialog {
 
 		ActionListener ac = e -> {
 			// 뒤로간다? (=현재창을 닫고 이전창을 열어준다)
-			
-			//고객 정보 초기화
-			// 창에 뿌려주는 거
-			m = (DefaultTableModel)jTable.getModel();		//틀만들고 
-			while(m.getRowCount()!=0) {m.removeRow(0);} 	//테이블 초기화
-			System.out.println("m.getRowCount() : " + m.getRowCount());
-			MemberManager member = new MemberManager();
-			Map<String, Member> map = member.loadDatabase();
-			TreeMap<String,Member> tmap = new TreeMap<String, Member>(map);	//정렬
-			Iterator<String> iterator = tmap.keySet().iterator();   //내림차순
-			while (iterator.hasNext()) {
-				String id = iterator.next(); // 1개로만 한다.
-				Member man = map.get(id);
-				m.insertRow(m.getRowCount(), new Object[] { man.getId(), man.getPwd(), man.getPhoneNumber(),
-						man.getAddress(), man.getGrade(), man.getOrderCount(), man.getPoint() });
-			}
-			m.insertRow(m.getRowCount(), new Object[] { "", "", "", "", "", "", "" });
-			jTable.updateUI();
-			
-			//사라지게
 			dispose();
 		};
 		bt4.addActionListener(ac);
@@ -172,39 +187,18 @@ class GuestManageWindow extends JDialog {
 		ActionListener act3 = e -> {
 			int lastRow = m.getRowCount() - 1; // 마지막 행
 			int lastCol = m.getColumnCount(); // 마지막 열
-			boolean nullCheck = true;					//추가할 내용이 없는 데, 추가버튼을 누를 경우 방지 
+
 			// 마지막행의 처음부터 끝까지 값을 가져온다. 그리고 그 값으로 회원가입한다.
 			String[] array = new String[7];
-			for (int i = 0; i < 7; i++) {
+			for (int i = 0; i < 4; i++) {
 				String a = (String) m.getValueAt(lastRow, i);
 				array[i] = a;
 				System.out.println(a);
-				if(!a.equals("")) {
-					nullCheck = false;
-				}
 			}
-			if(!nullCheck) {						//추가할 내용이 있을 때			
-				//주문수, 마일리지 숫자 이외 들어올시 처리
-				int array5, array6;
-				try {
-					array5 = Integer.parseInt(array[5]);
-				}catch(Exception e1) {
-					array5=0;
-				}
-				
-				try {
-					array6 = Integer.parseInt(array[6]);
-				}catch(Exception e1) {
-					array6=0;
-				}
-				
-				MemberManager.register(array[0], array[1], array[2], array[3], array[4], array5, array6);
-				
-				m.insertRow(m.getRowCount(), new Object[] { "", "", "", "", "", "", "" });
-				jTable.updateUI();
-			}
-			
-			
+			MemberManager.register(array[0], array[1], array[2], array[3]);
+
+			m.insertRow(m.getRowCount(), new Object[] { "", "", "", "", "", "", "" });
+			jTable.updateUI();
 		};
 		bt1.addActionListener(act3);
 		
@@ -218,26 +212,12 @@ class GuestManageWindow extends JDialog {
 			String value = (String) jTable.getValueAt(row, col);
 			System.out.println("value : " + value);
 
-			// 마지막행의 처음부터 끝까지 값을 가져온다. 그리고 그 값을 수정한다.
-			String[] array = new String[5];
-			for (int i = 0; i < 5; i++) {
+			//선택 행의 값을 불러와 배열에 저장한다.
+			String[] array = new String[7];
+			for (int i = 0; i < 4; i++) {
 				String a = (String) m.getValueAt(row, i);
 				array[i] = a;
 				System.out.println(a);
-			}
-			
-			//주문수, 마일리지 숫자 이외 들어올시 처리
-			int array5, array6;
-			try {
-				array5 = (int) m.getValueAt(row, 5);
-			}catch(Exception e1) {
-				array5=0;
-			}
-			
-			try {
-				array6 = (int) m.getValueAt(row, 6);
-			}catch(Exception e1) {
-				array6=0;
 			}
 			
 			//선택행 값 변경 적용
@@ -249,14 +229,15 @@ class GuestManageWindow extends JDialog {
 				if (id.equals(value)) {
 					System.out.println("일치하는 아이디 발견");
 					//해당 맵값을 수정한다.
-					map.put(id, new Member(id, array[1], array[2], array[3], array[4], array5, array6));
+					map.put(id, new Member(id, array[1], array[2], array[3]));
 					break;
 				}
 			}
 			member.saveDatabase(map);
-			jTable.updateUI();
 		};
 		bt2.addActionListener(act4);
+		
+		
 
 	}
 
