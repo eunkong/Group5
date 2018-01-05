@@ -2,16 +2,45 @@ package cook;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import master.Menu;
+import master.Order;
+
 class Window01 extends JFrame {
+	private static Socket socket ;
+	private static ObjectOutputStream out;
+	private static ObjectInputStream in;
+	{
+		try {
+			socket = new Socket(InetAddress.getByName("192.168.0.186"), 20000);
+			out = new ObjectOutputStream(socket.getOutputStream());
+			in = new ObjectInputStream(socket.getInputStream());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	final static int COOK = 2;
+	public static String[] state = { "", "주문완료", "요리중", "요리완료", "배달중", "배달완료" };
+	private static Map<Long, Order> orderlist;
+	private static boolean cookFinish, cookStart;
+	
 	private JPanel bg = new JPanel();
 	private JPanel menuPanel = new JPanel();
 
@@ -23,13 +52,14 @@ class Window01 extends JFrame {
 	private JLabel lbOrderTime = new JLabel();
 	private JLabel lbId = new JLabel();
 
-	private JButton btCookStart = new JButton("요리 시작");
+	private JButton btCookStart = new JButton("요리 준비");
 	private JButton btCookFinish = new JButton("요리 완료");
 	private JButton btBack = new JButton("가즈아ㅏㅏ");
 	
-	private String columnNames[] = { "분류", "메뉴명", "수량","가격(원)" };
+	private String columnNames[] = { "메뉴명", "수량","가격(원)" };
 	// DefaultTableModel을 선언하고 데이터 담기
 	private DefaultTableModel defaultTableModel = new DefaultTableModel(new Object[][] {}, columnNames);
+	private DefaultTableModel m;
 	// JTable에 DefaultTableModel을 담기
 	private JTable jTable = new JTable(defaultTableModel);
 	// JScrollPane에 JTable을 담기
@@ -50,6 +80,13 @@ class Window01 extends JFrame {
 	}
 
 	private void design() {
+		try {
+			out.writeInt(COOK); out.flush(); //서버에 요리사(2) 입장
+			cookFinish = false;
+			cookStart = false;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		setContentPane(bg);// bg를 배경에 설치하라
 		// this가 아니라 bg에 작업을 수행할 수 있다
 		bg.setLayout(null);
@@ -57,7 +94,7 @@ class Window01 extends JFrame {
 		bg.add(menuPanel);
 
 		lbCook.setFont(new Font("굴림", Font.PLAIN, 40));
-		lbCook.setBounds(209, 10, 205, 84);
+		lbCook.setBounds(250, 10, 205, 84);
 		bg.add(lbCook);
 
 		for (int i = 0; i < lbString.length; i++) {
@@ -67,22 +104,23 @@ class Window01 extends JFrame {
 			bg.add(lb[i]);
 		}
 
-		lbOrderState.setBounds(209, 119, 57, 15);
+		lbOrderState.setBounds(210, 100, 150, 30);
 		bg.add(lbOrderState);
 
-		lbOrderNum.setBounds(209, 162, 57, 15);
+		lbOrderNum.setBounds(210, 160, 150, 30);
 		bg.add(lbOrderNum);
 
-		lbOrderTime.setBounds(209, 208, 57, 15);
+		lbOrderTime.setBounds(210, 220, 150, 30);
 		bg.add(lbOrderTime);
 
-		lbId.setBounds(209, 255, 57, 15);
+		lbId.setBounds(210, 280, 150, 30);
 		bg.add(lbId);
 
 		btCookStart.setBounds(70, 670, 110, 55);
 		bg.add(btCookStart);
 
 		btCookFinish.setBounds(270, 670, 110, 55);
+		btCookFinish.setEnabled(false);
 		bg.add(btCookFinish);
 
 		btBack.setBounds(470, 670, 110, 55);
@@ -97,11 +135,7 @@ class Window01 extends JFrame {
 		jTable.setPreferredScrollableViewportSize(new Dimension(370, 250)); // 사이즈?
 		jTable.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
 		jTable.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
-		
-		
-		
-
-	}
+		}
 
 	private void event() {
 		// JFrame에서 기본적으로 제공하는 종료 옵션
@@ -109,6 +143,70 @@ class Window01 extends JFrame {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);// x 키 누르면 창 닫기
 		// setDefaultCloseOperation(HIDE_ON_CLOSE);//x키 누르면 숨김
 		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//x키 방지(+이벤트)
+		m = (DefaultTableModel) jTable.getModel(); //틀 만들기
+		
+		btCookStart.addActionListener(e->{
+			btCookStart.setEnabled(false);
+			btCookFinish.setEnabled(true);
+			
+			try {
+				orderlist = (Map<Long, Order>)in.readObject(); //주문서 받기
+				if(orderlist!=null) {
+					Iterator<Long> iterator = orderlist.keySet().iterator();
+						Long num = iterator.next();
+						Order order = orderlist.get(num);
+						
+						lbOrderState.setText(state[order.getOrderState()]); //주문상태
+						lbOrderNum.setText(num.toString());//주문번호
+						lbOrderTime.setText(order.getOrdertime());//주문시간
+						lbId.setText(order.getMember().getId());//고객아이디
+						for (Iterator<Menu> iterator2 = order.getOrderIdx().keySet().iterator(); iterator2.hasNext();) {
+							Menu menu=iterator2.next();
+							int numb=order.getOrderIdx().get(menu);
+							m.insertRow(m.getRowCount(), new Object[] {menu.getName(),numb,menu.getPrice()*numb});//메뉴
+						}
+				} else {
+					JOptionPane.showMessageDialog(null, "요리할게 없음ㅋ", "", JOptionPane.INFORMATION_MESSAGE); 
+					System.exit(0);
+				}
+					
+			} catch (ClassNotFoundException | IOException e1) {
+				e1.printStackTrace();
+			} 
+			cookStart = true;
+			cookFinish = false;
+			try {
+				out.writeBoolean(cookStart); out.flush(); //요리시작 상태 정보를 서버에 넘김
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} 
+			System.out.println("요리시작!");
+		});
+		
+		btCookFinish.addActionListener(e->{
+			btCookFinish.setEnabled(false);
+			btCookStart.setEnabled(true);
+			cookStart = false;
+			cookFinish = true;
+			try {
+				out.writeBoolean(cookFinish); out.flush(); //요리완료 상태 정보를 서버에 넘김
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} 
+			while(jTable.getRowCount()!=0) {
+				m.removeRow(0);
+			}
+			jTable.updateUI();
+			lbOrderState.setText(""); //주문상태
+			lbOrderNum.setText("");//주문번호
+			lbOrderTime.setText("");//주문시간
+			lbId.setText("");//고객아이디
+			JOptionPane.showMessageDialog(null, "요리가 완료되었습니다.","", JOptionPane.INFORMATION_MESSAGE);
+		});
+		
+		btBack.addActionListener(e->{
+			System.exit(0);
+		});
 	}
 
 	private void menu() {

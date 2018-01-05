@@ -40,7 +40,7 @@ class DeliverymanGUI extends JDialog {
 	private static ObjectInputStream in;
 	{
 		try {
-			socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
+			socket = new Socket(InetAddress.getByName("192.168.0.186"), 20000);
 			out = new ObjectOutputStream(socket.getOutputStream());
 			in = new ObjectInputStream(socket.getInputStream());
 		} catch (Exception e) {
@@ -106,7 +106,7 @@ class DeliverymanGUI extends JDialog {
 			bg.add(jb[i]);
 
 			show[i] = new JLabel("");
-			show[i].setBounds(200, 100 + i * 80, 100, 20);
+			show[i].setBounds(200, 100 + i * 80, 300, 20);
 			show[i].setFont(new Font("", Font.PLAIN, 14));
 			bg.add(show[i]);
 		}
@@ -153,6 +153,7 @@ class DeliverymanGUI extends JDialog {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} 
+			show[5].setText("배달중~★");
 		});
 		btFinish.addActionListener(e->{
 			btFinish.setEnabled(false);
@@ -165,6 +166,7 @@ class DeliverymanGUI extends JDialog {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} 
+			show[5].setText("배달 완료~★");
 		});
 		
 		btBack.addActionListener(e->{
