@@ -13,9 +13,10 @@ import java.util.Map;
 
 import client.Member;
 
-//membermap.db를 관리하는 클래스
+//memberlist.db 파일 관리 클래스
 public class MemberManager {
 	public static final File db = new File("files", "memberlist.db");
+	
 	/**
 	 * 로그인 메소드
 	 * @param id
@@ -84,7 +85,7 @@ public class MemberManager {
 	 * @param grade
 	 * @param orderCount
 	 * @param point
-	 * @return
+	 * @return 회원가입 성공 유무
 	 */
 	public static boolean register(String id, String password, String phone, String address, String grade, int orderCount, int point) {
 		Map<String, Member> map = loadDatabase();
@@ -105,6 +106,7 @@ public class MemberManager {
 	/**
 	 * 회원정보 수정 메소드
 	 * @param Member
+	 * @return Member 
 	 */
 	public static Member editInfo(Member member){
 		String editId = member.getId();

@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 import master.Order;
 import server.ReceiptManager;
 
+//주문관리창 구현 클래스
 class OrderManageWindow extends JDialog {
 	private JPanel bg = new JPanel();
 	
@@ -32,35 +33,27 @@ class OrderManageWindow extends JDialog {
 	public static String[] state = {"","주문완료","요리중","요리완료","배달중","배달완료"};
 
 	private String columnNames[] = { "주문번호", "주문시간", "고객아이디", "고객 주소","고객 연락처", "주문상태" };
-	// DefaultTableModel을 선언하고 데이터 담기
 	private DefaultTableModel defaultTableModel = new DefaultTableModel(new Object[][] {},
 			columnNames);
 	private DefaultTableModel m;
-	// JTable에 DefaultTableModel을 담기
 	private JTable jTable = new JTable(defaultTableModel);
-	// JScrollPane에 JTable을 담기
 	private JScrollPane jScollPane = new JScrollPane(jTable);
 	
 	
 	public OrderManageWindow(Frame mw, boolean modal) {
-		super(mw,modal);							//창 종속 위해 필요
+		super(mw,modal);							//창 종속
 		design();
 		event();
 		menu();
 
 		setTitle("주문관리");
 		setSize(1200, 800);
-//		setLocation(100, 40);
-		//setLocationByPlatform(true); // 위치를 운영체제가 정하도록 설정
-		// setAlwaysOnTop(true); // 항상위
 		setLocationRelativeTo(mw);
-//		setResizable(false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
 	private void design() {
-		setContentPane(bg); // bg를 배경에 설치하라
-		// this가 아니라 bg에 작업을 수행할 수 있다
+		setContentPane(bg); 
 		bg.setLayout(null);
 		
 		jpanel.setBounds(47, 166, 1092, 569);
@@ -84,27 +77,20 @@ class OrderManageWindow extends JDialog {
 		
 		jpanel.add(jScollPane);
 		
-		//jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		// jTable.getColumnModel().getColumn(3).setPreferredWidth(3);
-		// jTable.setBackground(Color.DARK_GRAY); //색
-		jTable.setRowHeight(25); // 높이 조절
-		jTable.setPreferredScrollableViewportSize(new Dimension(1050, 500)); // 사이즈?
-		jTable.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
-		jTable.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
+		jTable.setRowHeight(25); 
+		jTable.setPreferredScrollableViewportSize(new Dimension(1050, 500)); 
+		jTable.getTableHeader().setReorderingAllowed(false); 
+		jTable.getTableHeader().setResizingAllowed(false); 
 		
 		
 		
 	}
 
 	private void event() {
-		// JFrame에서 기본적으로 제공하는 종료 옵션
-		// setDefaultCloseOperation(EXIT_ON_CLOSE); //x키 누르면 종료
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE); // x키 누르면 창 닫기
-		// setDefaultCloseOperation(HIDE_ON_CLOSE); //x키 누르면 숨김
-		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); //x키 방지(+이벤트설정)
 		
+		//나가기
 		ActionListener ac = e->{
-			//뒤로간다? (=현재창을 닫고 이전창을 열어준다)
 			dispose();
 		};
 		bt4.addActionListener(ac);
@@ -112,15 +98,15 @@ class OrderManageWindow extends JDialog {
 		
 		//전체영수증 출력
 		ActionListener ac1 = e->{
-			m = (DefaultTableModel)jTable.getModel();		//틀만들고 
-			while(m.getRowCount()!=0) {m.removeRow(0);} 	//테이블 초기화
+			m = (DefaultTableModel)jTable.getModel();		
+			while(m.getRowCount()!=0) {m.removeRow(0);} 	
 
 			ReceiptManager receiptManager = new ReceiptManager();
 			Map<Long, Order> map = ReceiptManager.loadDatabase();
-			TreeMap<Long, Order> tmap = new TreeMap<Long, Order>(map);	//정렬
-			Iterator<Long> iterator = tmap.descendingKeySet().iterator();   //내림차순
+			TreeMap<Long, Order> tmap = new TreeMap<Long, Order>(map);	
+			Iterator<Long> iterator = tmap.descendingKeySet().iterator();   //내림차순 정렬
 			while(iterator.hasNext()) {
-				Long num = iterator.next();	//1개로만 한다.
+				Long num = iterator.next();	
 				Order order = map.get(num);
 				m.insertRow(m.getRowCount(), new Object[]{num,order.getOrdertime(),order.getMember().getId(),order.getMember().getAddress(),order.getMember().getPhoneNumber(),state[order.getOrderState()]});
 			}
@@ -128,18 +114,19 @@ class OrderManageWindow extends JDialog {
 		};
 		bt3.addActionListener(ac1);
 		
+		
 		//고객별 조회
 		ActionListener ac2 = e->{
-			m = (DefaultTableModel)jTable.getModel();		//틀만들고 
-			while(m.getRowCount()!=0) {m.removeRow(0);} 	//테이블 초기화
+			m = (DefaultTableModel)jTable.getModel();		
+			while(m.getRowCount()!=0) {m.removeRow(0);} 	
 			String inputId = JOptionPane.showInputDialog("아이디를 입력해주세요~");
 
 			ReceiptManager receiptManager = new ReceiptManager();
 			Map<Long, Order> map = ReceiptManager.getPerReceipt(inputId);
-			TreeMap<Long, Order> tmap = new TreeMap<Long, Order>(map);	//정렬
+			TreeMap<Long, Order> tmap = new TreeMap<Long, Order>(map);	
 			Iterator<Long> iterator = tmap.descendingKeySet().iterator();   //내림차순
 			while(iterator.hasNext()) {
-				Long num = iterator.next();	//1개로만 한다.
+				Long num = iterator.next();
 				Order order = map.get(num);
 				m.insertRow(m.getRowCount(), new Object[]{num,order.getOrdertime(),order.getMember().getId(),order.getMember().getAddress(),order.getMember().getPhoneNumber(),state[order.getOrderState()]});
 			}
@@ -163,7 +150,7 @@ class OrderManageWindow extends JDialog {
 			TreeMap<Long, Order> tmap = new TreeMap<Long, Order>(map);	//정렬
 			Iterator<Long> iterator = tmap.descendingKeySet().iterator();   //내림차순
 			while(iterator.hasNext()) {
-				Long num = iterator.next();	//1개로만 한다.
+				Long num = iterator.next();	
 				Order order = map.get(num);
 				m.insertRow(m.getRowCount(), new Object[]{num,order.getOrdertime(),order.getMember().getId(),order.getMember().getAddress(),order.getMember().getPhoneNumber(),state[order.getOrderState()]});
 			}

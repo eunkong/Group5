@@ -12,12 +12,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import master.Menu;
 import master.Order;
 
-//영수증 파일 관리 클래스
+//receiptlist.db 영수증 파일 관리 클래스
 public class ReceiptManager {
 		public static final File db = new File("files", "receiptlist.db");
 		public static String[] state = {"","주문완료","요리중","요리완료","배달중","배달완료"};
@@ -47,7 +46,6 @@ public class ReceiptManager {
 		
 		/**
 		 * 주문번호, 주문정보를 파일에 입력하는 메소드
-		 * 추가적으로 입력정보 콘솔 출력
 		 * @param orderNum
 		 * @param order
 		 */
@@ -74,8 +72,7 @@ public class ReceiptManager {
 		}
 		
 		/**
-		 * 주문번호, 주문정보를 파일에 입력한 뒤 콘솔에 출력하는 메소드
-		 * 추가적으로 입력정보 콘솔 출력
+		 * 주문번호, 주문정보를 파일에 입력한 뒤 콘솔에 출력(Test)하는 메소드
 		 * @param orderNum
 		 * @param order
 		 */
@@ -98,9 +95,8 @@ public class ReceiptManager {
 		//
 		
 		/**
-		 * 주문번호와 주문정보를 받아 콘솔에 영수증 출력하는 메소드
+		 * 주문번호와 주문정보를 받아 콘솔에 영수증 출력하는 메소드(Test용)
 		 * @param Map<주문번호, Order>
-		 * private 선언 : 내부 사용
 		 */
 		public static void printReceipt(Map<Long, Order> map) {
 				Set<Long> set = map.keySet();
@@ -115,10 +111,9 @@ public class ReceiptManager {
 		
 		
 		/**
-		 * 주문번호와 주문정보를 받아 콘솔에 영수증 출력하는 메소드(오버라이딩)
+		 * 주문번호와 주문정보를 받아 콘솔에 영수증 출력하는 메소드(Test용)
 		 * @param orderNum 주문번호
 		 * @param order 주문정보
-		 * private 선언 : 내부 사용
 		 */
 		public static void printReceipt(Long orderNum, Order order) {
 				System.out.println();
@@ -210,7 +205,7 @@ public class ReceiptManager {
 		
 		
 		/**
-		 * 매개변수로 받은 맵 내에서 입력받은 기간 영수증 가져오는 메소드
+		 * 입력받은 기간 영수증 가져오는 메소드
 		 * @param Map<주문번호, Order>, start, end
 		 * @return Map<주문번호, Order>
 		 */

@@ -9,6 +9,7 @@ import javax.swing.*;
 import master.ForguiShow;
 import master.MenuSFM;
 
+//서버관리창 메인창
 public class ServerMainFrame extends JFrame{
 	private JPanel bg = new JPanel(new BorderLayout());	//패널 만들기.
 	private JLabel lb1 = new JLabel("사장님꺼~♥");
@@ -25,10 +26,10 @@ public class ServerMainFrame extends JFrame{
 		design();
 		event();
 		menu();
-		setTitle("사장님꺼~♥");
+		setTitle("사장님꺼~♥♥");
 		setSize(482, 343);
-		setResizable(false);		//크기변경 불가
-		setLocationByPlatform(true);	//위치를 운영체제가 정하도록 설정, 여러개 창켜면 알아서 위치 겹치지 않게 만듬.
+		setResizable(false);		
+		setLocationByPlatform(true);	
 		setVisible(true);
 	}
 
@@ -58,7 +59,7 @@ public class ServerMainFrame extends JFrame{
 	}
 
 	private void design() {
-		setContentPane(bg);  //bg를 배경에 설치하라.
+		setContentPane(bg);  
 		bg.setLayout(null);
 		bg.setBackground(Color.WHITE);
 		
@@ -94,9 +95,3 @@ public class ServerMainFrame extends JFrame{
 		
 	}
 }
-
-//public class ServerMainFrame {
-//	public static void main(String[] args) {	
-//		new ServerMainFrame();
-//	}
-//}

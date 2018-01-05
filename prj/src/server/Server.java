@@ -12,9 +12,8 @@ public class Server {
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 
 		new ServerMainFrame();
-		//멀티 TCP 서버
+		//멀티 서버
 		try(ServerSocket server = new ServerSocket(20000);){
-			
 			while(true) {
 				Socket socket = server.accept();
 				System.out.println(socket+" 접속");

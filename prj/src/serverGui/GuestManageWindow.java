@@ -4,9 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -19,9 +17,9 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import client.Member;
-import master.MenuSFM;
 import server.MemberManager;
 
+// 고객관리창 구현 클래스
 class GuestManageWindow extends JDialog {
 	private JPanel bg = new JPanel();
 
@@ -48,14 +46,8 @@ class GuestManageWindow extends JDialog {
 	private String columnNames[] = { "아이디", "비밀번호", "전화번호", "고객 주소", "등급", "주문 수", "포인트" };
 	// DefaultTableModel을 선언하고 데이터 담기
 	private DefaultTableModel defaultTableModel = new DefaultTableModel(new Object[][] {}, columnNames);
-//	{
-//	    public boolean isCellEditable(int I, int c){		//테이블 버튼 수정 비활성화
-//	        return false;}
-//	};
 	private DefaultTableModel m;
-	// JTable에 DefaultTableModel을 담기
 	private JTable jTable = new JTable(defaultTableModel);
-	// JScrollPane에 JTable을 담기
 	private JScrollPane jScollPane = new JScrollPane(jTable);
 
 	public GuestManageWindow(Frame mw, boolean modal) {
@@ -72,8 +64,7 @@ class GuestManageWindow extends JDialog {
 	}
 
 	private void design() {
-		setContentPane(bg); // bg를 배경에 설치하라
-		// this가 아니라 bg에 작업을 수행할 수 있다
+		setContentPane(bg); 
 		bg.setLayout(null);
 
 		jpanel.setBounds(47, 166, 1092, 500);
@@ -97,13 +88,10 @@ class GuestManageWindow extends JDialog {
 
 		jpanel.add(jScollPane);
 
-		// jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		// jTable.getColumnModel().getColumn(3).setPreferredWidth(3);
-		// jTable.setBackground(Color.DARK_GRAY); //색
-		jTable.setRowHeight(25); // 높이 조절
-		jTable.setPreferredScrollableViewportSize(new Dimension(1050, 470)); // 사이즈?
-		jTable.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
-		jTable.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
+		jTable.setRowHeight(25); 
+		jTable.setPreferredScrollableViewportSize(new Dimension(1050, 470)); 
+		jTable.getTableHeader().setReorderingAllowed(false); 
+		jTable.getTableHeader().setResizingAllowed(false); 
 		
 		jlb1.setBounds(50, 696, 60, 36);
 		bg.add(jlb1);
@@ -125,16 +113,14 @@ class GuestManageWindow extends JDialog {
 		
 		
 
-		// 창에 뿌려주는 거
-		m = (DefaultTableModel) jTable.getModel(); // 틀만들고
-
-		System.out.println("m.getRowCount() : " + m.getRowCount());
-
+		//고객정보창 클릭시 바로 출력
+		m = (DefaultTableModel) jTable.getModel();			//Jtable 내부 틀 생성
+		System.out.println("[Test] m.getRowCount() : " + m.getRowCount());
 		MemberManager member = new MemberManager();
 		Map<String, Member> map = member.loadDatabase();
 		Iterator<String> iterator = map.keySet().iterator();
 		while (iterator.hasNext()) {
-			String id = iterator.next(); // 1개로만 한다.
+			String id = iterator.next();
 			Member man = map.get(id);
 			m.insertRow(m.getRowCount(), new Object[] { man.getId(), man.getPwd(), man.getPhoneNumber(),
 					man.getAddress(), man.getGrade(), man.getOrderCount(), man.getPoint() });
@@ -144,20 +130,12 @@ class GuestManageWindow extends JDialog {
 	}
 
 	private void event() {
-		// JFrame에서 기본적으로 제공하는 종료 옵션
-		// setDefaultCloseOperation(EXIT_ON_CLOSE); //x키 누르면 종료
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE); // x키 누르면 창 닫기
-		// setDefaultCloseOperation(HIDE_ON_CLOSE); //x키 누르면 숨김
-		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); //x키 방지(+이벤트설정)
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE); 
 
+		//나가기 버튼(테이블 내용 최신화)
 		ActionListener ac = e -> {
-			// 뒤로간다? (=현재창을 닫고 이전창을 열어준다)
-			
-			// 창에 뿌려주는 거
-			m = (DefaultTableModel) jTable.getModel(); // 틀만들고
-
-			System.out.println("m.getRowCount() : " + m.getRowCount());
-
+			m = (DefaultTableModel) jTable.getModel(); 
+			System.out.println("[Test] m.getRowCount() : " + m.getRowCount());
 			MemberManager member = new MemberManager();
 			Map<String, Member> map = member.loadDatabase();
 			Iterator<String> iterator = map.keySet().iterator();
@@ -168,20 +146,18 @@ class GuestManageWindow extends JDialog {
 						man.getAddress(), man.getGrade(), man.getOrderCount(), man.getPoint() });
 			}
 			jTable.updateUI();
-			
-			
-			
 			dispose();
 		};
 		bt4.addActionListener(ac);
 
+		
 		// 회원삭제
 		ActionListener act2 = e -> {
 			int row = jTable.getSelectedRow();
-			System.out.println("row : " + row);
+			System.out.println("[test] row : " + row);
 			int col = 0;
 			String value = (String) jTable.getValueAt(row, col);
-			System.out.println("value : " + value);
+			System.out.println("[test] value : " + value);
 
 			m.removeRow(row); // 선택열 삭제
 
@@ -191,12 +167,11 @@ class GuestManageWindow extends JDialog {
 			while (iterator.hasNext()) {
 				String id = iterator.next();
 				if (id.equals(value)) {
-					System.out.println("일치하는 아이디 발견");
+					System.out.println("[test] 일치하는 아이디 발견");
 					map.remove(id);
 					break;
 				}
 			}
-
 			member.saveDatabase(map);
 		};
 		bt3.addActionListener(act2);
@@ -204,7 +179,6 @@ class GuestManageWindow extends JDialog {
 		
 		// 회원추가
 		ActionListener act3 = e -> {
-			
 			String addName = jtf1.getText();	//이름
 			String addPassword = jtf2.getText();	//비밀번호
 			String addPhone = jtf3.getText();	//전화번호
@@ -251,7 +225,6 @@ class GuestManageWindow extends JDialog {
 				e1.printStackTrace();
 				array6 = 0;
 			}
-	
 				
 			
 			//선택행 값 변경 적용
@@ -261,7 +234,7 @@ class GuestManageWindow extends JDialog {
 			while (iterator.hasNext()) {
 				String id = iterator.next();
 				if (id.equals(value)) {
-					System.out.println("일치하는 아이디 발견");
+					System.out.println("[test] 일치하는 아이디 발견");
 					//해당 맵값을 수정한다.
 					map.put(id, new Member(id, array[1], array[2], array[3], array[4], array5, array6));
 					break;
@@ -271,8 +244,6 @@ class GuestManageWindow extends JDialog {
 		};
 		bt2.addActionListener(act4);
 		
-		
-
 	}
 
 	private void menu() {
