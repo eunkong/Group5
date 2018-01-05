@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-
 import client.ClientTool;
 import client.Member;
 
@@ -31,34 +30,29 @@ public class MyInfo extends JDialog {
 	private static JButton btCancel = new JButton("취소");
 
 	private static Member member;
-	
+
 	public MyInfo(Frame owner, boolean modal) {
 		super(owner, modal);
 		design();
 		event();
 		menu();
-		
+
 		setTitle("내정보");
 		setSize(400, 500);
 		setLocationRelativeTo(owner);
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); //X키 비활성화
-//		 setDefaultCloseOperation(EXIT_ON_CLOSE);
-		// setVisible(true);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // X키 비활성화
 	}
 
 	private void design() {
-		setContentPane(bg);// bg를 배경에 설치하라
-		// this가 아니라 bg에 작업을 수행할 수 있다
+		setContentPane(bg);// 배경 설치
 		bg.setLayout(null);
-		
 
 		tfId.setBounds(128, 40, 170, 20);
 		bg.add(tfId, BorderLayout.NORTH);
-		
-		
+
 		tfPw.setBounds(128, 90, 170, 20);
 		bg.add(tfPw);
-		tfPhone.setBounds(128, 140, 170,20);
+		tfPhone.setBounds(128, 140, 170, 20);
 		bg.add(tfPhone);
 		tfAddress.setBounds(128, 190, 170, 20);
 		bg.add(tfAddress);
@@ -79,8 +73,7 @@ public class MyInfo extends JDialog {
 		bg.add(jlPoint);
 		jlGrade.setBounds(27, 290, 57, 15);
 		bg.add(jlGrade);
-		
-		
+
 		btEdit.setBounds(70, 370, 113, 30);
 		bg.add(btEdit);
 		btCancel.setBounds(220, 370, 113, 30);
@@ -88,20 +81,21 @@ public class MyInfo extends JDialog {
 	}
 
 	private void event() {
-		btCancel.addActionListener(e->{
+		btCancel.addActionListener(e -> {
 			System.out.println("취소 버튼 클릭");
-				try {
-					ClientTool.getTool().myinfoClose();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			dispose();
-			
-		});
-		btEdit.addActionListener(e->{
 			try {
-				boolean result = ClientTool.getTool().myinfoEdit(tfPw.getText(), tfPhone.getText(), tfAddress.getText());
-				if(result) {
+				ClientTool.getTool().myinfoClose();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			dispose();
+
+		});
+		btEdit.addActionListener(e -> {
+			try {
+				boolean result = ClientTool.getTool().myinfoEdit(tfPw.getText(), tfPhone.getText(),
+						tfAddress.getText());
+				if (result) {
 					JOptionPane.showMessageDialog(null, "회원정보가 수정되었습니다!", "", JOptionPane.INFORMATION_MESSAGE);
 					dispose();
 				} else {
@@ -111,63 +105,19 @@ public class MyInfo extends JDialog {
 				e1.printStackTrace();
 			}
 		});
-
 	}
 
 	private void menu() {
-
 	}
-	
-	void generateInfo(Member mem) {
-//		if (mem == null) {
-//			lb.setText("로그인 정보가 없습니다");
-//			return;
-//		}
-//		StringBuffer buffer = new StringBuffer("");
-//
-//		//lb.setFont(new Font("", Font.PLAIN, 20));
-//
-//		buffer.append("<html>");
-//
-//		buffer.append("id:");
-//		buffer.append(mem.getId());
-//		buffer.append("<br>");
-//
-//		buffer.append("pw:");
-//		buffer.append(mem.getPwd());
-//		buffer.append("<br>");
-//
-//		buffer.append("phone number:");
-//		buffer.append(mem.getPhoneNumber());
-//		buffer.append("<br>");
-//
-//		buffer.append("address:");
-//		buffer.append(mem.getAddress());
-//		buffer.append("<br>");
-//
-//		buffer.append("point:");
-//		buffer.append(mem.getPoint());
-//		buffer.append("<br>");
-//
-//		buffer.append("grade:");
-//		buffer.append(mem.getGrade());
-//		buffer.append("<br>");
-//
-//		buffer.append("<html>");
-//
-//		lb.setText(buffer.toString());
-//	}
 
-	}
-	public  void setMember(Member member) {
-		MyInfo.member=member;
-	
+	public void setMember(Member member) {
+		MyInfo.member = member;
 		tfId.setText(member.getId());
 		tfPw.setText(member.getPwd());
 		tfPhone.setText(member.getPhoneNumber());
 		tfAddress.setText(member.getAddress());
 		tfGrade.setText(member.getGrade());
-		tfPoint.setText(member.getPoint()+"");
-	}	
-		
+		tfPoint.setText(member.getPoint() + "");
+	}
+
 }

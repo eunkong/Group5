@@ -21,15 +21,13 @@ public class MenuBoard extends JDialog{
 	private JPanel bg = new JPanel();
 	
 	private JPanel bg1 = new JPanel();
-	//private JToolBar tb = new JToolBar();
 	
 	/** 
 	 * 출력되는 글자의 크기를 컨트롤하기 위한 JButton
 	 * @see #design
 	 * @see #event
 	 */
-	//private JButton bt1=new JButton("+");//글씨크기 키우기
-	//private JButton bt2=new JButton("-");//글씨크기 줄이기
+	
 	
 	/**
 	 * 그룹별 메뉴가 출력
@@ -44,13 +42,11 @@ public class MenuBoard extends JDialog{
 	public MenuBoard(Frame owner, boolean modal) {
 		super(owner, modal);
 		design();
-		event();
-		menu();
 		
 		setTitle("메뉴목록");
 		setSize(700, 300);
 		setLocationRelativeTo(owner);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);//x 키 누르면 창 닫기
 	}
 	/** 
 	 * 출력화면 구성
@@ -67,9 +63,6 @@ public class MenuBoard extends JDialog{
 		setContentPane(bg);//bg를 배경에 설치하라
 		//this가 아니라 bg에 작업을 수행할 수 있다
 		bg.add(bg1);
-		//bg.add(tb,BorderLayout.NORTH);
-		
-		//bg1.setLayout(new GridLayout(3, (MenuSFM.getGroupString().size()+2)/3));
 		
 		Set<String> temp=new TreeSet<>(MenuSFM.getGroupString());//분류 이름을 Set으로 가져옴
 		//콘솔과 같은 순서대로 나오게 하기위해 TreeSet
@@ -83,40 +76,6 @@ public class MenuBoard extends JDialog{
 			jb.add(new JLabel(MenuSFM.menuPrintJLabel(string)));//분류에 따른 메뉴를 출력시킬  String(html을 String 에 넣음)
 			bg1.add(jb.get(i));//툴바1에 분류에 따른 메뉴목록 추가
 			jb.get(i).setFont(new Font("", Font.PLAIN, fontsize));//처음엔 15사이즈의 폰트로 출력하도록 설정
-		}
-			//tb.add(bt1);
-			//tb.add(bt2);
-			//tb.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-	}
-	/**
-	 * @see #fontSizeConntrol
-	 */
-	private void event() {
-//		JFrame에서 기본적으로 제공하는 종료 옵션
-//		setDefaultCloseOperation(EXIT_ON_CLOSE);//x 키 누르면 종료
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);//x 키 누르면 창 닫기
-//		setDefaultCloseOperation(HIDE_ON_CLOSE);//x키 누르면 숨김
-//		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//x키 방지(+이벤트)
-//		bt1.addActionListener(e->{
-//			fontSizeConntrol(true);
-//		});
-//		
-//		bt2.addActionListener(e->{
-//			fontSizeConntrol(false);
-//		});
-		//ActionListener로 이벤트 추가
-	}
-	private void menu() {
-		
-	}//지금은 쓰지않음
-	/**
-	 * 
-	 * @param flag 확대/축소를 분류
-	 */
-	private void fontSizeConntrol(boolean flag) {//true를 넣고 실행하면 글씨크기가 2증가 false를 넣고 실행하면 글씨크기가 2 감소
-		fontsize=fontsize+(flag?2:-2);
-		for (int i = 0; i < jb.size(); i++) {
-			jb.get(i).setFont(new Font("", Font.PLAIN, fontsize));
 		}
 	}
 	
