@@ -21,7 +21,6 @@ public class MemIdx {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException {
-		// TODO Auto-generated method stub
 		try (ObjectInputStream in = new ObjectInputStream(
 				new BufferedInputStream(
 						new FileInputStream(new File("files", "memberlist.db"))));
@@ -37,7 +36,6 @@ public class MemIdx {
 			}	
 			System.out.println("รั "+total+"ธํ");
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 	}
 

@@ -39,19 +39,16 @@ import client.Member;
 		
 		setTitle("아이디/비밀번호 찾기");
 		setSize(300, 200);
-//		setLocation(100, 100);
 		setLocationByPlatform(true);	//위치를 운영체제가 정하도록 설정
-//		setAlwaysOnTop(true);//항상위
 		setResizable(false);
 		setVisible(true);
 	}
 
 	private void design() {
-		setContentPane(bg);//bg를 배경에 설치하라
-		//this가 아니라 bg에 작업을 수행할 수 있다
+		setContentPane(bg);//배경 설치
 		bg.setLayout(null);
 		
-		title.setFont(new Font("궁서체", Font.PLAIN, 20));
+		title.setFont(new Font("굴림", Font.PLAIN, 20));
 		title.setBounds(72, 10, 133, 47);
 		bg.add(title);
 		
@@ -69,34 +66,23 @@ import client.Member;
 	}
 
 	private void event() {
-//		JFrame에서 기본적으로 제공하는 종료 옵션
-//		setDefaultCloseOperation(EXIT_ON_CLOSE);//x 키 누르면 종료
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);//x 키 누르면 창 닫기
-//		setDefaultCloseOperation(HIDE_ON_CLOSE);//x키 누르면 숨김
-//		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//x키 방지(+이벤트)
 		searchButton.addActionListener(e->{
 				searchId();
 		});
 		
 		pnumArea.addKeyListener(
 			new KeyAdapter() {
-			/* (non-Javadoc)
-			 * @see java.awt.event.KeyAdapter#keyPressed(java.awt.event.KeyEvent)
-			 */
-			@Override
 			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
 				if(e.getKeyCode()==KeyEvent.VK_ENTER)
 				searchId();
 				if(e.getKeyCode()==KeyEvent.VK_ESCAPE)
 				dispose();
 			}	
 		});
-		
 	}
 
 	private void menu() {
-		
 	}
 	
 	private void searchId() {
@@ -113,15 +99,12 @@ import client.Member;
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		if(id.equals(""))JOptionPane.showMessageDialog(null, "검색된 아이디가 없습니다.");
 		else { JOptionPane.showMessageDialog(null, "회원님의 번호로 검색된 아이디는 "+id+"입니다.");
 		dispose();
 		}
-	
 	}
-	
 }
 
 

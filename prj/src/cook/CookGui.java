@@ -23,7 +23,7 @@ import master.Menu;
 import master.Order;
 
 class Window01 extends JFrame {
-	private static Socket socket ;
+	private static Socket socket;
 	private static ObjectOutputStream out;
 	private static ObjectInputStream in;
 	{
@@ -34,13 +34,13 @@ class Window01 extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 	final static int COOK = 2;
 	public static String[] state = { "", "주문완료", "요리중", "요리완료", "배달중", "배달완료" };
 	private static Map<Long, Order> orderlist;
 	private static boolean cookFinish, cookStart;
-	
+
 	private JPanel bg = new JPanel();
 	private JPanel menuPanel = new JPanel();
 
@@ -55,14 +55,13 @@ class Window01 extends JFrame {
 	private JButton btCookStart = new JButton("요리 준비");
 	private JButton btCookFinish = new JButton("요리 완료");
 	private JButton btBack = new JButton("가즈아ㅏㅏ");
-	
-	private String columnNames[] = { "메뉴명", "수량","가격(원)" };
-	// DefaultTableModel을 선언하고 데이터 담기
-	private DefaultTableModel defaultTableModel = new DefaultTableModel(new Object[][] {}, columnNames);
+
+	private String columnNames[] = { "메뉴명", "수량", "가격(원)" };
+
 	private DefaultTableModel m;
-	// JTable에 DefaultTableModel을 담기
+	// DefaultTableModel -> JTable -> JScrollPane
+	private DefaultTableModel defaultTableModel = new DefaultTableModel(new Object[][] {}, columnNames);
 	private JTable jTable = new JTable(defaultTableModel);
-	// JScrollPane에 JTable을 담기
 	private JScrollPane jScollPane = new JScrollPane(jTable);
 
 	public Window01() {
@@ -73,23 +72,22 @@ class Window01 extends JFrame {
 		setTitle("");
 		setSize(660, 800);
 		setLocation(450, 50);
-		//setLocationByPlatform(true); // 위치를 운영체제가 정하도록 설정
-		// setAlwaysOnTop(true);//항상위
 		setResizable(false);
 		setVisible(true);
 	}
 
 	private void design() {
 		try {
-			out.writeInt(COOK); out.flush(); //서버에 요리사(2) 입장
+			out.writeInt(COOK);
+			out.flush(); // 서버에 요리사(2) 입장
 			cookFinish = false;
 			cookStart = false;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		setContentPane(bg);// bg를 배경에 설치하라
-		// this가 아니라 bg에 작업을 수행할 수 있다
+		setContentPane(bg);// 배경 설치
 		bg.setLayout(null);
+
 		menuPanel.setBounds(150, 350, 450, 280);
 		bg.add(menuPanel);
 
@@ -125,92 +123,83 @@ class Window01 extends JFrame {
 
 		btBack.setBounds(470, 670, 110, 55);
 		bg.add(btBack);
-		
 
 		menuPanel.add(jScollPane);
-		// jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		// jTable.getColumnModel().getColumn(3).setPreferredWidth(3);
-		// jTable.setBackground(Color.DARK_GRAY); //색
 		jTable.setRowHeight(20); // 높이 조절
-		jTable.setPreferredScrollableViewportSize(new Dimension(370, 250)); // 사이즈?
+		jTable.setPreferredScrollableViewportSize(new Dimension(370, 250)); // 사이즈
 		jTable.getTableHeader().setReorderingAllowed(false); // 컬럼들 이동 불가
 		jTable.getTableHeader().setResizingAllowed(false); // 컬럼 크기 조절 불가
-		}
+	}
 
 	private void event() {
-		// JFrame에서 기본적으로 제공하는 종료 옵션
-		// setDefaultCloseOperation(EXIT_ON_CLOSE);//x 키 누르면 종료
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);// x 키 누르면 창 닫기
-		// setDefaultCloseOperation(HIDE_ON_CLOSE);//x키 누르면 숨김
-		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//x키 방지(+이벤트)
-		m = (DefaultTableModel) jTable.getModel(); //틀 만들기
-		
-		btCookStart.addActionListener(e->{
+		m = (DefaultTableModel) jTable.getModel(); // 틀 만들기
+
+		btCookStart.addActionListener(e -> {
 			btCookStart.setEnabled(false);
 			btCookFinish.setEnabled(true);
-			
+
 			try {
-				orderlist = (Map<Long, Order>)in.readObject(); //주문서 받기
-				if(orderlist!=null) {
+				orderlist = (Map<Long, Order>) in.readObject(); // 주문서 받기
+				if (orderlist != null) {
 					Iterator<Long> iterator = orderlist.keySet().iterator();
-						Long num = iterator.next();
-						Order order = orderlist.get(num);
-						
-						lbOrderState.setText(state[order.getOrderState()]); //주문상태
-						lbOrderNum.setText(num.toString());//주문번호
-						lbOrderTime.setText(order.getOrdertime());//주문시간
-						lbId.setText(order.getMember().getId());//고객아이디
-						for (Iterator<Menu> iterator2 = order.getOrderIdx().keySet().iterator(); iterator2.hasNext();) {
-							Menu menu=iterator2.next();
-							int numb=order.getOrderIdx().get(menu);
-							m.insertRow(m.getRowCount(), new Object[] {menu.getName(),numb,menu.getPrice()*numb});//메뉴
-						}
+					Long num = iterator.next();
+					Order order = orderlist.get(num);
+
+					lbOrderState.setText(state[order.getOrderState()]); // 주문상태
+					lbOrderNum.setText(num.toString());// 주문번호
+					lbOrderTime.setText(order.getOrdertime());// 주문시간
+					lbId.setText(order.getMember().getId());// 고객아이디
+					for (Iterator<Menu> iterator2 = order.getOrderIdx().keySet().iterator(); iterator2.hasNext();) {
+						Menu menu = iterator2.next();
+						int numb = order.getOrderIdx().get(menu);
+						m.insertRow(m.getRowCount(), new Object[] { menu.getName(), numb, menu.getPrice() * numb });// 메뉴
+					}
 				} else {
-					JOptionPane.showMessageDialog(null, "요리할게 없음ㅋ", "", JOptionPane.INFORMATION_MESSAGE); 
+					JOptionPane.showMessageDialog(null, "요리할게 없음ㅋ", "", JOptionPane.INFORMATION_MESSAGE);
 					System.exit(0);
 				}
-					
 			} catch (ClassNotFoundException | IOException e1) {
 				e1.printStackTrace();
-			} 
+			}
 			cookStart = true;
 			cookFinish = false;
 			try {
-				out.writeBoolean(cookStart); out.flush(); //요리시작 상태 정보를 서버에 넘김
+				out.writeBoolean(cookStart);
+				out.flush(); // 요리시작 상태 정보를 서버에 넘김
 			} catch (IOException e1) {
 				e1.printStackTrace();
-			} 
+			}
 			System.out.println("요리시작!");
 		});
-		
-		btCookFinish.addActionListener(e->{
+
+		btCookFinish.addActionListener(e -> {
 			btCookFinish.setEnabled(false);
 			btCookStart.setEnabled(true);
 			cookStart = false;
 			cookFinish = true;
 			try {
-				out.writeBoolean(cookFinish); out.flush(); //요리완료 상태 정보를 서버에 넘김
+				out.writeBoolean(cookFinish);
+				out.flush(); // 요리완료 상태 정보를 서버에 넘김
 			} catch (IOException e1) {
 				e1.printStackTrace();
-			} 
-			while(jTable.getRowCount()!=0) {
+			}
+			while (jTable.getRowCount() != 0) {
 				m.removeRow(0);
 			}
 			jTable.updateUI();
-			lbOrderState.setText(""); //주문상태
-			lbOrderNum.setText("");//주문번호
-			lbOrderTime.setText("");//주문시간
-			lbId.setText("");//고객아이디
-			JOptionPane.showMessageDialog(null, "요리가 완료되었습니다.","", JOptionPane.INFORMATION_MESSAGE);
+			lbOrderState.setText(""); // 주문상태
+			lbOrderNum.setText("");// 주문번호
+			lbOrderTime.setText("");// 주문시간
+			lbId.setText("");// 고객아이디
+			JOptionPane.showMessageDialog(null, "요리가 완료되었습니다.", "", JOptionPane.INFORMATION_MESSAGE);
 		});
-		
-		btBack.addActionListener(e->{
+		btBack.addActionListener(e -> {
 			System.exit(0);
 		});
 	}
 
 	private void menu() {
-
 	}
 }
 

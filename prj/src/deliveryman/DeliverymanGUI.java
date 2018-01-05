@@ -3,35 +3,23 @@ package deliveryman;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.List;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
 import master.Order;
-import server.ReceiptManager;
 
 class DeliverymanGUI extends JDialog {
 	
@@ -82,11 +70,7 @@ class DeliverymanGUI extends JDialog {
 		
 		setTitle("주문관리");
 		setSize(600, 800);
-		// setLocation(100, 40);
-		// setLocationByPlatform(true); // 위치를 운영체제가 정하도록 설정
-		// setAlwaysOnTop(true); // 항상위
 		setLocationRelativeTo(mw);
-		// setResizable(false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
@@ -96,8 +80,7 @@ class DeliverymanGUI extends JDialog {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		setContentPane(bg); // bg를 배경에 설치하라
-		// this가 아니라 bg에 작업을 수행할 수 있다
+		setContentPane(bg); // 배경 설치
 		bg.setLayout(null);
 		for (int i = 0; i < columnNames.length; i++) {
 			jb[i] = new JLabel(columnNames[i]);
