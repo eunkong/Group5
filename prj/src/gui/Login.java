@@ -129,7 +129,7 @@ public class Login extends JFrame {
 	}
 
 	private void menu() {
-		JMenuBar mb = new JMenuBar();
+		/*JMenuBar mb = new JMenuBar();
 
 		JMenu fg = new JMenu("forget Id/Pw");
 
@@ -147,7 +147,7 @@ public class Login extends JFrame {
 		fg.add(searchPw);
 
 		mb.add(fg);
-		setJMenuBar(mb);
+		setJMenuBar(mb);*/
 
 	}
 

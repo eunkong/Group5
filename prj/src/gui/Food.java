@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Menu;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
@@ -28,6 +29,10 @@ import master.Order;
 
 class FoodView extends JFrame {
 
+	private	Socket socket ;
+	ObjectOutputStream out ;
+	ObjectInputStream in ;
+	
 	private static final int TABLE_NUM = 6;
 
 	private JPanel bg = new JPanel(new BorderLayout());
@@ -73,8 +78,23 @@ class FoodView extends JFrame {
 
 	private JLabel jlabel = new JLabel("짜장면 짬뽕 짜장면 짬뽕");
 
+	private Thread[] thd=new Thread[TABLE_NUM];
+	
 	public FoodView() {
+		
 		design();
+		try {
+			socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
+			out = new ObjectOutputStream(socket.getOutputStream());
+			in = new ObjectInputStream(socket.getInputStream());
+			out.writeInt(2);
+			out.flush();
+			
+		} catch (Exception e) {
+			socket=null;
+			out=null;
+			in=null;
+		}
 		event();
 		menu();
 		setTitle("????");
@@ -129,10 +149,20 @@ class FoodView extends JFrame {
 		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); //x키 방지(+이벤트설정)
 		// 수락
 		jbtOk[0].addActionListener(e -> {
-			okAction(0);
+					okAction(0);
 		});
 		jbtCpt[0].addActionListener(e -> {
-			cptAction(0);
+			
+			thd[0]=new Thread() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					super.run();
+					System.out.println("쓰레드0");
+					cptAction(0);
+				}
+			};
+			thd[0].run();
 		});
 		jbtCncl[0].addActionListener(e -> {
 			cnclAction(0);
@@ -142,7 +172,16 @@ class FoodView extends JFrame {
 			okAction(1);
 		});
 		jbtCpt[1].addActionListener(e -> {
-			cptAction(1);
+			thd[1]=new Thread() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					super.run();
+					System.out.println("쓰레드1");
+					cptAction(1);
+				}
+			};
+			thd[1].run();
 		});
 		jbtCncl[1].addActionListener(e -> {
 			cnclAction(1);
@@ -152,7 +191,17 @@ class FoodView extends JFrame {
 			okAction(2);
 		});
 		jbtCpt[2].addActionListener(e -> {
-			cptAction(2);
+			thd[2]=new Thread() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					super.run();
+					System.out.println("쓰레드2");
+					cptAction(2);
+				}
+			};
+			thd[2].run();
+			
 		});
 		jbtCncl[2].addActionListener(e -> {
 			cnclAction(2);
@@ -162,7 +211,16 @@ class FoodView extends JFrame {
 			okAction(3);
 		});
 		jbtCpt[3].addActionListener(e -> {
-			cptAction(3);
+			thd[3]=new Thread() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					super.run();
+					System.out.println("쓰레드3");
+					cptAction(3);
+				}
+			};
+			thd[3].run();
 		});
 		jbtCncl[3].addActionListener(e -> {
 			cnclAction(3);
@@ -172,7 +230,15 @@ class FoodView extends JFrame {
 			okAction(4);
 		});
 		jbtCpt[4].addActionListener(e -> {
-			cptAction(4);
+			thd[4]=new Thread() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					super.run();
+					cptAction(4);
+				}
+			};
+			thd[4].run();
 		});
 		jbtCncl[4].addActionListener(e -> {
 			cnclAction(4);
@@ -182,7 +248,15 @@ class FoodView extends JFrame {
 			okAction(5);
 		});
 		jbtCpt[5].addActionListener(e -> {
-			cptAction(5);
+			thd[5]=new Thread() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					super.run();
+					cptAction(5);
+				}
+			};
+			thd[5].run();
 		});
 		jbtCncl[5].addActionListener(e -> {
 			cnclAction(5);
@@ -192,24 +266,18 @@ class FoodView extends JFrame {
 
 	private void okAction(int i) {
 		jbtOk[i].setEnabled(false);
-
 	}
 
 	private void cptAction(int num) {
 		
 		boolean cookFinish, cookStart;
-		
-		
-		try (Socket socket = new Socket(InetAddress.getByName("192.168.0.246"), 20000);
-				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());) {
+		System.out.println("aa");
+		try  {
 			//System.out.println("a");
-			out.writeInt(2);
-			out.flush();
+			
 			Map<Long, Order> orderlist = (Map<Long, Order>) in.readObject();
 			
 			int i = 0;
-			
 			while (((DefaultTableModel) jTable[i].getModel()).getRowCount() != 0 && i < TABLE_NUM) {
 				i++;
 			}
@@ -272,10 +340,7 @@ class FoodView extends JFrame {
 	}
 
 	private void orderShow() {
-
-		try (Socket socket = new Socket(InetAddress.getByName("192.168.0.246"), 20000);
-				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());) {
+		try {
 			//System.out.println("a");
 			out.writeInt(2);
 			out.flush();
@@ -291,8 +356,9 @@ class FoodView extends JFrame {
 			}
 
 			
-			System.out.println(orderlist.size());
+			//System.out.println(orderlist.size());
 			
+			System.out.println("ddd");
 			for (java.util.Iterator<Long> ite = orderlist.keySet().iterator();ite.hasNext() &&  i < TABLE_NUM; ) {
 				
 				DefaultTableModel dtemp = (DefaultTableModel) jTable[i].getModel();

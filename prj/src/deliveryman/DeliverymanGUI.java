@@ -40,7 +40,7 @@ class DeliverymanGUI extends JDialog {
 	private static ObjectInputStream in;
 	{
 		try {
-			socket = new Socket(InetAddress.getByName("192.168.0.246"), 20000);
+			socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
 			out = new ObjectOutputStream(socket.getOutputStream());
 			in = new ObjectInputStream(socket.getInputStream());
 		} catch (Exception e) {
