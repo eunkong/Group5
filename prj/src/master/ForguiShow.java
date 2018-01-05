@@ -89,11 +89,8 @@ public class ForguiShow extends JFrame {
 	 */
 
 	private void event() {
-		// JFrame에서 기본적으로 제공하는 종료 옵션
-		// setDefaultCloseOperation(EXIT_ON_CLOSE);//x 키 누르면 종료
+		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);// x 키 누르면 창 닫기
-		// setDefaultCloseOperation(HIDE_ON_CLOSE);//x키 누르면 숨김
-		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//x키 방지(+이벤트)
 
 		ActionListener act = e -> {
 			action(e.getActionCommand());

@@ -149,18 +149,13 @@ public class MenuSFM implements Serializable {// 메뉴관리
 				System.out.println(temp + "-" + getMenu(group, temp).getPrice() + "원");
 			}
 
-			/*
-			   for (Iterator<Menu> iter = getMenuGroup(group).iterator(); iter.hasNext();) {
-			   Menu temp = iter.next(); System.out.println(temp.getName() + "-" +
-			   temp.getPrice() + "원"); }
-			 */
+			
 			System.out.println();
 		}
 
-	}// 중간에 TreeMap, TreeSet 은 가나다순 출력을 위한 것일 뿐입니다.(없는 버전으로 쉽게 수정 가능)
+	}// 중간에 TreeMap, TreeSet 은 가나다순 출력을 위한 것
 
-	// GUI용
-	public static String menuPrintJLabel(String group) {// JLabel에 메뉴 출력용(아마 쓰이지 않을 듯 하니 무시해도 무관.)
+	public static String menuPrintJLabel(String group) {// JLabel에 메뉴 출력용, 분류 하나의 전체 메뉴를 가져옴
 		
 		StringBuffer buffer = new StringBuffer("<html>");
 		buffer.append("<br>-------" + group + "-------");
@@ -217,18 +212,6 @@ public class MenuSFM implements Serializable {// 메뉴관리
 	}
 
 	
-	public static JButton[] getButton(String group) {
-		ArrayList<JButton> temp = new ArrayList<>();
-		Set<Menu> stemp = menus.get(group);
-		for (Menu menu : stemp) {
-			temp.add(new JButton(menu.getName() + "-" + menu.getPrice() + "원"));
-		}
-		return temp.toArray(new JButton[temp.size()]);
-	}// 추후 손님용 레이아웃을 위한 것
-
-	
-	
-	
 	@SuppressWarnings("unchecked")
 	public static void menuLoad() {// files에 있는 menus객체를 읽어오는 메소드
 		ObjectInputStream in;
@@ -265,6 +248,7 @@ public class MenuSFM implements Serializable {// 메뉴관리
 			names.add(menu.getName());
 		return new TreeSet<String>(names);
 	}
+	
 	
 	public static Set<String> getGroupString() {// 분류들을 set으로 가져옴
 
