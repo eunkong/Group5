@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -17,7 +19,9 @@ import master.Order;
 
 //다중IP 연결 생성 클래스(Thread상속)
 public class Connection extends Thread {
-	private static Calendar cal;
+	
+	private static Date d;
+	private static Format f = new SimpleDateFormat("yy년 MM월 dd일 HH:mm:ss");
 	private static String time;
 
 	private static final int GUEST = 1;
@@ -286,10 +290,8 @@ public class Connection extends Thread {
 				System.out.println("[test] : "+result);
 				Order order = (Order) in.readObject();
 				System.out.println("[test] : "+order.toString());
-				cal = Calendar.getInstance();
-				time = (cal.get(Calendar.YEAR) - 2000) + "년 " + (1 + cal.get(Calendar.MONTH)) + "월 "
-						+ cal.get(Calendar.DAY_OF_MONTH) + "일  " + cal.get(Calendar.HOUR_OF_DAY) + ":"
-						+ cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND);
+				d = new Date();
+				time = f.format(d);
 				order.setOrdertime(time);
 				Long orderNumber = OrderNumber.getOrderNumber();
 				ReceiptManager.saveDatabasePrint(orderNumber, order);
