@@ -32,13 +32,11 @@ public class Cook {
 				if(orderlist!=null) {
 					System.out.println("고객정보");
 					Iterator<Long> iterator = orderlist.keySet().iterator();
-					while(iterator.hasNext()) 
-					{
+					
 						Long num = iterator.next();
 						Order order = orderlist.get(num);
 						ReceiptManager.printReceipt(num, order);
-						break;
-					}
+						
 					System.out.println("요리가능여부 : (0이면 가능)/(1이면 종료)");
 					cookChoice = s.nextInt();
 					if(cookChoice == 0) { //요리사가 요리를 한다면

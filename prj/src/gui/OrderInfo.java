@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -145,15 +146,17 @@ public class OrderInfo extends JDialog{
 				JOptionPane.showMessageDialog(null, "주문 내역이 없습니다!","",JOptionPane.WARNING_MESSAGE);
 				return;
 			}
+			TreeMap<Long, Order>temp=new  TreeMap<>(orderIdx);
 			
-			
-			for (long onumber: orderIdx.keySet()) {
-				Order orderTemp=orderIdx.get(onumber);
+			for (Iterator<Long> ite = temp.descendingKeySet().iterator(); ite.hasNext();) {
+				long key=ite.next();
+				Order orderTemp=orderIdx.get(key);
 				Member memtp=orderTemp.getMember();
-				tp.addRow(new Object[] {onumber,orderTemp.getOrdertime(),memtp.getAddress(),
-				memtp.getPhoneNumber(),state[orderTemp.getOrderState()],orderTemp.getPriceSum()		
-				});
+				tp.addRow(new Object[] {key,orderTemp.getOrdertime(),memtp.getAddress(),
+						memtp.getPhoneNumber(),state[orderTemp.getOrderState()],orderTemp.getPriceSum()		
+						});
 			}
+			
 			
 			 jTable.updateUI();
 		} catch (Exception e1) {
