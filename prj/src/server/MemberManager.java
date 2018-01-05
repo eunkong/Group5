@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import client.Member;
-
+ 
 //memberlist.db 파일 관리 클래스
 public class MemberManager {
 	public static final File db = new File("files", "memberlist.db");

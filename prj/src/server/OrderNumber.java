@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import master.Order;
-
+ 
 //주문번호 생성 클래스
 public class OrderNumber {
 	private static Date d;
