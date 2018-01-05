@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import client.Member;
-import server.MemberManager;
+
 
 @SuppressWarnings("serial")
 public class Order implements Serializable {
@@ -37,15 +37,6 @@ public class Order implements Serializable {
 		orderIdx=ordertemp;
 		member.setOrderCount(member.getOrderCount() + 1);
 		
-	}
-
-	private void printOrder() {
-
-		for (Iterator<Menu> iterator = orderIdx.keySet().iterator(); iterator.hasNext();) {
-			Menu menu = iterator.next();
-			System.out.println(menu.getName() + "-" + menu.getPrice() + "-" + orderIdx.get(menu) + "°³");
-		}
-		System.out.println("ÃÑ" + priceSum + "¿ø");
 	}
 
 	//setter getter
