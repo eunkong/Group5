@@ -152,6 +152,25 @@ class GuestManageWindow extends JDialog {
 
 		ActionListener ac = e -> {
 			// 뒤로간다? (=현재창을 닫고 이전창을 열어준다)
+			
+			// 창에 뿌려주는 거
+			m = (DefaultTableModel) jTable.getModel(); // 틀만들고
+
+			System.out.println("m.getRowCount() : " + m.getRowCount());
+
+			MemberManager member = new MemberManager();
+			Map<String, Member> map = member.loadDatabase();
+			Iterator<String> iterator = map.keySet().iterator();
+			while (iterator.hasNext()) {
+				String id = iterator.next(); // 1개로만 한다.
+				Member man = map.get(id);
+				m.insertRow(m.getRowCount(), new Object[] { man.getId(), man.getPwd(), man.getPhoneNumber(),
+						man.getAddress(), man.getGrade(), man.getOrderCount(), man.getPoint() });
+			}
+			jTable.updateUI();
+			
+			
+			
 			dispose();
 		};
 		bt4.addActionListener(ac);
@@ -217,22 +236,23 @@ class GuestManageWindow extends JDialog {
 				System.out.println(a);
 			}
 			
-			//주문수, 마일리지 숫자 아닌 값 들어갔을 때 처리
+			//주문수, 마일리지 숫자 아닌 값으로 수정시 처리
 			int array5, array6;
 			try {
 				array5 = Integer.parseInt(array[5]);
-			}catch(Exception e1)
-			{
+			}catch(Exception e1) {
+				e1.printStackTrace();
 				array5 = 0;
 			}
 			
 			try {
 				array6 = Integer.parseInt(array[6]);
-			}catch(Exception e1)
-			{
+			}catch(Exception e1) {
+				e1.printStackTrace();
 				array6 = 0;
 			}
-			
+	
+				
 			
 			//선택행 값 변경 적용
 			MemberManager member = new MemberManager();
