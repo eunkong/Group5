@@ -28,7 +28,7 @@ class Window01 extends JFrame {
 	private static ObjectInputStream in;
 	{
 		try {
-			socket = new Socket(InetAddress.getByName("192.168.0.186"), 20000);
+			socket = new Socket(InetAddress.getByName("192.168.0.243"), 20000);
 			out = new ObjectOutputStream(socket.getOutputStream());
 			in = new ObjectInputStream(socket.getInputStream());
 		} catch (Exception e) {
@@ -54,7 +54,7 @@ class Window01 extends JFrame {
 
 	private JButton btCookStart = new JButton("요리 준비");
 	private JButton btCookFinish = new JButton("요리 완료");
-	private JButton btBack = new JButton("가즈아ㅏㅏ");
+	private JButton btBack = new JButton("돌아가기");
 
 	private String columnNames[] = { "메뉴명", "수량", "가격(원)" };
 
@@ -138,6 +138,7 @@ class Window01 extends JFrame {
 		btCookStart.addActionListener(e -> {
 			btCookStart.setEnabled(false);
 			btCookFinish.setEnabled(true);
+			btBack.setEnabled(false);
 
 			try {
 				orderlist = (Map<Long, Order>) in.readObject(); // 주문서 받기
@@ -176,6 +177,7 @@ class Window01 extends JFrame {
 		btCookFinish.addActionListener(e -> {
 			btCookFinish.setEnabled(false);
 			btCookStart.setEnabled(true);
+			btBack.setEnabled(true);
 			cookStart = false;
 			cookFinish = true;
 			try {

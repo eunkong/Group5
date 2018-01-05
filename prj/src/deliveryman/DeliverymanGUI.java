@@ -115,6 +115,7 @@ class DeliverymanGUI extends JDialog {
 		btStart.addActionListener(e->{
 			btStart.setEnabled(false);
 			btFinish.setEnabled(true);
+			btBack.setEnabled(false);
 			try {
 				out.writeInt(0); out.flush(); //서버에 배달가느여부(0) 전송
 				JOptionPane.showMessageDialog(null,"배달준비완료!", "", JOptionPane.INFORMATION_MESSAGE);
@@ -141,6 +142,7 @@ class DeliverymanGUI extends JDialog {
 		btFinish.addActionListener(e->{
 			btFinish.setEnabled(false);
 			btStart.setEnabled(true);
+			btBack.setEnabled(true);
 			try {
 				deliveryState = true;
 				out.writeBoolean(deliveryState); out.flush(); //배달완료 상태를 서버에 넘김
