@@ -77,7 +77,6 @@ class MainOrderView extends JFrame {
 	public MainOrderView(Member member, Map<String, Set<Menu>> map) {
 		this.member = member;
 		this.map = map;
-		System.out.println(map);
 		for (String s : map.keySet()) {
 			for (Menu menu : map.get(s)) {
 				orders.put(menu.getName(), 0);
@@ -294,7 +293,16 @@ class MainOrderView extends JFrame {
 			for (String string : orders.keySet()) {
 				if (orders.get(string) == 0)
 					continue;
-				Menu menu = MenuSFM.getMenu(string);
+				Menu menu=null;
+				for (String str : map.keySet()) {
+					for (Menu mn : map.get(str)) {
+						if(string.equals(mn.getName())) {
+							menu=mn;
+							break;
+						}
+					}
+				}
+				
 				ordertemp.put(menu, orders.get(string));
 			}
 
@@ -303,6 +311,7 @@ class MainOrderView extends JFrame {
 				ClientTool.getTool().order(ordertemp);
 			} catch (IOException e1) {
 				e1.printStackTrace();
+				System.out.println("dd");
 				return;
 			}
 
