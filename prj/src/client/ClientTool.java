@@ -1,5 +1,8 @@
 package client;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
@@ -11,9 +14,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import master.Menu;
-import master.MenuSFM;
 import master.Order;
-import server.ReceiptManager;
 
 public class ClientTool {
 	public static final int REGISTER = 1;
@@ -24,6 +25,7 @@ public class ClientTool {
 	public Socket socket;
 	public ObjectOutputStream out;
 	public ObjectInput in;
+	public BufferedReader inFile;
 	public Scanner s;
 	final static int CLIENT = 1;
 
@@ -38,12 +40,13 @@ public class ClientTool {
 	}
 	
 	private ClientTool() throws UnknownHostException, IOException {
-		socket = new Socket(InetAddress.getByName("192.168.0.246"), 20000);
+		File ipFile = new File("files", "ip.txt"); //ip파일
+		inFile = new BufferedReader(new FileReader(ipFile)); //ip파일 불러오기 통로 생성
+		InetAddress inet = InetAddress.getByName(inFile.readLine());
+		socket = new Socket(inet, 20000);
 		out = new ObjectOutputStream(socket.getOutputStream());
 		in = new ObjectInputStream(socket.getInputStream());
 		s = new Scanner(System.in);
-		// in 만들때 ObjectInputStream(BufferedInputStream(socket.getInputStream()));
-		// 하면 더이상 진행되지 않음. (왜..?)
 	}
 
 	public void clientHome() throws IOException, ClassNotFoundException {
