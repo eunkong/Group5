@@ -19,8 +19,8 @@ public class ServerMainFrame extends JFrame{
 	private JButton bt3 = new JButton("메뉴관리");
 	private JButton bt4 = new JButton("나가자");
 
-	private OrderManageWindow orderWindow = new OrderManageWindow(this,true);		//boolean은 창 종속 매개변수
-	private GuestManageWindow guestWindow = new GuestManageWindow(this,true);
+	private OrderManageWindow orderWindow = new OrderManageWindow(this,true);		//OrderManageWindow 창 종속 매개변수
+	private GuestManageWindow guestWindow = new GuestManageWindow(this,true);	//GuestManageWindow 창 종속 매개 변수
 	
 	public ServerMainFrame() {
 		design();
@@ -54,7 +54,7 @@ public class ServerMainFrame extends JFrame{
 		});
 		
 		bt4.addActionListener(e->{
-			System.exit(0);
+			System.exit(0); //종료
 		});
 	}
 
