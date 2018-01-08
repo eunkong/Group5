@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -34,15 +35,19 @@ class MainOrderView extends JFrame {
 	private JPanel jpanel2 = new JPanel();
 	private JPanel jpanel3 = new JPanel();
 
-	
-
+	Map<String, Set<Menu>> menuTmp=new HashMap<>();
+	{
+		//여기에 서버에서 받는 코드 작성
+		menuTmp=MenuSFM.getMenus();
+	}
 
 	private Map<String, Integer> orders = new HashMap<>();
+	private Map<String, Integer> prices= new HashMap<>();
 	{
-		Map<String, Set<Menu>> temp=new HashMap<>();//ClientTool.getTool()로 받아오기
-		for (String s : temp.keySet()) {
-			for (Menu menu : temp.get(s)) {
+		for (String s : menuTmp.keySet()) {
+			for (Menu menu : menuTmp.get(s)) {
 				orders.put(menu.getName(), 0);
+				prices.put(menu.getName(), menu.getPrice());
 			  }
 			}
 		
@@ -50,8 +55,8 @@ class MainOrderView extends JFrame {
 	Member member;
 	private boolean gopp = false;
 
-	private static final int ROW = MenuSFM.getMenus().size();
-	private static final int COL = 4;
+	private final int ROW = menuTmp.size();
+	private final int COL = 4;
 
 	
 	private JButton[] groups = new JButton[ROW];
@@ -101,7 +106,7 @@ class MainOrderView extends JFrame {
 		bg.add(jpanel1);
 		jpanel1.setLayout(new GridLayout(ROW, 1));
 		int idx = 0;
-		for (String str : MenuSFM.getGroupString()) {
+		for (String str : menuTmp.keySet()) {
 			groups[idx] = new JButton(str);
 			jpanel1.add(groups[idx]);
 			idx++;
@@ -148,8 +153,10 @@ class MainOrderView extends JFrame {
 		// setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//x키 방지(+이벤트)
 		ActionListener act1 = e -> {
 			String gp = e.getActionCommand();
-			Set<String> menu = MenuSFM.getMenuName(gp);
-
+			Set<String> menu = new HashSet<>();
+			for (Menu mtemp : menuTmp.get(gp)) {
+				menu.add(mtemp.getName());
+			}
 			for (int i = 0; i < menus.length; i++) {
 				for (int j = 0; j < menus[i].length; j++) {
 					menus[i][j].setText("");
@@ -169,7 +176,16 @@ class MainOrderView extends JFrame {
 		ActionListener act2 = e -> {
 
 			String order = e.getActionCommand();// 지금 클릭해서 주문한 메뉴 이름
-
+			Menu menuT=null;
+			for (String str: menuTmp.keySet()) {
+				for (Menu setTemp  : menuTmp.get(str)) {
+					if(order.equals(setTemp.getName())) {
+						menuT=setTemp;
+					}
+				}
+			}
+			if(menuT==null)return;
+			
 			if (order.equals("") || order == null)
 				return;
 			int temp = orders.get(order);// 주문 추가/수정이전의 개수 ex) 짜장면 4개 새로주문 =>0 , 짬뽕 4개에서 3개로 변경=>4
@@ -180,10 +196,14 @@ class MainOrderView extends JFrame {
 
 			String ordergname = "";
 
-			for (Iterator<String> ite = MenuSFM.getGroupString().iterator(); ite.hasNext();) {
+			for (Iterator<String> ite = menuTmp.keySet().iterator(); ite.hasNext();) {
 				String gp = ite.next();
-				if (MenuSFM.getMenuName(gp).contains(order)) {
-					ordergname = gp;
+				for (Iterator<Menu> iterator = menuTmp.get(gp).iterator(); iterator.hasNext();) {
+					Menu menuTemp=iterator.next();
+					if (order.equals(menuTemp.getName())) {
+						ordergname = gp;
+						break;
+					}
 				}
 
 			}
@@ -196,14 +216,15 @@ class MainOrderView extends JFrame {
 			if (temp != 0) {// 신규주문이 아니거나 클릭모드로 주문수를 줄이고 있는 경우
 				for (int row = 0; row < m.getRowCount(); row++) {
 					if (order.equals(m.getValueAt(row, 1))) {
+						
 						m.setValueAt(num, row, 2);// 메뉴 개수 설정
-						m.setValueAt(num * MenuSFM.getMenu(order).getPrice(), row, 3);// 메뉴 가격 × 메뉴 개수
+						m.setValueAt(num * menuT.getPrice(), row, 3);// 메뉴 가격 × 메뉴 개수
 					}
 
 				}
 			} else {
 				m.insertRow(m.getRowCount() - 1, new Object[] { ordergname, order, num,
-						num * (MenuSFM.getMenu(order).getPrice() + (gopp ? 1000 : 0)) });// 신규주문인 경우
+						num * (menuT.getPrice() + (gopp ? 1000 : 0)) });// 신규주문인 경우
 			}
 
 			int menuSum = 0;
@@ -252,7 +273,8 @@ class MainOrderView extends JFrame {
 		order.addActionListener(e -> {
 			int priceSum = 0;
 			for (String name : orders.keySet()) {
-				priceSum += MenuSFM.getMenu(name).getPrice() * orders.get(name);
+				
+				priceSum += prices.get(name)* orders.get(name);
 			}
 			if (((DefaultTableModel) jTable.getModel()).getRowCount() == 1) {
 
@@ -319,15 +341,7 @@ class MainOrderView extends JFrame {
 
 		basicmenu.add(logoutMenu);
 
-		if (member.getId().equals("master")) {
-			JMenuItem menuChange = new JMenuItem("menu manage");
-			menuChange.addActionListener(e -> {
-				MenuSFM.menuLoad();// files에서 menu목록 가져와서 MenuSFM에 재저장(내용을 읽어옴)
-				new ForguiShow();// GUI로 메뉴 관리시작
-			});
-			basicmenu.add(menuChange);
-		}
-		
+	
 		basicmenu.add(exit);
 
 		mb.add(basicmenu);
@@ -363,9 +377,9 @@ class MainOrderView extends JFrame {
 		}
 		m.setValueAt(0, 0, 2);
 		m.setValueAt(0, 0, 3);
-		for (String s : MenuSFM.getGroupString()) {
-			for (String string : MenuSFM.getMenuName(s)) {
-				orders.put(string, 0);
+		for (String s : menuTmp.keySet()) {
+			for (Menu menu: menuTmp.get(s)) {
+				orders.put(menu.getName(), 0);
 			}
 		}
 	}
