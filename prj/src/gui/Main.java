@@ -52,7 +52,6 @@ class MainOrderView extends JFrame {
 	}
 	Member member;
 	private boolean gopp = false;
-	private int djs = 1;
 
 	private static final int ROW = MenuSFM.getMenus().size();
 	private static final int COL = 4;
