@@ -12,9 +12,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import client.Member;
+import master.Menu;
+import master.MenuSFM;
 import master.Order;
 
 //다중IP 연결 생성 클래스(Thread상속)
@@ -236,6 +239,10 @@ public class Connection extends Thread {
 			else {
 				out.writeObject(member);
 				out.flush(); // 로그인 성공시 고객정보 객체 전송
+				Map<String, Set<Menu>> map = MenuSFM.getMenus();	//메뉴정보 전송
+				System.out.println(map);
+				out.writeObject(map);
+				out.flush();
 			}
 
 			//고객 접속 메인선택 처리 메소드
