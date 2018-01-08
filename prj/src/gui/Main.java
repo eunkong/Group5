@@ -34,10 +34,7 @@ class MainOrderView extends JFrame {
 	private JPanel jpanel2 = new JPanel();
 	private JPanel jpanel3 = new JPanel();
 
-	static {
-		MenuSFM.menuLoad();
-	}
-
+	
 
 
 	private Map<String, Integer> orders = new HashMap<>();
