@@ -239,6 +239,7 @@ public class Connection extends Thread {
 			else {
 				out.writeObject(member);
 				out.flush(); // 로그인 성공시 고객정보 객체 전송
+				MenuSFM.menuLoad();
 				Map<String, Set<Menu>> map = MenuSFM.getMenus();	//메뉴정보 전송
 				System.out.println(map);
 				out.writeObject(map);

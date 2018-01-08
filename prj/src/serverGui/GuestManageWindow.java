@@ -134,7 +134,10 @@ class GuestManageWindow extends JDialog {
 
 		//나가기 버튼(테이블 내용 최신화)
 		ActionListener ac = e -> {
+//			삭제하는 과정이 필요하다.
+			
 			m = (DefaultTableModel) jTable.getModel(); 
+			while(m.getRowCount()!=0) {m.removeRow(0);}
 			System.out.println("[Test] m.getRowCount() : " + m.getRowCount());
 			MemberManager member = new MemberManager();
 			Map<String, Member> map = member.loadDatabase();
