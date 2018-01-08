@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 import client.Member;
 import server.MemberManager;
-  
+   
 // 고객관리창 구현 클래스
 class GuestManageWindow extends JDialog {
 	private JPanel bg = new JPanel();

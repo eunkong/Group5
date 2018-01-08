@@ -42,7 +42,7 @@ public class Connection extends Thread {
 	public static final int COMPLETE = 5;
 	
 	private static List<Connection> list = new ArrayList<>();
-
+ 
 	/**
 	 * 연결추가 메소드
 	 * @param Connection
