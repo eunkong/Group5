@@ -17,6 +17,7 @@ import java.util.*;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -380,7 +381,7 @@ public class Food extends JFrame {
 	
 			
 		} catch (Exception e) {
-			System.out.println("¤µ¤²");
+			JOptionPane.showMessageDialog(null,"ERROR", "",JOptionPane.ERROR_MESSAGE);
 			return ;
 		}
 		
