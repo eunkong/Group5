@@ -27,7 +27,7 @@ import cook.Cook;
 import master.MenuSFM;
 import master.Order;
 
-class FoodView extends JFrame {
+public class Food extends JFrame {
 
 	private	Socket socket ;
 	ObjectOutputStream out ;
@@ -80,7 +80,7 @@ class FoodView extends JFrame {
 
 	private Thread[] thd=new Thread[TABLE_NUM];
 	
-	public FoodView() {
+	public Food() {
 		
 		design();
 		try {
@@ -389,11 +389,5 @@ class FoodView extends JFrame {
 	}
 
 	private void menu() {
-	}
-}
-
-public class Food {
-	public static void main(String[] args) {
-		new FoodView();
 	}
 }

@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -68,14 +70,16 @@ class MainOrderView extends JFrame {
 	private JButton orderinfo = new JButton("ÁÖ¹® Á¤º¸");
 	private JButton myinfo = new JButton("³» Á¤º¸");
 	private JButton order = new JButton("ÁÖ¹®");
-	private JButton moreOrLess = new JButton("+");
+	private JButton moreBt = new JButton("");
+	private JButton lessBt = new JButton("");
 	private JButton reset = new JButton("»èÁ¦");
-	private JButton setFoodSize = new JButton("");
+	
 
 	private JMenuBar mb = new JMenuBar();
 	private JMenu basicmenu = new JMenu("Menu");
 	private JMenu setting = new JMenu("Setting");
 	private JMenuItem setMode = new JMenuItem(modeName[orderMode - 1] + " mode");
+	
 
 	private MyInfo myInfoView = new MyInfo(this, true);
 
@@ -141,13 +145,13 @@ class MainOrderView extends JFrame {
 		order.setBounds(660, 435, 250, 55);
 		bg.add(order);
 
-		moreOrLess.setBounds(660, 402, 70, 30);
-		bg.add(moreOrLess);
-		setFoodSize.setBounds(750, 402, 70, 30);
-		bg.add(setFoodSize);
+		moreBt.setBounds(660, 402, 70, 30);
+		bg.add(moreBt);
+		lessBt.setBounds(750, 402, 70, 30);
+		bg.add(lessBt);
 		reset.setBounds(840, 402, 70, 30);
 		bg.add(reset);
-
+	
 	}
 
 	private void event() {
@@ -173,8 +177,7 @@ class MainOrderView extends JFrame {
 				menus[idx / COL][idx % COL].setText(string);
 				idx++;
 			}
-			if (gp.equals("¸é·ù"))
-				setFoodSize.setText("º¸Åë");
+			
 		};
 
 		ActionListener act2 = e -> {
@@ -238,16 +241,12 @@ class MainOrderView extends JFrame {
 		}
 
 		ActionListener act3 = e -> {
-			if (e.getActionCommand().equals("+")) {
-				pm = false;
-				moreOrLess.setText("-");
-			} else {
-				pm = true;
-				moreOrLess.setText("+");
-			}
+			if(e.getActionCommand().equals(""))return;
+			pm=e.getActionCommand().equals("+");
+		
 		};
-		moreOrLess.addActionListener(act3);
-
+		moreBt.addActionListener(act3);
+		lessBt.addActionListener(act3);
 		for (int i = 0; i < groups.length; i++) {
 			groups[i].addActionListener(act1);
 		}
@@ -307,13 +306,19 @@ class MainOrderView extends JFrame {
 			resetOrder();
 		});
 
-		setFoodSize.addActionListener(e -> {
-			gopp = !gopp;
-			setFoodSize.setText(setFoodSize.getText().equals("º¸Åë") ? "°ö»©±â" : "º¸Åë");
-		});
+	
 		setMode.addActionListener(e -> {
 			orderMode = 1 + (orderMode) % modeName.length;
 			setMode.setText(modeName[orderMode - 1] + " mode");
+			if(orderMode==CLICK_MODE) {
+				moreBt.setText("+");
+				lessBt.setText("-");
+				
+			}else {
+				moreBt.setText("");
+				lessBt.setText("");
+				
+				}
 		});
 
 	}
@@ -323,7 +328,7 @@ class MainOrderView extends JFrame {
 		JMenuItem logoutMenu = new JMenuItem("logout");
 		JMenuItem exit = new JMenuItem("exit");
 
-		JMenuItem settingItem = new JMenuItem("setting");
+	
 
 		logoutMenu.addActionListener(e -> {
 			try {
@@ -338,9 +343,7 @@ class MainOrderView extends JFrame {
 			new Login();
 		});
 
-		settingItem.addActionListener(e -> {
-		});
-
+		
 		exit.addActionListener(e -> {
 			System.exit(0);
 		});
@@ -357,8 +360,6 @@ class MainOrderView extends JFrame {
 		}
 		basicmenu.add(setMode);
 		basicmenu.add(exit);
-
-		setting.add(settingItem);
 
 		mb.add(basicmenu);
 		mb.add(setting);
@@ -411,12 +412,7 @@ class MainOrderView extends JFrame {
 		}
 	}
 
-	private void foodSize(String str) {
-		if (!str.equals("º¸Åë") && !str.equals("°ö»©±â"))
-			return;
-		gopp = !gopp;
-		menus[ROW - 1][COL - 1].setText(str.equals("°ö»©±â") ? "º¸Åë" : "°ö»©±â");
-	}
+
 
 	public void setCusId(String id) {
 		cusId = id;
