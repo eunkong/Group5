@@ -30,7 +30,7 @@ import master.Menu;
 import master.MenuSFM;
 
 class MainOrderView extends JFrame {
-//
+
 	String cusId = "";
 
 	private JPanel bg = new JPanel();
