@@ -42,7 +42,7 @@ class MainOrderView extends JFrame {
 		MenuSFM.menuLoad();
 	}
 
-	private boolean pm = true;
+
 
 	private Map<String, Integer> orders = new HashMap<>();
 	{
@@ -58,27 +58,21 @@ class MainOrderView extends JFrame {
 	private static final int ROW = MenuSFM.getMenus().size();
 	private static final int COL = 4;
 
-	private static final int INSERT_MODE = 1;
-	private static final int CLICK_MODE = 2;
-
-	private int orderMode = INSERT_MODE;
-	private String[] modeName = { "insert", "click" };
-
+	
 	private JButton[] groups = new JButton[ROW];
 	private JButton[][] menus = new JButton[ROW][COL];
 
 	private JButton orderinfo = new JButton("주문 정보");
 	private JButton myinfo = new JButton("내 정보");
 	private JButton order = new JButton("주문");
-	private JButton moreBt = new JButton("");
-	private JButton lessBt = new JButton("");
+	
 	private JButton reset = new JButton("삭제");
 	
 
 	private JMenuBar mb = new JMenuBar();
 	private JMenu basicmenu = new JMenu("Menu");
 	private JMenu setting = new JMenu("Setting");
-	private JMenuItem setMode = new JMenuItem(modeName[orderMode - 1] + " mode");
+	
 	
 
 	private MyInfo myInfoView = new MyInfo(this, true);
@@ -142,14 +136,11 @@ class MainOrderView extends JFrame {
 		orderinfo.setBounds(665, 10, 114, 31);
 		bg.add(orderinfo);
 
-		order.setBounds(660, 435, 250, 55);
+		order.setBounds(665, 390, 110, 65);
 		bg.add(order);
 
-		moreBt.setBounds(660, 402, 70, 30);
-		bg.add(moreBt);
-		lessBt.setBounds(750, 402, 70, 30);
-		bg.add(lessBt);
-		reset.setBounds(840, 402, 70, 30);
+		
+		reset.setBounds(795, 390, 110, 65);
 		bg.add(reset);
 	
 	}
@@ -188,7 +179,7 @@ class MainOrderView extends JFrame {
 				return;
 			int temp = orders.get(order);// 주문 추가/수정이전의 개수 ex) 짜장면 4개 새로주문 =>0 , 짬뽕 4개에서 3개로 변경=>4
 
-			ordering(order, orderMode);// 모드에 따라서 주문
+			ordering(order);
 
 			int num = orders.get(order);// 주문 추가/수정 후의 개수 ex) 짜장면 4개 새로주문 =>4 , 짬뽕 4개에서 3개로 변경=>3
 
@@ -207,7 +198,7 @@ class MainOrderView extends JFrame {
 			DefaultTableModel m = (DefaultTableModel) jTable.getModel();
 
 			// 모델에 데이터 추가 , 마지막 출에 새로운 데이터를 추가합니다
-			if (temp != 0 || (!pm && orderMode == CLICK_MODE)) {// 신규주문이 아니거나 클릭모드로 주문수를 줄이고 있는 경우
+			if (temp != 0) {// 신규주문이 아니거나 클릭모드로 주문수를 줄이고 있는 경우
 				for (int row = 0; row < m.getRowCount(); row++) {
 					if (order.equals(m.getValueAt(row, 1))) {
 						m.setValueAt(num, row, 2);// 메뉴 개수 설정
@@ -240,13 +231,8 @@ class MainOrderView extends JFrame {
 			}
 		}
 
-		ActionListener act3 = e -> {
-			if(e.getActionCommand().equals(""))return;
-			pm=e.getActionCommand().equals("+");
 		
-		};
-		moreBt.addActionListener(act3);
-		lessBt.addActionListener(act3);
+		
 		for (int i = 0; i < groups.length; i++) {
 			groups[i].addActionListener(act1);
 		}
@@ -307,19 +293,7 @@ class MainOrderView extends JFrame {
 		});
 
 	
-		setMode.addActionListener(e -> {
-			orderMode = 1 + (orderMode) % modeName.length;
-			setMode.setText(modeName[orderMode - 1] + " mode");
-			if(orderMode==CLICK_MODE) {
-				moreBt.setText("+");
-				lessBt.setText("-");
-				
-			}else {
-				moreBt.setText("");
-				lessBt.setText("");
-				
-				}
-		});
+		
 
 	}
 
@@ -358,7 +332,7 @@ class MainOrderView extends JFrame {
 			});
 			basicmenu.add(menuChange);
 		}
-		basicmenu.add(setMode);
+		
 		basicmenu.add(exit);
 
 		mb.add(basicmenu);
@@ -368,13 +342,11 @@ class MainOrderView extends JFrame {
 
 	}
 
-	private void ordering(String order, int mode) {
-
+	private void ordering(String order) {
+		
 		int num = 0;
-		switch (mode) {
-		case INSERT_MODE:
 			String s = JOptionPane.showInputDialog("주문/수정하실" + order + "의 개수를 입력하세요");
-			if (s.equals(null))
+			if (s.equals(null)||s.equals(""))
 				return;
 			try {
 				int n = Integer.parseInt(s);
@@ -386,16 +358,7 @@ class MainOrderView extends JFrame {
 			}
 			num = Integer.parseInt(s);
 			orders.put(order, num);
-			break;
-		case CLICK_MODE:
-			num = orders.get(order) + (pm ? 1 : -1);
-			if (num < 0) {
-				num = 0;
-				return;
-			}
-			orders.put(order, num);
-			break;
-		}
+
 	}
 
 	private void resetOrder() {
