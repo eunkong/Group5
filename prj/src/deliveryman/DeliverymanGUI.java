@@ -3,6 +3,9 @@ package deliveryman;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,13 +25,14 @@ import javax.swing.table.DefaultTableModel;
 import master.Order;
 
 class DeliverymanGUI extends JDialog {
-	
 	private static Socket socket ;
+	private File ipFile = new File("files", "ip.txt"); //ip파일
 	private static ObjectOutputStream out;
 	private static ObjectInputStream in;
 	{
 		try {
-			socket = new Socket(InetAddress.getByName("192.168.0.246"), 20000);
+			BufferedReader inFile = new BufferedReader(new FileReader(ipFile)); //ip파일 불러오기 통로 생성
+			Socket socket = new Socket(InetAddress.getByName(inFile.readLine()), 20000);
 			out = new ObjectOutputStream(socket.getOutputStream());
 			in = new ObjectInputStream(socket.getInputStream());
 		} catch (Exception e) {

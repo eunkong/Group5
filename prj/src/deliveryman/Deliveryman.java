@@ -1,5 +1,8 @@
 package deliveryman;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
@@ -16,8 +19,9 @@ public class Deliveryman {
 	static boolean deliveryState;
 	public static void main(String[] args){
 		System.out.println("<<배달맨>>");
-		//
-		try(Socket socket = new Socket(InetAddress.getByName("192.168.0.246"), 20000);
+		File ipFile = new File("files", "ip.txt"); //ip파일
+		try(BufferedReader inFile = new BufferedReader(new FileReader(ipFile)); //ip파일 불러오기 통로 생성
+				Socket socket = new Socket(InetAddress.getByName(inFile.readLine()), 20000);
 				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 				Scanner s = new Scanner(System.in);){
