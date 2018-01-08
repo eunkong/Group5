@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -14,7 +13,6 @@ import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -24,8 +22,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import client.*;
-import master.*;
+import client.ClientTool;
+import client.Member;
+import master.Menu;
+import master.MenuSFM;
 class MainOrderView extends JFrame {
 
 	String cusId = "";
@@ -35,32 +35,21 @@ class MainOrderView extends JFrame {
 	private JPanel jpanel2 = new JPanel();
 	private JPanel jpanel3 = new JPanel();
 
-	Map<String, Set<Menu>> menuTmp=new HashMap<>();
-	{
-		//여기에 서버에서 받는 코드 작성
-		menuTmp=MenuSFM.getMenus();
-	}
+
+	Map<String, Set<Menu>> map;
 
 	private Map<String, Integer> orders = new HashMap<>();
 	private Map<String, Integer> prices= new HashMap<>();
-	{
-		for (String s : menuTmp.keySet()) {
-			for (Menu menu : menuTmp.get(s)) {
-				orders.put(menu.getName(), 0);
-				prices.put(menu.getName(), menu.getPrice());
-			  }
-			}
-		
-	}
+	
 	Member member;
 	private boolean gopp = false;
 
-	private final int ROW = menuTmp.size();
-	private final int COL = 4;
+	private int row ;
+	private int col ;
 
 	
-	private JButton[] groups = new JButton[ROW];
-	private JButton[][] menus = new JButton[ROW][COL];
+	private JButton[] groups = new JButton[row];
+	private JButton[][] menus = new JButton[row][col];
 
 	private JButton orderinfo = new JButton("주문 정보");
 	private JButton myinfo = new JButton("내 정보");
@@ -85,8 +74,24 @@ class MainOrderView extends JFrame {
 	private JTable jTable = new JTable(defaultTableModel);
 	private JScrollPane jScollPane = new JScrollPane(jTable);
 
-	public MainOrderView(Member member) {
+	public MainOrderView(Member member, Map<String, Set<Menu>> map) {
 		this.member = member;
+		this.map = map;
+		System.out.println(map);
+		for (String s : map.keySet()) {
+			for (Menu menu : map.get(s)) {
+				orders.put(menu.getName(), 0);
+				prices.put(menu.getName(), menu.getPrice());
+			  }
+			}
+		row=map.size();
+		System.out.println(row);
+		col=4;
+		
+		groups = new JButton[row];
+		menus = new JButton[row][col];
+
+		
 		design();
 		event();
 		menu();
@@ -104,9 +109,9 @@ class MainOrderView extends JFrame {
 
 		jpanel1.setBounds(20, 70, 140, 420);
 		bg.add(jpanel1);
-		jpanel1.setLayout(new GridLayout(ROW, 1));
+		jpanel1.setLayout(new GridLayout(row, 1));
 		int idx = 0;
-		for (String str : menuTmp.keySet()) {
+		for (String str : map.keySet()) {
 			groups[idx] = new JButton(str);
 			jpanel1.add(groups[idx]);
 			idx++;
@@ -114,7 +119,7 @@ class MainOrderView extends JFrame {
 
 		jpanel2.setBounds(180, 70, 450, 420);
 		bg.add(jpanel2);
-		jpanel2.setLayout(new GridLayout(ROW, COL));
+		jpanel2.setLayout(new GridLayout(row, col));
 		for (int i = 0; i < menus.length; i++) {
 			for (int j = 0; j < menus[i].length; j++) {
 				menus[i][j] = new JButton("");
@@ -154,7 +159,7 @@ class MainOrderView extends JFrame {
 		ActionListener act1 = e -> {
 			String gp = e.getActionCommand();
 			Set<String> menu = new HashSet<>();
-			for (Menu mtemp : menuTmp.get(gp)) {
+			for (Menu mtemp : map.get(gp)) {
 				menu.add(mtemp.getName());
 			}
 			for (int i = 0; i < menus.length; i++) {
@@ -165,9 +170,9 @@ class MainOrderView extends JFrame {
 			int idx = 0;
 
 			for (String string : menu) {
-				if (idx == ROW * COL)
+				if (idx == row * col)
 					break;
-				menus[idx / COL][idx % COL].setText(string);
+				menus[idx / col][idx % col].setText(string);
 				idx++;
 			}
 			
@@ -177,8 +182,8 @@ class MainOrderView extends JFrame {
 
 			String order = e.getActionCommand();// 지금 클릭해서 주문한 메뉴 이름
 			Menu menuT=null;
-			for (String str: menuTmp.keySet()) {
-				for (Menu setTemp  : menuTmp.get(str)) {
+			for (String str: map.keySet()) {
+				for (Menu setTemp  : map.get(str)) {
 					if(order.equals(setTemp.getName())) {
 						menuT=setTemp;
 					}
@@ -196,9 +201,9 @@ class MainOrderView extends JFrame {
 
 			String ordergname = "";
 
-			for (Iterator<String> ite = menuTmp.keySet().iterator(); ite.hasNext();) {
+			for (Iterator<String> ite = map.keySet().iterator(); ite.hasNext();) {
 				String gp = ite.next();
-				for (Iterator<Menu> iterator = menuTmp.get(gp).iterator(); iterator.hasNext();) {
+				for (Iterator<Menu> iterator = map.get(gp).iterator(); iterator.hasNext();) {
 					Menu menuTemp=iterator.next();
 					if (order.equals(menuTemp.getName())) {
 						ordergname = gp;
@@ -241,8 +246,8 @@ class MainOrderView extends JFrame {
 
 			jTable.updateUI();
 		};
-		for (int i = 0; i < ROW; i++) {
-			for (int j = 0; j < COL; j++) {
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
 				menus[i][j].addActionListener(act2);
 			}
 		}
@@ -377,8 +382,8 @@ class MainOrderView extends JFrame {
 		}
 		m.setValueAt(0, 0, 2);
 		m.setValueAt(0, 0, 3);
-		for (String s : menuTmp.keySet()) {
-			for (Menu menu: menuTmp.get(s)) {
+		for (String s : map.keySet()) {
+			for (Menu menu: map.get(s)) {
 				orders.put(menu.getName(), 0);
 			}
 		}

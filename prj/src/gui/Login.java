@@ -5,29 +5,20 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.net.UnknownHostException;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 
-import client.Client;
 import client.ClientTool;
 import client.Member;
+import master.Menu;
 
 public class Login extends JFrame {
 	private JPanel bg = new JPanel(new BorderLayout());
@@ -117,13 +108,14 @@ public class Login extends JFrame {
 		String pwd = pwArea.getText();
 		try {
 			Member mem = ClientTool.getTool().login(id, pwd);
+			Map<String, Set<Menu>> map = (Map<String, Set<Menu>>) ClientTool.getTool().in.readObject();
 			if (mem == null) {
 				JOptionPane.showMessageDialog(null, "로그인 실패", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			JOptionPane.showMessageDialog(null, "로그인에 성공하였습니다.", "", JOptionPane.INFORMATION_MESSAGE);
 			this.setVisible(false);
-			new MainOrderView(mem);
+			new MainOrderView(mem, map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
