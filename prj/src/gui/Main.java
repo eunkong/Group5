@@ -23,12 +23,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import client.ClientTool;
-import client.Member;
-import master.ForguiShow;
-import master.Menu;
-import master.MenuSFM;
-
+import client.*;
+import master.*;
 class MainOrderView extends JFrame {
 
 	String cusId = "";
@@ -46,11 +42,13 @@ class MainOrderView extends JFrame {
 
 	private Map<String, Integer> orders = new HashMap<>();
 	{
-		for (String s : MenuSFM.getGroupString()) {
-			for (String string : MenuSFM.getMenuName(s)) {
-				orders.put(string, 0);
+		Map<String, Set<Menu>> temp=new HashMap<>();//ClientTool.getTool()로 받아오기
+		for (String s : temp.keySet()) {
+			for (Menu menu : temp.get(s)) {
+				orders.put(menu.getName(), 0);
+			  }
 			}
-		}
+		
 	}
 	Member member;
 	private boolean gopp = false;
