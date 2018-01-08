@@ -108,13 +108,13 @@ public class Login extends JFrame {
 		String pwd = pwArea.getText();
 		try {
 			Member mem = ClientTool.getTool().login(id, pwd);
-			Map<String, Set<Menu>> map = (Map<String, Set<Menu>>) ClientTool.getTool().in.readObject();
 			if (mem == null) {
 				JOptionPane.showMessageDialog(null, "로그인 실패", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			JOptionPane.showMessageDialog(null, "로그인에 성공하였습니다.", "", JOptionPane.INFORMATION_MESSAGE);
 			this.setVisible(false);
+			Map<String, Set<Menu>> map = (Map<String, Set<Menu>>) ClientTool.getTool().in.readObject();
 			new MainOrderView(mem, map);
 		} catch (Exception e) {
 			e.printStackTrace();
