@@ -45,7 +45,7 @@ public class ForguiShow extends JFrame {
 	 * @see	#event()
 	 * @see #menu()
 	 */
-	private MenuBoard menuboard = new MenuBoard(this, true);
+	
 	
 	public ForguiShow() {// 강사님의 기본 틀대로 만든 JFrame 상속 클래스
 
@@ -121,6 +121,7 @@ public class ForguiShow extends JFrame {
 	private void menu() {
 
 	}
+	
 	/**
 	 *@see #event()
 	 *@param key
@@ -137,7 +138,7 @@ public class ForguiShow extends JFrame {
 		switch (key) {
 		case "메뉴보기":
 			MenuSFM.menuPrintConsole();// 콘솔창에서 메뉴목록 확인가능
-			menuboard.setVisible(true);
+			new MenuBoard(this, true);
 			break;
 
 		case "메뉴추가":

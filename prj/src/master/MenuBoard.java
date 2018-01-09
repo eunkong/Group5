@@ -47,6 +47,7 @@ public class MenuBoard extends JDialog{
 		setSize(700, 300);
 		setLocationRelativeTo(owner);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);//x 키 누르면 창 닫기
+		setVisible(true);
 	}
 	/** 
 	 * 출력화면 구성
