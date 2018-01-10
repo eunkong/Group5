@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import serverGui.ServerMainFrame;
- 
+  
 public class Server {
 	public static final int REGISTER = 1;
 	public static final int LOGIN = 2;

@@ -1,5 +1,5 @@
 package master;
-
+ 
 @SuppressWarnings("serial")
 public class Menu extends MenuSample{
 

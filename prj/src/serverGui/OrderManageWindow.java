@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 import master.Order;
 import server.ReceiptManager;
- 
+  
 //주문관리창 구현 클래스
 class OrderManageWindow extends JDialog {
 	private JPanel bg = new JPanel();

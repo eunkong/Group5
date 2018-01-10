@@ -54,7 +54,7 @@ class MainOrderView extends JFrame {
 	private JButton orderinfo = new JButton("주문 정보");
 	private JButton myinfo = new JButton("내 정보");
 	private JButton order = new JButton("주문");
-	
+	 
 	private JButton reset = new JButton("삭제");
 	
 

@@ -8,7 +8,7 @@ import javax.swing.*;
 
 import master.ForguiShow;
 import master.MenuSFM;
- 
+  
 //서버관리창 메인창
 public class ServerMainFrame extends JFrame{
 	private JPanel bg = new JPanel(new BorderLayout());	//패널 만들기.

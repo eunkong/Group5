@@ -11,7 +11,7 @@ import java.util.Scanner;
 import master.MenuSFM;
 import master.Order;
 // 참고용 !!!!!! 초기 데이터
-//
+// 
 public class Client {
 	public static final int REGISTER = 1;
 	public static final int LOGIN = 2;
