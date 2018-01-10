@@ -1,5 +1,5 @@
 package serverGui;
-  
+ 
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
@@ -43,7 +43,7 @@ class GuestManageWindow extends JDialog {
 
 	
 
-	private String columnNames[] = { "아이디", "비밀번호", "전화번호", "고객 주소", "등급", "주문 수", "포인트" };
+	private String columnNames[] = { "아이디", "전화번호", "고객 주소", "등급", "주문 수", "포인트" };
 	// DefaultTableModel을 선언하고 데이터 담기
 	private DefaultTableModel defaultTableModel = new DefaultTableModel(new Object[][] {}, columnNames);
 	private DefaultTableModel m;
@@ -122,7 +122,7 @@ class GuestManageWindow extends JDialog {
 		while (iterator.hasNext()) {
 			String id = iterator.next();
 			Member man = map.get(id);
-			m.insertRow(m.getRowCount(), new Object[] { man.getId(), man.getPwd(), man.getPhoneNumber(),
+			m.insertRow(m.getRowCount(), new Object[] { man.getId(), man.getPhoneNumber(),
 					man.getAddress(), man.getGrade(), man.getOrderCount(), man.getPoint() });
 		}
 		jTable.updateUI();
@@ -145,7 +145,7 @@ class GuestManageWindow extends JDialog {
 			while (iterator.hasNext()) {
 				String id = iterator.next(); // 1개로만 한다.
 				Member man = map.get(id);
-				m.insertRow(m.getRowCount(), new Object[] { man.getId(), man.getPwd(), man.getPhoneNumber(),
+				m.insertRow(m.getRowCount(), new Object[] { man.getId(), man.getPhoneNumber(),
 						man.getAddress(), man.getGrade(), man.getOrderCount(), man.getPoint() });
 			}
 			jTable.updateUI();
@@ -196,7 +196,6 @@ class GuestManageWindow extends JDialog {
 		bt1.addActionListener(act3);
 		
 		
-
 		// 회원수정
 		ActionListener act4 = e -> {
 			int row = jTable.getSelectedRow();
@@ -205,30 +204,27 @@ class GuestManageWindow extends JDialog {
 			String value = (String) jTable.getValueAt(row, col);
 			System.out.println("value : " + value);
 
-			//선택 행의 값을 불러와 배열에 저장한다.
-			String[] array = new String[7];
-			for (int i = 0; i < 7; i++) {
+			// 마지막행의 처음부터 끝까지 값을 가져온다. 그리고 그 값을 수정한다.
+			String[] array = new String[4];
+			for (int i = 0; i < 4; i++) {
 				String a = (String) m.getValueAt(row, i);
 				array[i] = a;
 				System.out.println(a);
 			}
 			
-			//주문수, 마일리지 숫자 아닌 값으로 수정시 처리
-			int array5, array6;
+			//주문수, 마일리지 숫자 이외 들어올시 처리
+			int array4, array5;
 			try {
-				array5 = Integer.parseInt(array[5]);
+				array4 = (int) m.getValueAt(row, 4);
 			}catch(Exception e1) {
-				e1.printStackTrace();
-				array5 = 0;
+				array4=0;
 			}
 			
 			try {
-				array6 = Integer.parseInt(array[6]);
+				array5 = (int) m.getValueAt(row, 5);
 			}catch(Exception e1) {
-				e1.printStackTrace();
-				array6 = 0;
+				array5=0;
 			}
-				
 			
 			//선택행 값 변경 적용
 			MemberManager member = new MemberManager();
@@ -237,16 +233,17 @@ class GuestManageWindow extends JDialog {
 			while (iterator.hasNext()) {
 				String id = iterator.next();
 				if (id.equals(value)) {
-					System.out.println("[test] 일치하는 아이디 발견");
+					System.out.println("일치하는 아이디 발견");
 					//해당 맵값을 수정한다.
-					map.put(id, new Member(id, array[1], array[2], array[3], array[4], array5, array6));
+					map.put(id, new Member(id, map.get(id).getPwd(), array[1], array[2], array[3], array4, array5));
 					break;
 				}
 			}
 			member.saveDatabase(map);
+			jTable.updateUI();
 		};
 		bt2.addActionListener(act4);
-		
+
 	}
 
 	private void menu() {
