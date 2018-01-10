@@ -261,6 +261,7 @@ class MainOrderView extends JFrame {
 			try {
 				member = ClientTool.getTool().myinfoOpen();
 				myInfoView.setMember(member);
+				this.member = member;
 				myInfoView.setVisible(true);
 			} catch (Exception e1) {
 				e1.printStackTrace();

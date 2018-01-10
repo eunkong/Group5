@@ -2,6 +2,9 @@ package gui;
  
 import java.awt.BorderLayout;
 import java.awt.Frame;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 
 import javax.swing.*;
@@ -12,22 +15,22 @@ import client.Member;
 public class MyInfo extends JDialog {
 	private JPanel bg = new JPanel(new BorderLayout());
 
-	private static JLabel tfId = new JLabel();
-	private static JPasswordField tfPw = new JPasswordField();
-	private static JTextField tfPhone = new JTextField();
-	private static JTextField tfAddress = new JTextField();
-	private static JLabel tfPoint = new JLabel();
-	private static JLabel tfGrade = new JLabel();
+	private JLabel tfId = new JLabel();
+	private JPasswordField tfPw = new JPasswordField();
+	private JTextField tfPhone = new JTextField();
+	private JTextField tfAddress = new JTextField();
+	private JLabel tfPoint = new JLabel();
+	private JLabel tfGrade = new JLabel();
 
-	private static JLabel jlId = new JLabel("아이디");
-	private static JLabel jlPw = new JLabel("비밀번호");
-	private static JLabel jlPhone = new JLabel("전화번호");
-	private static JLabel jlAddress = new JLabel("주소");
-	private static JLabel jlPoint = new JLabel("포인트");
-	private static JLabel jlGrade = new JLabel("등급");
+	private JLabel jlId = new JLabel("아이디");
+	private JLabel jlPw = new JLabel("비밀번호");
+	private JLabel jlPhone = new JLabel("전화번호");
+	private JLabel jlAddress = new JLabel("주소");
+	private JLabel jlPoint = new JLabel("포인트");
+	private JLabel jlGrade = new JLabel("등급");
 
-	private static JButton btEdit = new JButton("수정");
-	private static JButton btCancel = new JButton("취소");
+	private JButton btEdit = new JButton("수정");
+	private JButton btCancel = new JButton("취소");
 
 	private static Member member;
 
@@ -81,15 +84,16 @@ public class MyInfo extends JDialog {
 	}
 
 	private void event() {
-		btCancel.addActionListener(e -> {
+		btCancel.addActionListener(e-> {
+			//btCalcel이 static으로 선언될경우 Action이 중복으로 쌓이게 된다
 			System.out.println("취소 버튼 클릭");
+			System.out.println(btCancel.getActionListeners().length);
 			try {
 				ClientTool.getTool().myinfoClose();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 			dispose();
-
 		});
 		btEdit.addActionListener(e -> {
 			try {
